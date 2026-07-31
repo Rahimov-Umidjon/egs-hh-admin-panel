@@ -22,7 +22,6 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
 import { cn } from "@/lib/utils"
 import {
   Card,
@@ -209,7 +208,7 @@ export default function LoginPage() {
   return (
     <div className="relative flex h-screen overflow-hidden">
 
-      <div className="hidden lg:flex w-1/2 flex-col  justify-center bg-gradient-to-br from-indigo-700 via-violet-700 to-sky-600 p-16 text-white">
+      <div className="hidden lg:flex w-1/2 flex-col  justify-center bg-linear-to-br from-indigo-700 via-violet-700 to-sky-600 p-16 text-white">
         <div className="flex items-center   ">
 
           <div className="flex  items-center justify-center rounded-2xl bg-white/10 backdrop-blur">
@@ -610,23 +609,7 @@ export default function LoginPage() {
                           )}
                         </div>
 
-                        <div className="space-y-2 sm:col-span-2">
-                          <Label>{t("auth.address_line2")}</Label>
-                          <Input
-                            placeholder="3-qavat"
-                            value={registerForm.location.address_line2}
-                            onChange={(e) =>
-                              updateLocationField(
-                                "address_line2",
-                                e.target.value
-                              )
-                            }
-                            className={cn(fieldError("location.address_line2") && "border-red-500")}
-                          />
-                          {fieldError("location.address_line2") && (
-                            <p className="text-xs text-red-600">{fieldError("location.address_line2")}</p>
-                          )}
-                        </div>
+                        
 
                         <div className="space-y-2">
                           <Label>{t("auth.city")}</Label>

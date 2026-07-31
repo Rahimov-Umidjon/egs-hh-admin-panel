@@ -32,8 +32,7 @@ export interface RegisterPayload {
 
   security_question: string
   security_answer: string
-
-  agreed_terms: boolean
+ 
 
   location: RegisterLocationPayload
 }
