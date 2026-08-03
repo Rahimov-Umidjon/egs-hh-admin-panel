@@ -96,7 +96,7 @@ export default function ProfilePage() {
 
 
   const meta = statusMeta[profile?.status || 'approved']
-  const Icon = status.icon;
+  const Icon = meta.icon;
 
   return (
     <div className="space-y-6">
@@ -118,10 +118,10 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-4 ">
                   <div className="group relative">
                     <Avatar className="size-20 border">
-                      <AvatarImage src={profile.logo ?? undefined} alt={profile.company_name} />
-                      <AvatarFallback className="text-lg font-semibold">
-                        {initials(profile.company_name)}
-                      </AvatarFallback>
+                      <AvatarImage src={profile?.logo?.url ?? undefined} alt={profile.company_name} />
+                      {/* <AvatarFallback className="text-lg font-semibold">
+                        {profile.logo.url}
+                      </AvatarFallback> */}
                     </Avatar>
                     <button
                       type="button"
@@ -148,9 +148,17 @@ export default function ProfilePage() {
                     <h3 className="text-xl font-bold tracking-tight text-[#54606a]">
                       {profile.company_name}
                     </h3>
-                    <Badge variant="outline" className={cn("border-0 px-2 py-0 text-xs font-medium", meta.text)}>
-                      {meta.label}
-                    </Badge>
+                    <div
+                      className={cn(
+                        "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium",
+                        meta.bg,
+                        meta.border,
+                        meta.text
+                      )}
+                    >
+                      <Icon className={cn("h-4 w-4", meta.iconClass)} />
+                      <span>{meta.label}</span>
+                    </div>
                     {profile?.website && (
                       <a
                         href={profile?.website}

@@ -41,21 +41,21 @@ const navItems = [
         url: "/",
         icon: LayoutDashboard,
     },
-    {
-        title: "Yuklar",
-        url: "/loads",
-        icon: Truck,
-    },
+    // {
+    //     title: "Yuklar",
+    //     url: "/loads",
+    //     icon: Truck,
+    // },
     {
         title: "Haydovchilar",
         url: "/drivers",
         icon: Users,
     },
-    {
-        title: "Tekshiruv",
-        url: "/verification",
-        icon: ShieldCheck,
-    },
+    // {
+    //     title: "Tekshiruv",
+    //     url: "/verification",
+    //     icon: ShieldCheck,
+    // },
 
     {
         title: "Vakansiyalar",
