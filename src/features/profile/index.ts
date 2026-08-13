@@ -1,5 +1,6 @@
 import { profileApi } from "@/lib/profile.api"
 import type {
+  CreateLocationPayload,
   UpdateLocationPayload,
   UpdatePasswordPayload,
   UpdateProfileInfoPayload,
@@ -73,10 +74,39 @@ export function useUpdateLocation() {
     }) => profileApi.updateLocation(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: profileKeys.me() })
-      toast.success("Manzil yangilandi")
+      toast.success("Filial yangilandi")
     },
     onError: () => {
-      toast.error("Manzilni yangilashda xatolik yuz berdi")
+      toast.error("Filialni yangilashda xatolik yuz berdi")
+    },
+  })
+}
+
+export function useCreateLocation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: CreateLocationPayload) =>
+      profileApi.createLocation(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: profileKeys.me() })
+      toast.success("Filial qo'shildi")
+    },
+    onError: () => {
+      toast.error("Filial qo'shishda xatolik yuz berdi")
+    },
+  })
+}
+
+export function useDeleteLocation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) => profileApi.deleteLocation(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: profileKeys.me() })
+      toast.success("Filial o'chirildi")
+    },
+    onError: () => {
+      toast.error("Filialni o'chirishda xatolik yuz berdi")
     },
   })
 }

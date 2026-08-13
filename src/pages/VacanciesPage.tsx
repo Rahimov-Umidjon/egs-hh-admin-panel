@@ -4,11 +4,14 @@ import {
   Briefcase,
   CalendarClock,
   Check,
+  ClipboardList,
   Eye,
   Loader2,
+  MoreVertical,
   Pencil,
   Plus,
   Search,
+  Star,
   Trash2,
   X,
 } from "lucide-react"
@@ -26,6 +29,13 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -46,6 +56,7 @@ import {
 import { VacancyFormDialog } from "@/components/Vacancyformdialog"
 import { cn } from "@/lib/utils"
 import { VacancyDetailsDialog } from "@/components/VacancyDetailsDialog"
+import { useNavigate } from "react-router-dom"
 
 const statusMeta: Record<
   string,
@@ -71,11 +82,29 @@ const statusMeta: Record<
   },
 }
 
+const employmentMeta: Record<string, string> = {
+  full_time: "To'liq stavka",
+  part_time: "Yarim stavka",
+  contract: "Shartnoma asosida",
+  internship: "Amaliyot",
+  remote: "Masofaviy",
+  temporary: "Vaqtinchalik",
+}
+
 // Har bir status uchun qaysi statuslarga o'tish mumkinligi
 const nextStatusOptions: Record<VacancyStatus, VacancyStatus[]> = {
   draft: ["published", "closed"],
   published: ["draft", "closed"],
   closed: [], // yopilgan vakansiyani yangilab bo'lmaydi
+}
+
+function formatDate(value?: string) {
+  if (!value) return null
+  return new Date(value).toLocaleDateString("uz-UZ", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  })
 }
 
 export default function VacanciesPage() {
@@ -84,6 +113,7 @@ export default function VacanciesPage() {
   const [status, setStatus] = useState<VacancyStatus | undefined>()
   const [salaryFrom, setSalaryFrom] = useState("")
   const [salaryTo, setSalaryTo] = useState("")
+  const navigate = useNavigate()
 
   const debouncedSearch = useDebouncedValue(search, 400)
   const debouncedSalaryFrom = useDebouncedValue(salaryFrom, 400)
@@ -177,12 +207,9 @@ export default function VacanciesPage() {
     })
   }
 
-  const changeStatus = (vacancy: Vacancy, newStatus: VacancyStatus) => {
-    updateStatusMutation.mutate({ id: vacancy.id, status: newStatus })
-  }
-
   const vacancies = data?.pages.flatMap((page) => page.data) ?? []
   const total = data?.pages[0]?.pagination.total ?? 0
+
 
   return (
     <div className="space-y-6">
@@ -297,6 +324,10 @@ export default function VacanciesPage() {
           {vacancies.map((vacancy) => {
             const meta = statusMeta[vacancy.status] ?? statusMeta.draft
             const availableStatuses = nextStatusOptions[vacancy.status as VacancyStatus] ?? []
+            const employmentLabel = vacancy.employment_type
+              ? employmentMeta[vacancy.employment_type] ?? vacancy.employment_type
+              : null
+            const publishedLabel =  vacancy.published_at ? formatDate(vacancy.published_at) : null
 
             return (
               <Card
@@ -313,67 +344,85 @@ export default function VacanciesPage() {
                       <Briefcase className="size-5" />
                     </div>
                     <div className="space-y-1.5">
-                      <h3 className="line-clamp-2 font-bold leading-tight tracking-tight text-[#54606a]">
-                        {vacancy.title}
-                      </h3>
-                      <Badge variant="outline" className={cn("border-0 px-2 py-0 text-xs font-medium", meta.text)}>
-                        <span className={cn("mr-1.5 size-1.5 rounded-full", meta.dot)} />
-                        {meta.label}
-                      </Badge>
+                      <div className="flex items-center gap-1.5">
+                        {vacancy.is_favorite && (
+                          <Star className="size-3.5 shrink-0 fill-amber-400 text-amber-400" />
+                        )}
+                        <h3 className="line-clamp-2 font-bold leading-tight tracking-tight text-[#54606a]">
+                          {vacancy.title}
+                        </h3>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <Badge variant="outline" className={cn("border-0 px-2 py-0 text-xs font-medium", meta.text)}>
+                          <span className={cn("mr-1.5 size-1.5 rounded-full", meta.dot)} />
+                          {meta.label}
+                        </Badge>
+                        {employmentLabel && (
+                          <Badge
+                            variant="outline"
+                            className="border-0 bg-white px-2 py-0 text-xs font-medium text-gray-500"
+                          >
+                            {employmentLabel}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Dropdown o'rniga to'g'ridan-to'g'ri tugmalar */}
-                  <div className="flex shrink-0 items-center gap-1">
-                    {/* Status o'zgartirish tugmalari */}
-                    {availableStatuses.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {availableStatuses.map((s) => (
-                          <Button
-                            key={s}
-                            size="sm"
-                            variant="outline"
-                            disabled={updateStatusMutation.isPending}
-                            onClick={() => requestStatusChange(vacancy, s)}
-                            className={cn("  rounded-[4px] text-xs py-2 border-0 shadow-none bg-white cursor-pointer", statusMeta[s].text)}
-                          >
-                            {s === "closed" ? (
-                              <X className="mr-1 size-3" />
-                            ) : (
-                              <Check className="mr-1 size-3" />
-                            )}
-                            {statusMeta[s].label}ga o'tkazish
-                          </Button>
-                        ))}
-                      </div>
-                    )}
+                  {/* Barcha amallar bitta dropdown menyusida */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="shrink-0 text-muted-foreground hover:text-foreground cursor-pointer bg-white"
+                      >
+                        <MoreVertical className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-52">
+                      <DropdownMenuItem
+                        onClick={() => navigate(`/vacancies/${vacancy?.id}`)}
+                        className="cursor-pointer"
+                      >
+                        <Eye className="size-4" />
+                        Ko'rish
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => openEdit(vacancy)}
+                        className="cursor-pointer"
+                      >
+                        <Pencil className="size-4" />
+                        Tahrirlash
+                      </DropdownMenuItem>
 
+                      {availableStatuses.length > 0 && <DropdownMenuSeparator />}
+                      {availableStatuses.map((s) => (
+                        <DropdownMenuItem
+                          key={s}
+                          onClick={() => requestStatusChange(vacancy, s)}
+                          disabled={updateStatusMutation.isPending}
+                          className={cn("cursor-pointer", statusMeta[s].text)}
+                        >
+                          {s === "closed" ? (
+                            <X className="size-4" />
+                          ) : (
+                            <Check className="size-4" />
+                          )}
+                          {statusMeta[s].label}ga o'tkazish
+                        </DropdownMenuItem>
+                      ))}
 
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-muted-foreground hover:text-foreground cursor-pointer bg-white"
-                      onClick={() => setViewTargetId(vacancy.id)}
-                    >
-                      <Eye className="size-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-muted-foreground hover:text-foreground cursor-pointer  bg-white"
-                      onClick={() => openEdit(vacancy)}
-                    >
-                      <Pencil className="size-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive hover:text-destructive cursor-pointer  bg-white"
-                      onClick={() => setDeleteTarget(vacancy)}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
-                  </div>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => setDeleteTarget(vacancy)}
+                        className="cursor-pointer text-destructive focus:text-destructive"
+                      >
+                        <Trash2 className="size-4" />
+                        O'chirish
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </CardHeader>
 
                 <CardContent className="flex-1 space-y-3">
@@ -381,31 +430,51 @@ export default function VacanciesPage() {
                     {vacancy.description}
                   </p>
 
-                  <div className="flex items-center gap-2 rounded-lg bg-white px-3 py-2">
-                    <Banknote className="size-4 shrink-0 text-muted-foreground" />
-                    <span className="text-sm font-semibold tabular-nums">
-                      {vacancy.salary_from.toLocaleString()} –{" "}
-                      {vacancy.salary_to.toLocaleString()}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {vacancy.salary_currency}
-                    </span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center gap-2 rounded-lg bg-white px-3 py-2">
+                      <Banknote className="size-4 shrink-0 text-muted-foreground" />
+                      <span className="text-sm font-semibold tabular-nums">
+                        {vacancy.salary_from.toLocaleString()} –{" "}
+                        {vacancy.salary_to.toLocaleString()}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {vacancy.salary_currency}
+                      </span>
+                    </div>
+
+                    {typeof vacancy.view_count === "number" && (
+                      <div className="flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs text-muted-foreground">
+                        <Eye className="size-3.5" />
+                        {vacancy.view_count}
+                      </div>
+                    )}
+                    {typeof vacancy.application_count === "number" && (
+                      <div className="flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs text-muted-foreground">
+                        <ClipboardList className="size-3.5" />
+                        {vacancy.application_count} ta ariza
+                      </div>
+                    )}
                   </div>
-
-
                 </CardContent>
 
                 <CardFooter className="flex flex-wrap justify-between gap-1.5 border-t border-border/50 pt-3">
-                  <div className="flex gap-2">
-                    {(vacancy.requirements ?? []).map((req, i) => (
-                      <Badge
-                        key={i}
-                        variant="outline"
-                        className="rounded-[4px] border-0 bg-white px-2 py-1 text-sm font-medium text-gray-500"
-                      >
-                        {req}
-                      </Badge>
-                    ))}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex gap-2">
+                      {(vacancy.requirements ?? []).map((req, i) => (
+                        <Badge
+                          key={i}
+                          variant="outline"
+                          className="rounded-[4px] border-0 bg-white px-2 py-1 text-sm font-medium text-gray-500"
+                        >
+                          {req}
+                        </Badge>
+                      ))}
+                    </div>
+                    {publishedLabel && (
+                      <span className="text-xs font-medium text-gray-400">
+                        E'lon: {publishedLabel}
+                      </span>
+                    )}
                   </div>
 
                   {vacancy.expires_at && (

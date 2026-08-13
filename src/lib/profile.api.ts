@@ -1,7 +1,8 @@
-import { api } from "@/lib/api" // sizning axios instance joylashgan fayl yo'liga moslang
+import { api } from "@/lib/api"
 import type {
   CompanyLocation,
   CompanyProfile,
+  CreateLocationPayload,
   UpdateLocationPayload,
   UpdatePasswordPayload,
   UpdateProfileInfoPayload,
@@ -14,17 +15,17 @@ export const profileApi = {
   },
 
   updateLogo: async (file: File) => {
-    const formData = new FormData();
+    const formData = new FormData()
 
-    formData.append("_method", "PATCH");
-    formData.append("logo", file);
+    formData.append("_method", "PATCH")
+    formData.append("logo", file)
 
     const { data } = await api.post<{ data: CompanyProfile }>(
       "/carrier/profile",
       formData
-    );
+    )
 
-    return data.data;
+    return data.data
   },
 
   updateInfo: async (payload: UpdateProfileInfoPayload) => {
@@ -49,5 +50,20 @@ export const profileApi = {
       payload
     )
     return data.data
+  },
+
+  createLocation: async (payload: CreateLocationPayload) => {
+    const { data } = await api.post<{ data: CompanyLocation }>(
+      "/carrier/profile/locations",
+      payload
+    )
+    return data.data
+  },
+
+  deleteLocation: async (id: number) => {
+    const { data } = await api.delete<{ success: boolean; message: string }>(
+      `/carrier/profile/locations/${id}`
+    )
+    return data
   },
 }

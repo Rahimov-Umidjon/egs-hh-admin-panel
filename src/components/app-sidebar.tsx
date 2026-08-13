@@ -1,13 +1,12 @@
 import { NavLink, useLocation } from "react-router-dom"
 import {
     LayoutDashboard,
-    Truck,
     Users,
-    ShieldCheck,
     BarChart3,
     Briefcase,
     LogOut,
     ChevronsUpDown,
+    FileUser,
 } from "lucide-react"
 
 import {
@@ -62,6 +61,12 @@ const navItems = [
         url: "/vacancies",
         icon: Briefcase,
     },
+    {
+        title: "Arizalar",
+        url: "/aplications",
+        icon: FileUser,
+    },
+
     {
         title: "Profile",
         url: "/profile",

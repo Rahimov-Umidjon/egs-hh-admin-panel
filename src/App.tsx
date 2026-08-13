@@ -6,9 +6,12 @@ import LoginPage from "@/pages/LoginPage"
 import DashboardPage from "@/pages/DashboardPage"
 import DriversPage from "@/pages/DriversPage"
 import LoadsPage from "@/pages/LoadsPage"
-import VerificationPage from "@/pages/VerificationPage" 
+import VerificationPage from "@/pages/VerificationPage"
 import VacanciesPage from "@/pages/VacanciesPage"
 import ProfilePage from "./pages/Profilepage"
+import ApplicationsPage from "./pages/ApplicationsPage"
+import ApplicationShowPage from "./pages/ApplicationResumePage"
+import VacancyDetailPage from "./pages/Vacancydetailpage"
 
 function App() {
   return (
@@ -24,7 +27,10 @@ function App() {
               <Route path="/drivers" element={<DriversPage />} />
               <Route path="/verification" element={<VerificationPage />} />
               <Route path="/vacancies" element={<VacanciesPage />} />
-              <Route path="/profile" element={<ProfilePage  />} />
+              <Route path="/vacancies/:id" element={<VacancyDetailPage />} />
+              <Route path="/aplications" element={<ApplicationsPage />} />
+              <Route path="/carrier/applications/:id" element={<ApplicationShowPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Route>
           </Route>
         </Routes>

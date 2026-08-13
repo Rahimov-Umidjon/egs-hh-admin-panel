@@ -19,6 +19,9 @@ export interface Vacancy {
   expires_at: string | null
   created_at?: string
   updated_at?: string
+  is_favorite: boolean,
+  view_count: number,
+  application_count: number,
 }
 
 // POST /api/carrier/vacancies va PUT /api/carrier/vacancies/:id uchun body
@@ -100,7 +103,10 @@ export interface CompanyLocation {
 export interface CompanyProfile {
   id: number
   company_name: string
-  logo: string | null
+  logo: {
+    id: number,
+    url: string
+  },
   state_incorporated: string
   website: string
   business_started_at: string
@@ -137,4 +143,78 @@ export interface UpdateLocationPayload {
   region?: string
   phone?: string
   email?: string
+}
+
+// Mavjud UpdateLocationPayload bilan bir xil shaklda, lekin create uchun
+// name, address_line1, city, region, phone majburiy bo'lishi kerak
+export interface CreateLocationPayload {
+  name: string
+  address_line1: string
+  city: string
+  region: string
+  phone: string
+  email?: string
+}
+
+
+
+
+
+
+export type ApplicationStatus = "pending" | "invited" | "rejected"
+
+export interface ApplicationVacancySummary {
+  id: number
+  title: string
+  employment_type: "full_time" | "part_time" | string
+  salary_from: number
+  salary_to: number
+  salary_currency: SalaryCurrency
+  status: VacancyStatus
+  published_at: string | null
+}
+
+export interface ApplicationDriverResume {
+  birth_date: string | null
+  experience_years: number | null
+  desired_salary_from: string | number | null
+  salary_currency: SalaryCurrency | string | null
+  description: string | null
+  address: string | null
+}
+
+export interface ApplicationDriverSummary {
+  id: number
+  phone_number: string
+  fio: string | null
+  number: string | null
+  is_online: number
+  last_login_at: string | null
+  created_at: string
+  resume?: ApplicationDriverResume | null
+}
+
+export interface Application {
+  id: number
+  vacancy_id: number
+  driver_id: number
+  status: ApplicationStatus
+  message: string | null
+  rejection_reason: string | null
+  applied_at: string
+  created_at: string
+  updated_at: string
+  vacancy: ApplicationVacancySummary
+  driver: ApplicationDriverSummary
+}
+
+export interface ApplicationListParams {
+  page?: number
+  status?: ApplicationStatus
+  search?: string
+}
+
+export interface ChangeApplicationStatusPayload {
+  status: Extract<ApplicationStatus, "invited" | "rejected">
+  rejection_reason?: string
 }

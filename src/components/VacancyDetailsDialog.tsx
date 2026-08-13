@@ -21,7 +21,6 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useVacancy } from "@/features/vacancies"
-import { cn } from "@/lib/utils"
 
 const statusMeta: Record<string, { label: string; dot: string; text: string }> = {
   draft: { label: "Qoralama", dot: "bg-amber-400", text: "text-amber-700 dark:text-amber-400" },
@@ -134,15 +133,15 @@ export function VacancyDetailsDialog({ vacancyId, onOpenChange }: VacancyDetails
                   <Building2 className="size-4" /> Kompaniya
                 </h4>
                 <div className="rounded-lg bg-muted p-3">
-                  <p className="font-medium text-foreground">{vacancy.carrier.company_name}</p>
+                  <p className="font-medium text-foreground">{vacancy.carrier?.company_name}</p>
                   <p className="text-xs text-muted-foreground">
-                    Faoliyat davri: {vacancy.carrier.years_in_business}
+                    Faoliyat davri: {vacancy.carrier?.years_in_business}
                   </p>
                 </div>
 
-                {vacancy.carrier.locations?.length > 0 && (
+                {vacancy.carrier?.locations?.length > 0 && (
                   <div className="space-y-2">
-                    {vacancy.carrier.locations.map((loc) => (
+                    {vacancy.carrier?.locations.map((loc) => (
                       <div key={loc.id} className="flex items-start gap-2 rounded-lg border border-border/60 p-3 text-sm">
                         <MapPin className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                         <div className="space-y-0.5">
