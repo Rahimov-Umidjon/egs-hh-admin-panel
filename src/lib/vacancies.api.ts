@@ -1,5 +1,5 @@
 import { api } from "@/lib/api" // sizning axios instance joylashgan fayl yo'liga moslang
-import type { PaginatedResponse, Vacancy, VacancyListParams, VacancyPayload, VacancyStatus } from "@/types"
+import type { PaginatedResponse, Vacancy, VacancyID, VacancyListParams, VacancyPayload, VacancyStatus } from "@/types"
 
 
 // api instance baseURL'i allaqachon "/api" bilan tugaydi, shuning uchun
@@ -15,7 +15,7 @@ export const vacanciesApi = {
   },
 
   getOne: async (id: number) => {
-    const { data } = await api.get<{ data: Vacancy }>(`${BASE_URL}/${id}`)
+    const { data } = await api.get<{ data: VacancyID }>(`${BASE_URL}/${id}`)
     return data.data
   },
 

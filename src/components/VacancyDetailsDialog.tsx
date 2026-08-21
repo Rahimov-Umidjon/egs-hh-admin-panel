@@ -22,11 +22,11 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useVacancy } from "@/features/vacancies"
 
-const statusMeta: Record<string, { label: string; dot: string; text: string }> = {
-  draft: { label: "Qoralama", dot: "bg-amber-400", text: "text-amber-700 dark:text-amber-400" },
-  published: { label: "Chop etilgan", dot: "bg-emerald-500", text: "text-emerald-700 dark:text-emerald-400" },
-  closed: { label: "Yopilgan", dot: "bg-rose-400", text: "text-rose-700 dark:text-rose-400" },
-}
+// const statusMeta: Record<string, { label: string; dot: string; text: string }> = {
+//   draft: { label: "Qoralama", dot: "bg-amber-400", text: "text-amber-700 dark:text-amber-400" },
+//   published: { label: "Chop etilgan", dot: "bg-emerald-500", text: "text-emerald-700 dark:text-emerald-400" },
+//   closed: { label: "Yopilgan", dot: "bg-rose-400", text: "text-rose-700 dark:text-rose-400" },
+// }
 
 const employmentTypeLabels: Record<string, string> = {
   full_time: "To'liq stavka",
@@ -42,8 +42,7 @@ interface VacancyDetailsDialogProps {
 
 export function VacancyDetailsDialog({ vacancyId, onOpenChange }: VacancyDetailsDialogProps) {
   const { data: vacancy, isLoading } = useVacancy(vacancyId)
-  const meta = vacancy ? statusMeta[vacancy.status] ?? statusMeta.draft : null
-
+ 
   return (
     <Dialog open={!!vacancyId} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
@@ -98,7 +97,7 @@ export function VacancyDetailsDialog({ vacancyId, onOpenChange }: VacancyDetails
               </div>
 
               {/* Talablar */}
-              {vacancy?.requirements?.length > 0 && (
+              { vacancy?.requirements && vacancy?.requirements?.length > 0 && (
                 <div className="space-y-1.5">
                   <h4 className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
                     <ListChecks className="size-4" /> Talablar
@@ -112,7 +111,7 @@ export function VacancyDetailsDialog({ vacancyId, onOpenChange }: VacancyDetails
               )}
 
               {/* Majburiyatlar */}
-              {vacancy.responsibilities?.length > 0 && (
+              {vacancy.responsibilities && vacancy.responsibilities?.length > 0 && (
                 <div className="space-y-1.5">
                   <h4 className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
                     <ClipboardList className="size-4" /> Majburiyatlar

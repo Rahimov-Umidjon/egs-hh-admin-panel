@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { Vacancy, VacancyPayload } from "@/types"
+import type {  Vacancy, VacancyID, VacancyPayload } from "@/types"
 import { useCreateVacancy, useUpdateVacancy } from "@/features/vacancies"
 
 
@@ -80,7 +80,7 @@ const emptyValues: VacancyFormInput = {
 interface VacancyFormDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  vacancy?: Vacancy | null // bo'sh bo'lsa — yaratish rejimi, to'ldirilgan bo'lsa — tahrirlash
+  vacancy?: VacancyID | Vacancy | null // bo'sh bo'lsa — yaratish rejimi, to'ldirilgan bo'lsa — tahrirlash
 }
 
 export function VacancyFormDialog({

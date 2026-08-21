@@ -7,6 +7,7 @@ import {
     LogOut,
     ChevronsUpDown,
     FileUser,
+    ShieldCheck,
 } from "lucide-react"
 
 import {
@@ -50,11 +51,11 @@ const navItems = [
         url: "/drivers",
         icon: Users,
     },
-    // {
-    //     title: "Tekshiruv",
-    //     url: "/verification",
-    //     icon: ShieldCheck,
-    // },
+    {
+        title: "Employees",
+        url: "/employees",
+        icon: ShieldCheck,
+    },
 
     {
         title: "Vakansiyalar",

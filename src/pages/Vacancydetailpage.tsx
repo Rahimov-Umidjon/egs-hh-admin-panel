@@ -1,26 +1,28 @@
 // pages/VacancyDetailPage.tsx
 // Route: /vacancies/:id
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import {
-    ArrowLeft,
+    Award,
     Banknote,
     Briefcase,
+    Cake,
     CalendarClock,
     Check,
     Clock,
+    Copy,
     Eye,
     ListChecks,
-    Loader2,
+    MapPin,
     MessageSquare,
     MoreVertical,
     Pencil,
     Phone,
-    RefreshCw,
+    Plus,
     Search,
-    SlidersHorizontal,
     Trash2,
+    Truck,
     UserCheck,
     UserRound,
     UserX,
@@ -55,7 +57,7 @@ import {
 } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
-import type { EmploymentType, VacancyStatus } from "@/types"
+import type { ApplicationStatus, EmploymentType, VacancyStatus } from "@/types"
 import {
     useDeleteVacancy,
     useUpdateVacancyStatus,
@@ -63,8 +65,26 @@ import {
 } from "@/features/vacancies"
 import {
     useChangeApplicationStatus,
-    useInfiniteApplications,
+    useApplications,
+    useApplication,
 } from "@/features/applications/useApplications"
+import { useDebouncedValue } from "@/hooks/use-debounced-value"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { VacancyFormDialog } from "@/components/Vacancyformdialog" 
+import { EmployeeCreateDialog, type SelectedApplication } from "@/components/Employeecreatedialog"
+import { useConfirm } from "@/components/confirm-provider"
+
 
 // ------------------------------------------------------------------
 // Static maps
@@ -165,6 +185,21 @@ type ApplicationDriver = {
     is_online: number | boolean
     last_login_at: string | null
     created_at: string
+    avatar?: {
+        url: string
+        mime_type?: string
+        size?: number
+    } | null
+    resume?: {
+        birth_date: string | null
+        experience_years: number | null
+        desired_salary_from: string | null
+        salary_currency: string | null
+        description: string | null
+        address: string | null
+        transport_types: { id: number; name: string; slug: string }[]
+        work_formats: { id: number; name_key: string }[]
+    } | null
 }
 
 type Application = {
@@ -185,64 +220,74 @@ export default function VacancyDetailPage() {
     const { id } = useParams<{ id: string }>()
     const vacancyId = id ? Number(id) : null
     const navigate = useNavigate()
+    const confirm = useConfirm()
+
 
     const { data: vacancy, isLoading } = useVacancy(vacancyId)
+    const [selectedAppId, setSelectedAppId] = useState<number | null>(null)
+
+    // --- Arizalar: sahifalab paginatsiya ---
+    const [search, setSearch] = useState("")
+    const [appStatus, setAppStatus] = useState<ApplicationStatus | undefined>()
+    const [page, setPage] = useState(1)
+    const debouncedSearch = useDebouncedValue(search, 400)
+    const [editOpen, setEditOpen] = useState(false)
+    const [createOpen, setCreateOpen] = useState(false)
+    const [employeeCreateApp, setEmployeeCreateApp] = useState<SelectedApplication | null>(null)
+
+    const hasActiveFilters = Boolean(search || appStatus)
+    const clearFilters = () => {
+        setSearch("")
+        setAppStatus(undefined)
+        setPage(1)
+    }
 
     const {
         data: applicationsData,
         isLoading: applicationsLoading,
-        isFetchingNextPage: isFetchingNextApplications,
-        hasNextPage: hasNextApplicationsPage,
-        fetchNextPage: fetchNextApplicationsPage,
-    } = useInfiniteApplications({
+        isFetching: applicationsFetching,
+    } = useApplications({
         vacancy_id: vacancyId ?? undefined,
+        search: debouncedSearch || undefined,
+        status: appStatus,
+        page,
     } as never)
 
-    const applications = (applicationsData?.pages.flatMap((page) => page.data) ?? []) as Application[]
-    const applicationsTotal = applicationsData?.pages[0]?.pagination.total ?? applications.length
-
-    const [search, setSearch] = useState("")
-    const filteredApplications = useMemo(() => {
-        if (!search.trim()) return applications
-        const q = search.trim().toLowerCase()
-        return applications.filter((app) => {
-            const name = (app.driver?.fio ?? app.full_name ?? "").toLowerCase()
-            const phone = (app.driver?.phone_number ?? "").toLowerCase()
-            return name.includes(q) || phone.includes(q)
-        })
-    }, [applications, search])
-
-    const applicationsSentinelRef = useRef<HTMLDivElement | null>(null)
-    useEffect(() => {
-        const sentinel = applicationsSentinelRef.current
-        if (!sentinel) return
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting && hasNextApplicationsPage && !isFetchingNextApplications) {
-                    fetchNextApplicationsPage()
-                }
-            },
-            { rootMargin: "200px" }
-        )
-        observer.observe(sentinel)
-        return () => observer.disconnect()
-    }, [hasNextApplicationsPage, isFetchingNextApplications, fetchNextApplicationsPage])
+    const applications = (applicationsData?.data ?? []) as Application[]
+    const pagination = applicationsData?.pagination
+    const applicationsTotal = pagination?.total ?? applications.length
 
     const changeApplicationStatus = useChangeApplicationStatus()
 
-    const [selectedApp, setSelectedApp] = useState<Application | null>(null)
-
-    const handleInvite = (applicationId: number) => {
+    const handleInvite = async (applicationId: number) => {
+        const ok = await confirm({
+            title: "Nomzodni taklif qilishni tasdiqlaysizmi?",
+            confirmText: "Taklif qilish",
+        })
+        if (!ok) return
         changeApplicationStatus.mutate({ id: applicationId, status: "invited" })
     }
 
-    const handleReject = (applicationId: number) => {
-        const reason = window.prompt("Rejection reason (optional):")
-        if (reason === null) return
+    const handleReject = async (applicationId: number) => {
+        const { confirmed, value } = await confirm({
+            title: "Nomzodni rad etishni tasdiqlaysizmi?",
+            description: "Rad etish sababini kiritishingiz mumkin (ixtiyoriy).",
+            confirmText: "Rad etish",
+            variant: "destructive",
+            input: {
+                label: "Rad etish sababi",
+                placeholder: "Masalan: tajriba yetarli emas...",
+                multiline: true,
+                required: false, // majburiy qilish uchun true qiling
+            },
+        })
+
+        if (!confirmed) return
+
         changeApplicationStatus.mutate({
             id: applicationId,
             status: "rejected",
-            rejection_reason: reason || undefined,
+            rejection_reason: value || undefined,
         })
     }
 
@@ -254,20 +299,53 @@ export default function VacancyDetailPage() {
         ? nextStatusOptions[vacancy.status as VacancyStatus] ?? []
         : []
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (!vacancy) return
-        if (!window.confirm(`"${vacancy.title}" will be permanently deleted. Continue?`)) {
-            return
-        }
+        const ok = await confirm({
+            title: "Vakansiyani o'chirishni tasdiqlaysizmi?",
+            description: `"${vacancy.title}" vakansiyasi butunlay o'chiriladi. Bu amalni orqaga qaytarib bo'lmaydi.`,
+            confirmText: "O'chirish",
+            variant: "destructive",
+        })
+        if (!ok) return
+
         deleteMutation.mutate(vacancy.id, {
             onSuccess: () => navigate("/vacancies"),
         })
     }
 
-    const handleStatusChange = (newStatus: VacancyStatus) => {
+    const handleStatusChange = async (newStatus: VacancyStatus) => {
         if (!vacancy) return
+        const ok = await confirm({
+            title: "Statusni o'zgartirishni tasdiqlaysizmi?",
+            description: (
+                <>
+                    "{vacancy.title}" vakansiyasi statusi{" "}
+                    <span className="font-medium text-foreground">{statusMeta[newStatus].label}</span>
+                    {" "}ga o'zgartiriladi.
+                </>
+            ),
+        })
+        if (!ok) return
+
         updateStatusMutation.mutate({ id: vacancy.id, status: newStatus })
     }
+
+    function getPageRange(current: number, last: number): (number | "ellipsis")[] {
+        const delta = 1
+        const range: (number | "ellipsis")[] = []
+        const start = Math.max(2, current - delta)
+        const end = Math.min(last - 1, current + delta)
+
+        range.push(1)
+        if (start > 2) range.push("ellipsis")
+        for (let i = start; i <= end; i++) range.push(i)
+        if (end < last - 1) range.push("ellipsis")
+        if (last > 1) range.push(last)
+
+        return range
+    }
+
 
     if (isLoading) {
         return (
@@ -320,7 +398,7 @@ export default function VacancyDetailPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => navigate(`/vacancies/${vacancy.id}/edit`)}>
+                    <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
                         <Pencil className="size-4" />
                         Edit vacancy
                     </Button>
@@ -373,7 +451,7 @@ export default function VacancyDetailPage() {
                         <div>
                             <p className="font-semibold leading-tight text-foreground">{vacancy.title}</p>
                             <p className="text-xs text-muted-foreground">
-                                {employmentTypeLabels[vacancy.employment_type] ?? vacancy.employment_type}
+                                {employmentTypeLabels[vacancy.employment_type as EmploymentType] ?? vacancy.employment_type}
                             </p>
                         </div>
                     </div>
@@ -521,7 +599,7 @@ export default function VacancyDetailPage() {
                             />
                             <InfoRow
                                 label="Employment type"
-                                value={employmentTypeLabels[vacancy.employment_type] ?? vacancy.employment_type}
+                                value={employmentTypeLabels[vacancy.employment_type as EmploymentType] ?? vacancy.employment_type}
                             />
                             <InfoRow
                                 label="Salary"
@@ -543,36 +621,63 @@ export default function VacancyDetailPage() {
                             Applications
                             <span className="font-normal text-muted-foreground">{applicationsTotal}</span>
                         </h4>
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm">
-                                <SlidersHorizontal className="size-3.5" />
-                                Filter
-                            </Button>
+
+                        <div className="flex flex-wrap items-center gap-2">
                             <div className="relative">
                                 <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
                                 <Input
                                     value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
+                                    onChange={(e) => {
+                                        setSearch(e.target.value)
+                                        setPage(1)
+                                    }}
                                     placeholder="Search applicants..."
                                     className="h-8 w-56 pl-8 text-sm"
                                 />
                             </div>
+
+                            <Select
+                                value={appStatus ?? "all"}
+                                onValueChange={(v) => {
+                                    setAppStatus(v === "all" ? undefined : (v as ApplicationStatus))
+                                    setPage(1)
+                                }}
+                            >
+                                <SelectTrigger className="h-8 w-40 text-sm">
+                                    <SelectValue placeholder="Status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All statuses</SelectItem>
+                                    <SelectItem value="pending">Pending</SelectItem>
+                                    <SelectItem value="invited">Invited</SelectItem>
+                                    <SelectItem value="rejected">Rejected</SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            {hasActiveFilters && (
+                                <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 text-muted-foreground">
+                                    <X className="mr-1 size-3.5" />
+                                    Clear
+                                </Button>
+                            )}
                         </div>
                     </div>
 
                     {applicationsLoading && (
-                        <div className="flex justify-center py-8">
-                            <Loader2 className="size-5 animate-spin text-muted-foreground" />
+                        <div className="space-y-2">
+                            {Array.from({ length: 4 }).map((_, i) => (
+                                <Skeleton key={i} className="h-12 w-full rounded-lg" />
+                            ))}
                         </div>
                     )}
 
-                    {!applicationsLoading && filteredApplications.length === 0 && (
+                    {!applicationsLoading && applications.length === 0 && (
                         <div className="rounded-lg border border-dashed py-10 text-center text-sm text-muted-foreground">
                             No applications yet
                         </div>
                     )}
 
-                    {!applicationsLoading && filteredApplications.length > 0 && (
+                    {!applicationsLoading && applications.length > 0 && (
                         <div className="overflow-hidden rounded-lg border border-border/60">
                             <Table>
                                 <TableHeader>
@@ -586,28 +691,46 @@ export default function VacancyDetailPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {filteredApplications.map((app) => {
-                                        const appMeta = applicationStatusMeta[app.status] ?? applicationStatusMeta.pending
-                                        const isOnline = !!app.driver?.is_online
+                                    {applications.map((app) => {
+                                        const appMeta = applicationStatusMeta[app?.status] ?? applicationStatusMeta.pending
+
+                                        const canDecide = app.status === "pending"
 
                                         return (
-                                            <TableRow key={app.id} className="cursor-pointer" onClick={() => setSelectedApp(app)}>
+                                            <TableRow key={app.id} className="cursor-pointer" onClick={() => setSelectedAppId(app.id)}>
                                                 <TableCell>
                                                     <div className="flex items-center gap-2.5">
-                                                        <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
-                                                            {(app.driver?.fio ?? app.full_name ?? "?")
-                                                                .split(" ")
-                                                                .map((p) => p[0])
-                                                                .join("")
-                                                                .slice(0, 2)
-                                                                .toUpperCase()}
-                                                        </div>
+                                                        {app.driver?.avatar?.url ? (
+                                                            <img
+                                                                src={app.driver.avatar.url}
+                                                                alt={app.driver.fio ?? "Driver"}
+                                                                className="size-8 shrink-0 rounded-full object-cover"
+                                                            />
+                                                        ) : (
+                                                            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                                                                {(app.driver?.fio ?? "?")
+                                                                    .split(" ")
+                                                                    .map((p) => p[0])
+                                                                    .join("")
+                                                                    .slice(0, 2)
+                                                                    .toUpperCase()}
+                                                            </div>
+                                                        )}
+
                                                         <div>
                                                             <p className="font-medium leading-none text-foreground">
-                                                                {app.driver?.fio ?? app.full_name ?? `Application #${app.id}`}
+                                                                {app.driver?.fio ?? `Application #${app.id}`}
                                                             </p>
+
                                                             <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                                                                <span className={cn("size-1.5 rounded-full", isOnline ? "bg-emerald-500" : "bg-muted-foreground/40")} />
+                                                                <span
+                                                                    className={cn(
+                                                                        "size-1.5 rounded-full",
+                                                                        app.driver?.is_online
+                                                                            ? "bg-emerald-500"
+                                                                            : "bg-muted-foreground/40"
+                                                                    )}
+                                                                />
                                                                 Driver ID: #{app.driver?.id}
                                                             </p>
                                                         </div>
@@ -629,19 +752,19 @@ export default function VacancyDetailPage() {
                                                 </TableCell>
                                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                                     <div className="flex items-center justify-end gap-1.5">
-                                                        <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setSelectedApp(app)}>
-                                                            View
-                                                        </Button>
+
+
+
                                                         <DropdownMenu>
                                                             <DropdownMenuTrigger asChild>
                                                                 <Button size="sm" variant="ghost" className="h-7 px-2 text-xs">
-                                                                    More
+                                                                    <MoreVertical className="size-4" />
                                                                 </Button>
                                                             </DropdownMenuTrigger>
                                                             <DropdownMenuContent align="end" className="w-44">
                                                                 <DropdownMenuItem
                                                                     className="cursor-pointer text-emerald-700 focus:text-emerald-700 dark:text-emerald-400"
-                                                                    disabled={changeApplicationStatus.isPending || app.status !== "pending"}
+                                                                    disabled={changeApplicationStatus.isPending || !canDecide}
                                                                     onClick={() => handleInvite(app.id)}
                                                                 >
                                                                     <UserCheck className="size-4" />
@@ -649,17 +772,37 @@ export default function VacancyDetailPage() {
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuItem
                                                                     className="cursor-pointer text-rose-700 focus:text-rose-700 dark:text-rose-400"
-                                                                    disabled={changeApplicationStatus.isPending || app.status !== "pending"}
+                                                                    disabled={changeApplicationStatus.isPending || !canDecide}
                                                                     onClick={() => handleReject(app.id)}
                                                                 >
                                                                     <UserX className="size-4" />
                                                                     Reject
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuSeparator />
-                                                                <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(`/drivers/${app.driver?.id}`)}>
+                                                                <DropdownMenuItem className="cursor-pointer" onClick={() => setSelectedAppId(app.id)}>
                                                                     <UserRound className="size-4" />
                                                                     View profile
                                                                 </DropdownMenuItem>
+
+                                                                {
+                                                                    app.status === 'invited' ? (
+                                                                        <DropdownMenuItem
+                                                                            className="cursor-pointer"
+                                                                            onClick={() => {
+                                                                                setEmployeeCreateApp({
+                                                                                    id: app.id,
+                                                                                    driverName: app.driver?.fio ?? `Ariza #${app.id}`,
+                                                                                    vacancyTitle: vacancy?.title,
+                                                                                })
+                                                                                setCreateOpen(true)
+                                                                            }}
+                                                                        >
+                                                                            <Plus className="size-4" />
+                                                                            Xodimlarga qo'shish
+                                                                        </DropdownMenuItem>
+                                                                    ) : ''
+                                                                }
+
                                                             </DropdownMenuContent>
                                                         </DropdownMenu>
                                                     </div>
@@ -672,25 +815,107 @@ export default function VacancyDetailPage() {
                         </div>
                     )}
 
-                    <div ref={applicationsSentinelRef} className="flex justify-center py-2">
-                        {isFetchingNextApplications && <Loader2 className="size-4 animate-spin text-muted-foreground" />}
-                    </div>
+                    {/* Paginatsiya — shadcn Pagination */}
+                    {pagination && pagination.last_page > 1 && (
+                        <div className="mt-4 flex flex-col items-center justify-between gap-3 sm:flex-row">
+                            <p className="text-sm text-muted-foreground">
+                                {pagination.from}–{pagination.to} of {pagination.total}
+                            </p>
+
+                            <Pagination className="mx-0 w-auto">
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious
+                                            href="#"
+                                            aria-disabled={pagination.current_page <= 1 || applicationsFetching}
+                                            className={cn(
+                                                (pagination.current_page <= 1 || applicationsFetching) &&
+                                                "pointer-events-none opacity-50"
+                                            )}
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                setPage((p) => Math.max(1, p - 1))
+                                            }}
+                                        />
+                                    </PaginationItem>
+
+                                    {getPageRange(pagination.current_page, pagination.last_page).map((item, idx) =>
+                                        item === "ellipsis" ? (
+                                            <PaginationItem key={`ellipsis-${idx}`}>
+                                                <PaginationEllipsis />
+                                            </PaginationItem>
+                                        ) : (
+                                            <PaginationItem key={item}>
+                                                <PaginationLink
+                                                    href="#"
+                                                    isActive={item === pagination.current_page}
+                                                    onClick={(e) => {
+                                                        e.preventDefault()
+                                                        setPage(item)
+                                                    }}
+                                                >
+                                                    {item}
+                                                </PaginationLink>
+                                            </PaginationItem>
+                                        )
+                                    )}
+
+                                    <PaginationItem>
+                                        <PaginationNext
+                                            href="#"
+                                            aria-disabled={pagination.current_page >= pagination.last_page || applicationsFetching}
+                                            className={cn(
+                                                (pagination.current_page >= pagination.last_page || applicationsFetching) &&
+                                                "pointer-events-none opacity-50"
+                                            )}
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                setPage((p) => p + 1)
+                                            }}
+                                        />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+                        </div>
+                    )}
+
+                    {/* {applicationsFetching && !applicationsLoading && (
+                        <div className="mt-2 flex justify-center">
+                            <Loader2 className="size-4 animate-spin text-muted-foreground" />
+                        </div>
+                    )}
+
+                    {applicationsFetching && !applicationsLoading && (
+                        <div className="mt-2 flex justify-center">
+                            <Loader2 className="size-4 animate-spin text-muted-foreground" />
+                        </div>
+                    )} */}
                 </CardContent>
             </Card>
 
+            <VacancyFormDialog
+                open={editOpen}
+                onOpenChange={setEditOpen}
+                vacancy={vacancy}
+            />
+
+
             {/* Side panel: applicant detail */}
             <ApplicantSidePanel
-                application={selectedApp}
+                applicationId={selectedAppId}
                 onOpenChange={(open) => {
-                    if (!open) setSelectedApp(null)
+                    if (!open) setSelectedAppId(null)
                 }}
-                onInvite={() => selectedApp && handleInvite(selectedApp.id)}
-                onReject={() => selectedApp && handleReject(selectedApp.id)}
-                onChangeStatus={() => {
-                    /* wire up to a status picker/dialog if you have one */
+            />
+
+            <EmployeeCreateDialog
+                open={createOpen}
+                onOpenChange={(open) => {
+                    setCreateOpen(open)
+                    if (!open) setEmployeeCreateApp(null)
                 }}
-                onViewProfile={() => selectedApp && navigate(`/drivers/${selectedApp.driver?.id}`)}
-                isPending={changeApplicationStatus.isPending}
+                defaultMode="from_application"
+                initialApplication={employeeCreateApp}
             />
         </div>
     )
@@ -706,28 +931,24 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 function ApplicantSidePanel({
-    application,
+    applicationId,
     onOpenChange,
-    onInvite,
-    onReject,
-    onChangeStatus,
-    onViewProfile,
-    isPending,
 }: {
-    application: Application | null
+    applicationId: number | null
     onOpenChange: (open: boolean) => void
-    onInvite: () => void
-    onReject: () => void
-    onChangeStatus: () => void
-    onViewProfile: () => void
-    isPending: boolean
 }) {
+    const { data: application, isLoading } = useApplication(applicationId)
+
     const driver = application?.driver
+    const resume = driver?.resume
+    const [copied, setCopied] = useState(false)
+    const [avatarFailed, setAvatarFailed] = useState(false)
+
     const appMeta = application
         ? applicationStatusMeta[application.status] ?? applicationStatusMeta.pending
         : null
+
     const isOnline = !!driver?.is_online
-    const canDecide = application?.status === "pending"
 
     const initials = (driver?.fio ?? "?")
         .split(" ")
@@ -736,81 +957,297 @@ function ApplicantSidePanel({
         .slice(0, 2)
         .toUpperCase()
 
+    const handleCopyPhone = () => {
+        if (!driver?.phone_number) return
+        navigator.clipboard.writeText(driver.phone_number)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 1500)
+    }
+
+    const desiredSalary =
+        resume?.desired_salary_from && resume?.salary_currency
+            ? `${Number(resume.desired_salary_from).toLocaleString()} ${resume.salary_currency}`
+            : null
+
+    const birthDate = resume?.birth_date ? formatDate(resume.birth_date) : null
+
     return (
-        <Sheet open={!!application} onOpenChange={onOpenChange}>
-            <SheetContent side="right" className="w-[320px] gap-0 overflow-y-auto p-0 sm:max-w-[320px]">
-                {application && (
-                    <>
-                        <SheetHeader className="flex-row items-center gap-3 space-y-0 border-b p-4">
-                            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-                                {initials}
+        <Sheet open={applicationId !== null} onOpenChange={onOpenChange}>
+            <SheetContent
+                side="right"
+                className="w-105 gap-0 overflow-y-auto p-0 sm:max-w-105"
+            >
+                {isLoading && (
+                    <div className="space-y-4 p-6">
+                        <div className="flex items-center gap-4">
+                            <Skeleton className="size-16 rounded-2xl" />
+                            <div className="space-y-2">
+                                <Skeleton className="h-4 w-32" />
+                                <Skeleton className="h-3 w-20" />
                             </div>
-                            <div className="min-w-0">
-                                <SheetTitle className="truncate text-left text-base">
-                                    {driver?.fio ?? "Unknown"}
-                                </SheetTitle>
-                                <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                                    <span className={cn("size-1.5 rounded-full", isOnline ? "bg-emerald-500" : "bg-muted-foreground/40")} />
-                                    {isOnline ? "Online" : "Offline"}
-                                </p>
+                        </div>
+                        <Skeleton className="h-24 w-full rounded-2xl" />
+                        <Skeleton className="h-24 w-full rounded-2xl" />
+                        <Skeleton className="h-32 w-full rounded-2xl" />
+                    </div>
+                )}
+
+                {!isLoading && application && (
+                    <div className="flex min-h-full flex-col">
+                        {/* Header */}
+                        <SheetHeader
+                            className={cn(
+                                "relative  border-b bg-linear-to-b px-6 py-4",
+                                isOnline
+                                    ? "from-emerald-500/[0.07] via-background to-background"
+                                    : "from-muted/40 via-background to-background"
+                            )}
+                        >
+                            <div className="flex items-start justify-between gap-4">
+                                <div className="flex min-w-0 items-center gap-4">
+                                    <div className="relative shrink-0">
+                                        {driver?.avatar?.url && !avatarFailed ? (
+                                            <img
+                                                src={driver.avatar.url}
+                                                alt={driver.fio}
+                                                onError={() => setAvatarFailed(true)}
+                                                className={cn(
+                                                    "size-16 rounded-2xl object-cover ring-2 ring-offset-2 ring-offset-background",
+                                                    isOnline ? "ring-emerald-500/30" : "ring-primary/10"
+                                                )}
+                                            />
+                                        ) : (
+                                            <div
+                                                className={cn(
+                                                    "flex size-16 items-center justify-center rounded-2xl text-lg font-semibold ring-2 ring-offset-2 ring-offset-background transition-colors",
+                                                    isOnline
+                                                        ? "bg-emerald-500/10 text-emerald-600 ring-emerald-500/30 dark:text-emerald-400"
+                                                        : "bg-primary/10 text-primary ring-primary/10"
+                                                )}
+                                            >
+                                                {initials}
+                                            </div>
+                                        )}
+
+                                        <span className="absolute -bottom-1 -right-1 flex size-4 items-center justify-center">
+                                            {isOnline && (
+                                                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500/60" />
+                                            )}
+                                            <span
+                                                className={cn(
+                                                    "relative size-3.5 rounded-full border-2 border-background",
+                                                    isOnline ? "bg-emerald-500" : "bg-muted-foreground/40"
+                                                )}
+                                            />
+                                        </span>
+                                    </div>
+
+                                    <div className="min-w-0">
+                                        <SheetTitle className="truncate text-lg font-semibold tracking-tight">
+                                            {driver?.fio ?? "Unknown"}
+                                        </SheetTitle>
+
+                                        <p className="mt-0.5 text-sm text-muted-foreground">
+                                            Driver #{driver?.id ?? "—"}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </SheetHeader>
 
-                        <div className="space-y-4 p-4">
-                            <DetailRow icon={UserRound} label="Driver ID" value={`#${driver?.id}`} />
-                            <DetailRow icon={Phone} label="Phone" value={driver?.phone_number ?? "—"} />
-                            <DetailRow icon={Briefcase} label="Driver number" value={driver?.number ?? "—"} />
-                            <DetailRow
-                                icon={Clock}
-                                label="Application status"
-                                value={
-                                    appMeta && (
-                                        <Badge variant="outline" className={cn("border-0 px-2 py-0.5 text-xs font-medium", appMeta.badge)}>
-                                            {appMeta.label}
-                                        </Badge>
-                                    )
-                                }
-                            />
-                            <DetailRow icon={Clock} label="Last login" value={formatDateTime(driver?.last_login_at) ?? "—"} />
-                            {application.message && (
-                                <DetailRow icon={MessageSquare} label="Applicant message" value={application.message} />
+                        {/* Content */}
+                        <div className="flex-1 space-y-7 p-5">
+                            {/* Driver information */}
+                            <section>
+                                <SectionTitle>Driver information</SectionTitle>
+
+                                <div className="mt-3 grid grid-cols-2 gap-3">
+                                    <InfoCard icon={Briefcase} label="Driver number" value={driver?.number ?? "—"} />
+                                    <InfoCard
+                                        icon={Phone}
+                                        label="Phone number"
+                                        value={driver?.phone_number ?? "—"}
+                                        action={
+                                            driver?.phone_number && (
+                                                <button
+                                                    onClick={handleCopyPhone}
+                                                    className="text-muted-foreground/60 transition-colors hover:text-foreground"
+                                                    aria-label="Copy phone number"
+                                                >
+                                                    {copied ? (
+                                                        <Check className="size-3.5 text-emerald-500" />
+                                                    ) : (
+                                                        <Copy className="size-3.5" />
+                                                    )}
+                                                </button>
+                                            )
+                                        }
+                                    />
+                                </div>
+                            </section>
+
+                            {/* Resume */}
+                            {resume && (
+                                <section>
+                                    <SectionTitle>Resume</SectionTitle>
+
+                                    <div className="mt-3 grid grid-cols-2 gap-3">
+                                        <InfoCard icon={Cake} label="Birth date" value={birthDate ?? "—"} />
+                                        <InfoCard
+                                            icon={Award}
+                                            label="Experience"
+                                            value={
+                                                resume.experience_years !== null
+                                                    ? `${resume.experience_years} years`
+                                                    : "—"
+                                            }
+                                        />
+                                        <InfoCard icon={Banknote} label="Desired salary" value={desiredSalary ?? "—"} />
+                                        <InfoCard icon={MapPin} label="Address" value={resume.address ?? "—"} />
+                                    </div>
+
+                                    {resume.description && (
+                                        <div className="mt-3 rounded-2xl border bg-muted/30 p-4">
+                                            <p className="text-sm leading-6 text-foreground/80">
+                                                {resume.description}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {resume.transport_types?.length > 0 && (
+                                        <div className="mt-3">
+                                            <SectionTitle><Truck size={20} /> Transport types</SectionTitle>
+                                            <div className="flex flex-wrap gap-1.5 mt-2">
+                                                {resume.transport_types.map((t) => (
+                                                    <Badge key={t.id} className="rounded-full px-2.5 py-0.5 text-xs font-normal">
+                                                        {t.name}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {resume.work_formats?.length > 0 && (
+                                        <div className="mt-3">
+                                            <SectionTitle><Briefcase size={20} />  Work format</SectionTitle>
+
+                                            <div className="flex flex-wrap gap-1.5 mt-2">
+                                                {resume.work_formats.map((w) => (
+                                                    <Badge key={w.id} className="rounded-full px-2.5 py-0.5 text-xs font-normal capitalize">
+                                                        {w.name_key.replace("_", " ")}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </section>
                             )}
-                            <DetailRow icon={CalendarClock} label="Applied at" value={formatDateTime(application.applied_at) ?? "—"} />
-                            <DetailRow icon={CalendarClock} label="Last updated" value={formatDateTime(application.updated_at) ?? "—"} />
+
+                            {/* Application */}
+                            <section>
+                                <SectionTitle>Application</SectionTitle>
+
+                                <div className="mt-3 overflow-hidden rounded-2xl border bg-card">
+                                    <DetailRow
+                                        icon={Clock}
+                                        label="Status"
+                                        value={
+                                            appMeta && (
+                                                <Badge variant="outline" className={cn("border-0 px-2 py-0.5 text-xs font-medium", appMeta.badge)}>
+                                                    {appMeta.label}
+                                                </Badge>
+                                            )
+                                        }
+                                    />
+                                    <DetailRow icon={CalendarClock} label="Applied at" value={formatDateTime(application.applied_at) ?? "—"} />
+                                    <DetailRow icon={CalendarClock} label="Last updated" value={formatDateTime(application.updated_at) ?? "—"} />
+                                    {application.rejection_reason && (
+                                        <DetailRow icon={UserX} label="Rejection reason" value={application.rejection_reason} />
+                                    )}
+                                </div>
+                            </section>
+
+                            {/* Message */}
+                            {application.message && (
+                                <section>
+                                    <SectionTitle>Applicant message</SectionTitle>
+                                    <div className="mt-3 rounded-2xl border bg-muted/30 p-4">
+                                        <div className="flex gap-3">
+                                            <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-background">
+                                                <MessageSquare className="size-3.5 text-muted-foreground" />
+                                            </div>
+                                            <p className="text-sm leading-6 text-foreground/80">
+                                                {application.message}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </section>
+                            )}
                         </div>
 
-                        <div className="space-y-2 border-t p-4">
-                            <Button className="w-full justify-start" onClick={onViewProfile}>
-                                <UserRound className="size-4" />
-                                View profile
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="w-full justify-start"
-                                disabled={!canDecide || isPending}
-                                onClick={onInvite}
-                            >
-                                <UserCheck className="size-4" />
-                                Invite
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="w-full justify-start border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                                disabled={!canDecide || isPending}
-                                onClick={onReject}
-                            >
-                                <X className="size-4" />
-                                Reject
-                            </Button>
-                            <Button variant="outline" className="w-full justify-start" onClick={onChangeStatus}>
-                                <RefreshCw className="size-4" />
-                                Change status
-                            </Button>
-                        </div>
-                    </>
+                        {/* Footer */}
+                        {/* <div className="sticky bottom-0 border-t bg-background/80 p-4 backdrop-blur-sm">
+                            <p className="text-center text-xs text-muted-foreground">
+                                Application details
+                                {application.updated_at && (
+                                    <span className="text-muted-foreground/60">
+                                        {" · "}updated {formatDateTime(application.updated_at)}
+                                    </span>
+                                )}
+                            </p>
+                        </div> */}
+                    </div>
                 )}
             </SheetContent>
         </Sheet>
+    )
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+    return (
+        <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground/70">
+            {children}
+        </h3>
+    )
+}
+
+function InfoCard({
+    icon: Icon,
+    label,
+    value,
+    action,
+}: {
+    icon: React.ComponentType<{ className?: string }>
+    label: string
+    value: React.ReactNode
+    action?: React.ReactNode
+}) {
+    return (
+        <div className="group rounded-2xl border bg-card p-4 transition-colors hover:border-primary/20 hover:bg-muted/30">
+            <div className="flex items-center justify-between">
+                <div className="flex size-9 items-center justify-center rounded-lg bg-primary/5 transition-colors group-hover:bg-primary/10">
+                    <Icon className="size-4 text-primary/70" />
+                </div>
+                {action}
+            </div>
+
+            <p className="mt-3 text-xs font-medium text-muted-foreground">
+                {label}
+            </p>
+
+
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <div className="mt-1 truncate text-sm font-semibold">
+                        {value}
+                    </div>
+                </TooltipTrigger>
+
+                <TooltipContent>
+                    {value}
+                </TooltipContent>
+            </Tooltip>
+        </div>
     )
 }
 
@@ -824,49 +1261,21 @@ function DetailRow({
     value: React.ReactNode
 }) {
     return (
-        <div className="flex items-start gap-3 text-sm">
-            <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-            <div>
-                <p className="text-xs text-muted-foreground">{label}</p>
-                <div className="font-medium text-foreground">{value}</div>
+        <div className="flex items-center gap-3 border-b px-4 py-3.5 transition-colors last:border-b-0 hover:bg-muted/20">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/5">
+                <Icon className="size-4 text-primary/70" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+                <p className="text-xs text-muted-foreground">
+                    {label}
+                </p>
+
+                <div className="mt-0.5 truncate text-sm font-medium text-foreground">
+                    {value}
+                </div>
             </div>
         </div>
     )
 }
 
-/*
-================================================================================
-NOTES
-================================================================================
-1) Sheet komponenti standart shadcn API'siga mos yozildi:
-   <Sheet open={...} onOpenChange={...}>
-     <SheetContent side="right">
-       <SheetHeader><SheetTitle>...</SheetTitle></SheetHeader>
-       ...
-     </SheetContent>
-   </Sheet>
-   Agar sizning sheet.tsx faylingiz boshqa proplar talab qilsa
-   (masalan className o'rniga boshqa nom, yoki SheetContent standart X
-   close tugmasini ko'rsatmasa), fayl kontentini yuboring — moslashtiraman.
-
-2) @/components/ui/table primitivini talab qiladi
-   (Table, TableHeader, TableBody, TableRow, TableHead, TableCell).
-   Agar yo'q bo'lsa: npx shadcn@latest add table
-
-3) ApplicationListParams'da "vacancy_id" maydoni borligini faraz qildim —
-   agar boshqacha nomlangan bo'lsa (masalan vacancyId), useInfiniteApplications
-   chaqiruvidagi kalitni moslang.
-
-4) Application status enum'ida "pending" | "invited" | "rejected"dan boshqa
-   qiymatlar bo'lsa, applicationStatusMeta ob'ektiga qo'shing.
-
-5) "carrier / company" bo'limi olib tashlandi — sizning vacancy JSON'ingizda
-   bunday maydon yo'q edi. Agar API'da bo'lsa, qaytarib qo'shish mumkin.
-
-6) "Change status" tugmasi hozircha no-op — status picker/dialogingiz
-   bo'lsa ulab qo'ying.
-
-7) Pagination footer (screenshotdagi "10 per page" va raqamlangan pager)
-   kiritilmadi, chunki hook'ingiz infinite scroll ishlatadi.
-================================================================================
-*/

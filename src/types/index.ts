@@ -4,6 +4,47 @@ export type VacancyStatus = "draft" | "published" | "closed"
 export type EmploymentType = "full_time" | "part_time" | "contract" | "temporary"
 export type SalaryCurrency = "USD" | "EUR" | "UZS"
 
+
+
+interface JobLocation {
+  id: number;
+  name: string;
+  address_line1: string;
+  city: string;
+  region: string;
+  phone: string;
+  is_primary: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface CarrierLogo {
+  id: number;
+  url: string;
+}
+
+interface Carrier {
+  id: number;
+  company_name: string;
+  years_in_business: string;
+  logo: CarrierLogo;
+  locations: JobLocation[];
+}
+
+export interface VacancyID extends Vacancy {
+  carrier: Carrier;
+}
+
+export interface JobResponse {
+  success: boolean;
+  message: string;
+  data: VacancyID;
+}
+
+
+
+
+
 export interface Vacancy {
   id: number
   title: string
@@ -205,7 +246,7 @@ export interface Application {
   created_at: string
   updated_at: string
   vacancy: ApplicationVacancySummary
-  driver: ApplicationDriverSummary
+  driver: ApplicationDriver
 }
 
 export interface ApplicationListParams {
@@ -218,3 +259,132 @@ export interface ChangeApplicationStatusPayload {
   status: Extract<ApplicationStatus, "invited" | "rejected">
   rejection_reason?: string
 }
+
+
+export type ApplicationDriver = {
+  id: number
+  phone_number: string
+  fio: string
+  number: string
+  is_online: number | boolean
+  last_login_at: string | null
+  created_at: string
+  avatar?: {
+    url: string
+    mime_type?: string
+    size?: number
+  } | null
+  resume?: {
+    birth_date: string | null
+    experience_years: number | null
+    desired_salary_from: string | null
+    salary_currency: string | null
+    description: string | null
+    address: string | null
+    transport_types: { id: number; name: string; slug: string }[]
+    work_formats: { id: number; name_key: string }[]
+  } | null
+}
+
+
+
+
+
+export type EmployeeStatus = "active" | "inactive" | "terminated"
+export type EmployeeSource = "manual" | "vacancy"
+export type PayPeriod = "monthly" | "weekly" | "daily" | "hourly"
+
+export interface EmployeeDriver {
+  id: number
+  phone_number: string
+  fio: string
+  number: string
+  avatar?: { url: string; mime_type?: string; size?: number } | null
+  is_online: number | boolean
+  last_login_at: string | null
+  created_at: string
+  resume?: unknown | null
+}
+
+export interface Employee {
+  id: number
+  carrier_id: number
+  driver_id: number
+  vacancy_id: number | null
+  vacancy_application_id: number | null
+  employee_number: string
+  status: EmployeeStatus
+  status_label: string | null
+  source: EmployeeSource
+  position: string
+  employment_type: EmploymentType
+  salary: string
+  salary_currency: SalaryCurrency
+  pay_period: PayPeriod
+  started_at: string
+  ended_at: string | null
+  termination_type: string | null
+  termination_reason: string | null
+  notes: string | null
+  meta: Record<string, unknown> | null
+  driver?: EmployeeDriver
+  created_at: string
+  updated_at: string
+}
+
+export interface EmployeeListParams {
+  search?: string
+  driver_id?: number
+  vacancy_id?: number
+  source?: EmployeeSource
+  status?: EmployeeStatus
+  created_from?: string
+  created_to?: string
+  sort_by?: "created_at" | "started_at" | "salary"
+  sort_direction?: "asc" | "desc"
+  per_page?: number
+  page?: number
+}
+
+export interface Pagination {
+  current_page: number
+  last_page: number
+  per_page: number
+  total: number
+  from: number
+  to: number
+  links: { first: string; last: string; prev: string | null; next: string | null }
+}
+
+export interface EmployeeListResponse {
+  success: boolean
+  message: string
+  data: Employee[]
+  pagination: Pagination
+}
+
+export interface EmployeePayload {
+  employee_number: string
+  position: string
+  employment_type: EmploymentType
+  salary: number
+  salary_currency: SalaryCurrency
+  pay_period: PayPeriod
+  started_at: string
+  ended_at?: string | null
+  termination_type?: string | null
+  termination_reason?: string | null
+  notes?: string | null
+  meta?: Record<string, unknown> | null
+  vacancy_application_id?: number
+  source?: EmployeeSource
+}
+
+export interface EmployeeWithDriverPayload extends EmployeePayload {
+  phone_number: string
+  number: string
+  fio: string
+  telegram_chat_id?: string
+}
+
+

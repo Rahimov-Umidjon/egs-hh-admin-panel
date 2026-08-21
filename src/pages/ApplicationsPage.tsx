@@ -296,7 +296,7 @@ export default function ApplicationsPage() {
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end" className="w-44">
                                                         <DropdownMenuItem
-                                                            onClick={() => navigate(`/carrier/applications/${application.id}`)}
+                                                            onClick={() => navigate(`/vacancies/${application?.vacancy_id}`)}
                                                             className="cursor-pointer"
                                                         >
                                                             <Eye className="mr-2 size-4" />
