@@ -92,5 +92,650 @@
   },
   "carrier": {
     "not_approved": "Пользователь находится на этапе подтверждения."
+  },
+  "profile": {
+    "title": "Профиль",
+    "subtitle": "Управление данными компании и филиалами",
+    "status": {
+      "pending": "На рассмотрении",
+      "approved": "Подтверждён",
+      "rejected": "Отклонён"
+    },
+    "changePassword": "Сменить пароль",
+    "edit": "Редактировать",
+    "email": "Email",
+    "username": "Имя пользователя",
+    "stateIncorporated": "Регион регистрации",
+    "businessStartedAt": "Дата начала деятельности",
+    "yearsInBusiness": "Стаж деятельности",
+    "tin": "ИНН",
+    "tinNotProvided": "Не указано",
+    "locations": {
+      "title": "Филиалы",
+      "add": "Добавить филиал",
+      "primary": "Главный офис",
+      "contactPrimary": "(основной)",
+      "editAria": "Редактировать филиал",
+      "deleteAria": "Удалить филиал",
+      "empty": {
+        "title": "Филиалы пока не добавлены",
+        "description": "Добавьте первый филиал вашей компании."
+      }
+    },
+    "error": {
+      "title": "Не удалось загрузить данные профиля",
+      "description": "Проверьте подключение к интернету и повторите попытку.",
+      "retry": "Повторить"
+    },
+    "logo": {
+      "changeAria": "Изменить логотип",
+      "success": "Логотип обновлён",
+      "invalidType": {
+        "title": "Неверный тип файла",
+        "description": "Загружайте изображение только в формате PNG, JPEG, WEBP или SVG."
+      },
+      "tooLarge": {
+        "title": "Файл слишком большой",
+        "description": "Размер логотипа не должен превышать {{size}}МБ."
+      },
+      "error": {
+        "title": "Не удалось загрузить логотип",
+        "description": "Повторите попытку немного позже."
+      }
+    }
+  },
+  "applications": {
+    "title": "Заявки",
+    "subtitle": "Просмотр заявок на вакансии",
+    "searchPlaceholder": "Поиск по водителю или вакансии...",
+    "statusPlaceholder": "Статус",
+    "statusAll": "Все статусы",
+    "status": {
+      "pending": "На рассмотрении",
+      "hired": "Наемный",
+      "invited": "Приглашён",
+      "rejected": "Отклонено"
+    },
+    "employmentType": {
+      "full_time": "Полная занятость",
+      "part_time": "Частичная занятость"
+    },
+    "clearFilters": "Очистить",
+    "totalCountPrefix": "Всего",
+    "totalCountSuffix": "заявок",
+    "emptyTitle": "Заявки не найдены",
+    "emptyDescription": "Попробуйте изменить поиск или фильтр",
+    "columns": {
+      "candidate": "Кандидат",
+      "vacancy": "Вакансия",
+      "employmentType": "Тип занятости",
+      "salary": "Зарплата",
+      "date": "Дата",
+      "status": "Статус",
+      "actions": "Действия"
+    },
+    "noName": "Имя не указано",
+    "actions": {
+      "view": "Просмотреть",
+      "invite": "Пригласить",
+      "reject": "Отклонить"
+    },
+    "pagination": {
+      "prev": "Назад",
+      "next": "Вперёд",
+      "range": "{{from}}–{{to}} из {{total}}"
+    },
+    "dialog": {
+      "confirmInviteTitle": "Подтвердить приглашение кандидата?",
+      "confirmRejectTitle": "Подтвердить отклонение заявки?",
+      "description": "Заявка «{{name}}» на вакансию «{{vacancy}}» будет переведена в статус «{{status}}».",
+      "rejectionReasonPlaceholder": "Причина отказа (необязательно)",
+      "cancel": "Отмена",
+      "confirm": "Подтвердить"
+    }
+  },
+  "vacancies": {
+    "title": "Вакансии",
+    "subtitle": "Управление открытыми вакансиями",
+    "create": "Новая вакансия",
+    "searchPlaceholder": "Поиск по названию...",
+    "currencyPlaceholder": "Валюта",
+    "currencyAll": "Все валюты",
+    "statusPlaceholder": "Статус",
+    "statusAll": "Все статусы",
+    "status": {
+      "draft": "Черновик",
+      "published": "Опубликовано",
+      "closed": "Закрыто"
+    },
+    "employmentType": {
+      "full_time": "Полная занятость",
+      "part_time": "Частичная занятость",
+      "contract": "По договору",
+      "internship": "Стажировка",
+      "remote": "Удалённо",
+      "temporary": "Временная"
+    },
+    "salaryFromPlaceholder": "Зарплата от",
+    "salaryToPlaceholder": "Зарплата до",
+    "clearFilters": "Очистить",
+    "totalCountPrefix": "Всего",
+    "totalCountSuffix": "вакансий",
+    "emptyTitle": "Вакансии не найдены",
+    "emptyDescription": "Попробуйте изменить поиск или фильтр",
+    "actions": {
+      "view": "Просмотреть",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "changeStatusTo": "Перевести в статус «{{status}}»"
+    },
+    "applicationCount": "{{count}} заявок",
+    "publishedLabel": "Опубликовано: {{date}}",
+    "expiresLabel": "Действует до {{date}}",
+    "loadedAll": "Все вакансии загружены",
+    "deleteDialog": {
+      "title": "Подтвердить удаление вакансии?",
+      "description": "Вакансия «{{title}}» будет удалена безвозвратно. Это действие нельзя отменить.",
+      "cancel": "Отмена",
+      "confirm": "Удалить"
+    },
+    "statusDialog": {
+      "title": "Подтвердить изменение статуса?",
+      "description": "Статус вакансии «{{title}}» будет изменён на «{{status}}».",
+      "cancel": "Отмена",
+      "confirm": "Подтвердить"
+    },
+    "form": {
+      "editTitle": "Редактировать вакансию",
+      "createTitle": "Новая вакансия",
+      "editDescription": "Обновите информацию о вакансии",
+      "createDescription": "Введите информацию о новой вакансии",
+      "titleLabel": "Название",
+      "titlePlaceholder": "Например: USA Truck Driver",
+      "descriptionLabel": "Описание",
+      "descriptionPlaceholder": "Подробная информация о вакансии",
+      "employmentTypeLabel": "Тип занятости",
+      "selectPlaceholder": "Выберите",
+      "statusLabel": "Статус",
+      "salaryFromLabel": "Зарплата (от)",
+      "salaryToLabel": "Зарплата (до)",
+      "currencyLabel": "Валюта",
+      "expiresAtLabel": "Срок действия",
+      "requirementsLabel": "Требования",
+      "requirementPlaceholder": "Например: права категории CE",
+      "addRequirement": "Добавить требование",
+      "responsibilitiesLabel": "Обязанности",
+      "responsibilityPlaceholder": "Например: безопасная перевозка груза",
+      "addResponsibility": "Добавить обязанность",
+      "cancel": "Отмена",
+      "save": "Сохранить",
+      "createSubmit": "Создать",
+      "validation": {
+        "titleMin": "Введите минимум 3 символа",
+        "descriptionMin": "Введите минимум 10 символов",
+        "negativeSalary": "Не может быть отрицательным",
+        "requirementRequired": "Не может быть пустым",
+        "requirementsMin": "Добавьте хотя бы 1 требование",
+        "responsibilityRequired": "Не может быть пустым",
+        "responsibilitiesMin": "Добавьте хотя бы 1 обязанность",
+        "salaryToMin": "Максимальная зарплата не может быть меньше минимальной"
+      }
+    },
+    "details": {
+      "descriptionTitle": "Описание",
+      "requirementsTitle": "Требования",
+      "responsibilitiesTitle": "Обязанности",
+      "companyTitle": "Компания",
+      "yearsInBusiness": "Стаж работы: {{years}}",
+      "primaryBadge": "Основной",
+      "expiresUntil": "Действует до {{date}}"
+    },
+    "confirmInvite": {
+      "title": "Подтвердить приглашение кандидата?",
+      "confirmButton": "Пригласить"
+    },
+    "confirmReject": {
+      "title": "Подтвердить отклонение кандидата?",
+      "description": "Вы можете указать причину отказа (необязательно).",
+      "confirmButton": "Отклонить",
+      "reasonLabel": "Причина отказа",
+      "reasonPlaceholder": "Например: недостаточно опыта..."
+    }
+  },
+  "vacancyDetail": {
+    "vacancyIdLabel": "ID вакансии: #{{id}}",
+    "more": "Ещё",
+    "noStatusChanges": "Изменение статуса недоступно",
+    "deleteVacancy": "Удалить вакансию",
+    "notFoundTitle": "Вакансия не найдена",
+    "backToVacancies": "Вернуться к вакансиям",
+    "summary": {
+      "salary": "Зарплата",
+      "published": "Опубликовано",
+      "expires": "Срок действия",
+      "created": "Создано"
+    },
+    "stats": {
+      "views": "Просмотры",
+      "applications": "Заявки",
+      "daysRemaining": "Осталось дней",
+      "until": "до {{date}}"
+    },
+    "content": {
+      "jobDescription": "Описание вакансии",
+      "requirements": "Требования",
+      "responsibilities": "Обязанности"
+    },
+    "info": {
+      "title": "Информация о вакансии",
+      "vacancyId": "ID вакансии",
+      "status": "Статус",
+      "employmentType": "Тип занятости",
+      "salary": "Зарплата",
+      "publishedAt": "Дата публикации",
+      "expiresAt": "Срок действия",
+      "createdAt": "Дата создания"
+    },
+    "applicationsSection": {
+      "title": "Заявки",
+      "searchPlaceholder": "Поиск кандидатов...",
+      "clear": "Очистить",
+      "empty": "Заявок пока нет",
+      "columns": {
+        "applicant": "Кандидат",
+        "phone": "Телефон",
+        "status": "Статус",
+        "appliedAt": "Дата заявки",
+        "lastUpdated": "Обновлено",
+        "actions": "Действия"
+      },
+      "driverIdLabel": "ID водителя: #{{id}}",
+      "actions": {
+        "viewProfile": "Просмотреть профиль",
+        "addToEmployees": "Добавить в сотрудники"
+      },
+      "pagination": {
+        "range": "{{from}}–{{to}} из {{total}}"
+      }
+    },
+    "panel": {
+      "unknown": "Неизвестно",
+      "driverInformation": "Информация о водителе",
+      "driverNumber": "Номер водителя",
+      "phoneNumber": "Номер телефона",
+      "copyPhoneAria": "Скопировать номер телефона",
+      "resume": "Резюме",
+      "birthDate": "Дата рождения",
+      "experience": "Опыт",
+      "experienceYears": "{{count}} лет",
+      "desiredSalary": "Ожидаемая зарплата",
+      "address": "Адрес",
+      "transportTypes": "Типы транспорта",
+      "workFormat": "Формат работы",
+      "application": "Заявка",
+      "appliedAt": "Дата заявки",
+      "lastUpdated": "Обновлено",
+      "rejectionReason": "Причина отказа",
+      "applicantMessage": "Сообщение кандидата",
+      "driverIdShort": "Водитель #{{id}}"
+    }
+  },
+  "employeeCreate": {
+    "title": "Новый сотрудник",
+    "description": "Добавьте нового водителя или создайте сотрудника из существующей заявки на вакансию",
+    "driverSection": {
+      "title": "Данные водителя",
+      "fioLabel": "ФИО",
+      "fioPlaceholder": "Например: Мухаммад Алиев",
+      "phoneLabel": "Номер телефона",
+      "phonePlaceholder": "+998901234567",
+      "numberLabel": "Номер водителя",
+      "numberPlaceholder": "DRV-001",
+      "telegramLabel": "Telegram chat ID (необязательно)",
+      "telegramPlaceholder": "123456789"
+    },
+    "applicationSection": {
+      "title": "Заявка на вакансию",
+      "searchPlaceholder": "Поиск по имени водителя...",
+      "loading": "Загрузка...",
+      "noResults": "Ничего не найдено",
+      "typeToSearch": "Начните вводить для поиска",
+      "invitedBadge": "Приглашён",
+      "unnamedApplication": "Заявка #{{id}}",
+      "unnamedVacancy": "Вакансия #{{id}}",
+      "clearAria": "Отменить"
+    },
+    "workSection": {
+      "title": "Данные о работе",
+      "employeeNumberLabel": "Номер сотрудника",
+      "employeeNumberPlaceholder": "EMP-0001",
+      "positionLabel": "Должность",
+      "positionPlaceholder": "Водитель",
+      "employmentTypeLabel": "Тип занятости",
+      "payPeriodLabel": "Период оплаты",
+      "payPeriod": {
+        "monthly": "Ежемесячно",
+        "weekly": "Еженедельно",
+        "daily": "Ежедневно",
+        "hourly": "Почасово"
+      },
+      "salaryLabel": "Зарплата",
+      "currencyLabel": "Валюта",
+      "startedAtLabel": "Дата начала",
+      "notesLabel": "Примечание (необязательно)",
+      "notesPlaceholder": "Дополнительное примечание..."
+    },
+    "cancel": "Отмена",
+    "create": "Создать",
+    "rootError": "Выберите заявку на вакансию",
+    "validation": {
+      "required": "Обязательно для заполнения",
+      "min2": "Минимум 2 символа",
+      "negativeSalary": "Не может быть отрицательным",
+      "phoneInvalid": "Введите корректный номер телефона",
+      "dateRequired": "Выберите дату"
+    }
+  },
+  "employees": {
+    "title": "Сотрудники",
+    "subtitle": "Список и управление сотрудниками компании",
+    "create": "Новый сотрудник",
+    "searchPlaceholder": "Поиск по номеру сотрудника, Ф.И.О...",
+    "sourcePlaceholder": "Источник",
+    "sourceAll": "Все источники",
+    "source": {
+      "manual": "Вручную",
+      "vacancy": "Через вакансию"
+    },
+    "clearFilters": "Очистить",
+    "totalCountPrefix": "Всего",
+    "totalCountSuffix": "сотрудников",
+    "emptyTitle": "Сотрудники не найдены",
+    "emptyDescription": "Попробуйте изменить поиск или фильтр",
+    "status": {
+      "active": "Активен",
+      "paused": "Приостановлен",
+      "ended": "Уволен"
+    },
+    "columns": {
+      "employee": "Сотрудник",
+      "position": "Должность",
+      "status": "Статус",
+      "source": "Источник",
+      "salary": "Зарплата",
+      "startedAt": "Дата начала",
+      "createdAt": "Создано",
+      "actions": "Действия"
+    },
+    "actions": {
+      "view": "Просмотр",
+      "edit": "Редактировать",
+      "activate": "Активировать",
+      "pause": "Приостановить",
+      "terminate": "Уволить"
+    },
+    "pauseDialog": {
+      "title": "Приостановить сотрудника",
+      "descriptionWithName": "Вы хотите временно приостановить {{name}}? Позже его можно будет снова активировать.",
+      "descriptionGeneric": "Вы хотите временно приостановить этого сотрудника?",
+      "confirm": "Приостановить",
+      "reasonLabel": "Причина (необязательно)",
+      "reasonPlaceholder": "Например: отпуск, болезнь..."
+    },
+    "resumeDialog": {
+      "title": "Активировать сотрудника",
+      "descriptionWithName": "Вы хотите снова активировать {{name}}?",
+      "descriptionGeneric": "Вы хотите снова активировать этого сотрудника?",
+      "confirm": "Активировать"
+    },
+    "terminateConfirm": {
+      "title": "Уволить сотрудника",
+      "descriptionWithName": "Вы хотите уволить {{name}}? Это действие нельзя отменить.",
+      "descriptionGeneric": "Вы хотите уволить этого сотрудника? Это действие нельзя отменить.",
+      "confirm": "Уволить",
+      "typeLabel": "Тип увольнения",
+      "typePlaceholder": "Выберите тип",
+      "reasonLabel": "Подробный комментарий",
+      "reasonPlaceholder": "Укажите причину"
+    },
+    "terminationTypes": {
+      "resigned": "По собственному желанию",
+      "fired": "Уволен работодателем",
+      "contract_expired": "Истёк срок контракта",
+      "mutual_agreement": "По соглашению сторон",
+      "other": "Другая причина"
+    },
+    "pagination": {
+      "range": "{{from}}–{{to}} из {{total}}"
+    }
+  },
+  "employeeDetails": {
+    "sections": {
+      "driverInformation": "Информация о водителе",
+      "employment": "Занятость",
+      "timeline": "Хронология",
+      "notes": "Заметки",
+      "additionalInfo": "Дополнительная информация"
+    },
+    "driverNumber": "Номер водителя",
+    "phoneNumber": "Номер телефона",
+    "copyPhoneAria": "Скопировать номер телефона",
+    "position": "Должность",
+    "employmentType": "Тип занятости",
+    "salary": "Зарплата",
+    "payPeriod": "Период оплаты",
+    "source": "Источник",
+    "startedAt": "Дата начала",
+    "endedAt": "Дата окончания",
+    "terminationReason": "Причина увольнения",
+    "createdAt": "Дата создания",
+    "lastUpdated": "Последнее обновление",
+    "employmentTypeValues": {
+      "full_time": "Полная занятость",
+      "part_time": "Неполная занятость",
+      "contract": "Контракт",
+      "temporary": "Стажировка"
+    },
+    "sourceValues": {
+      "manual": "Вручную",
+      "vacancy": "Через вакансию"
+    },
+    "payPeriodValues": {
+      "monthly": "Ежемесячно",
+      "weekly": "Еженедельно",
+      "daily": "Ежедневно",
+      "hourly": "Почасово"
+    }
+  },
+  "employeeTerminateDialog": {
+    "title": "Уволить сотрудника",
+    "descriptionWithName": "Вы хотите уволить {{name}}?",
+    "descriptionGeneric": "Вы хотите уволить этого сотрудника?",
+    "descriptionSuffix": "Это действие нельзя будет отменить.",
+    "typeLabel": "Причина увольнения (тип)",
+    "reasonLabel": "Подробный комментарий",
+    "reasonPlaceholder": "Например: дисциплинарное взыскание, сокращение штата и т.д.",
+    "confirmWarning": "Нажмите «Уволить» ещё раз для подтверждения.",
+    "cancel": "Отмена",
+    "confirmFirst": "Уволить",
+    "confirmSecond": "Да, уволить"
+  },
+  "Vehicles": {
+    "title": "Машины",
+    "subtitle": "Список и управление автопарком",
+    "addNew": "Новая машина",
+    "searchPlaceholder": "Поиск по гос. номеру, VIN, бренду...",
+    "status": {
+      "placeholder": "Статус",
+      "all": "Все статусы",
+      "active": "Активна",
+      "inactive": "Неактивна",
+      "repair": "В ремонте",
+      "sold": "Продана"
+    },
+    "availability": {
+      "placeholder": "Доступность",
+      "all": "Все",
+      "available": "Доступна",
+      "unavailable": "Занята"
+    },
+    "clearFilters": "Очистить",
+    "totalCount": "Всего {{count}} машин",
+    "loadError": {
+      "title": "Не удалось загрузить машины",
+      "retry": "Повторить"
+    },
+    "empty": {
+      "filteredTitle": "Машины не найдены",
+      "title": "Машины ещё не добавлены",
+      "filteredSubtitle": "Попробуйте изменить поиск или фильтры",
+      "subtitle": "Добавьте первую машину в автопарк"
+    },
+    "table": {
+      "vehicle": "Машина",
+      "vin": "VIN",
+      "transportType": "Тип транспорта",
+      "year": "Год",
+      "mileage": "Пробег",
+      "status": "Статус",
+      "availability": "Доступность",
+      "createdAt": "Добавлена",
+      "actions": "Действия"
+    },
+    "actionsMenu": {
+      "view": "Просмотр",
+      "edit": "Редактировать",
+      "delete": "Удалить"
+    },
+    "deleteConfirm": {
+      "title": "Удаление машины",
+      "description": "Вы хотите удалить {{label}}? Это действие нельзя отменить.",
+      "confirm": "Удалить"
+    },
+    "form": {
+      "editTitle": "Редактировать машину",
+      "createTitle": "Добавить новую машину",
+      "editDescription": "Обновите данные машины",
+      "createDescription": "Заполните данные, чтобы добавить новую машину в автопарк",
+      "loading": "Загрузка...",
+      "transportType": {
+        "label": "Тип транспорта",
+        "placeholder": "Выберите"
+      },
+      "statusLabel": "Статус",
+      "plateNumber": {
+        "label": "Гос. номер",
+        "placeholder": "01A123BC"
+      },
+      "vin": {
+        "label": "VIN код",
+        "placeholder": "1HGCM82633A123456"
+      },
+      "brand": {
+        "label": "Бренд",
+        "placeholder": "Mercedes-Benz"
+      },
+      "model": {
+        "label": "Модель",
+        "placeholder": "Actros 1845"
+      },
+      "year": "Год выпуска",
+      "mileage": "Пробег (км)",
+      "isAvailable": {
+        "label": "Доступна для аренды",
+        "description": "Если включено, машина отображается в списке заказов"
+      },
+      "notes": {
+        "label": "Примечание (необязательно)",
+        "placeholder": "Дополнительная информация о машине..."
+      },
+      "cancel": "Отмена",
+      "save": "Сохранить",
+      "add": "Добавить",
+      "errors": {
+        "transportType": "Выберите тип транспорта",
+        "plateNumber": "Введите гос. номер",
+        "vinRequired": "Введите VIN код",
+        "vinLength": "VIN код должен состоять из 17 символов",
+        "brand": "Введите бренд",
+        "model": "Введите модель",
+        "year": "Введите корректный год выпуска",
+        "mileage": "Пробег не может быть отрицательным"
+      }
+    },
+    "details": {
+      "vehicleInfo": "Информация о машине",
+      "vinCode": "VIN код",
+      "copyVinAria": "Скопировать VIN код",
+      "transportType": "Тип транспорта",
+      "year": "Год выпуска",
+      "mileage": "Пробег",
+      "historyStatus": "Статус и история",
+      "status": "Статус",
+      "availability": "Доступность",
+      "carrier": "Перевозчик",
+      "activeRental": "Активная аренда",
+      "yes": "Есть",
+      "no": "Нет",
+      "createdAt": "Дата добавления",
+      "updatedAt": "Последнее обновление",
+      "notes": "Примечание"
+    }
+  },
+  "sidebar": {
+    "adminPanel": "Админ панель",
+    "menu": "Меню",
+    "dashboard": "Панель управления",
+    "vehicles": "Машины",
+    "employees": "Сотрудники",
+    "vacancies": "Вакансии",
+    "applications": "Заявки",
+    "profile": "Профиль",
+    "logout": "Выйти"
+  },
+  "locationDialog": {
+    "editTitle": "Редактировать филиал",
+    "createTitle": "Добавить новый филиал",
+    "editDescription": "Обновите данные филиала \"{{name}}\".",
+    "createDescription": "Введите данные нового филиала.",
+    "name": "Название филиала",
+    "address": "Адрес",
+    "city": "Город",
+    "region": "Область",
+    "phone": "Телефон",
+    "email": "Email (необязательно)",
+    "emailPlaceholder": "office@company.uz",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "add": "Добавить"
+  },
+  "profileInfoDialog": {
+    "title": "Редактировать данные",
+    "description": "Обновите основную контактную информацию вашей компании.",
+    "website": "Веб-сайт",
+    "websitePlaceholder": "https://company.com",
+    "email": "Email",
+    "emailPlaceholder": "info@company.com",
+    "username": "Имя пользователя",
+    "cancel": "Отмена",
+    "save": "Сохранить"
+  },
+  "changePasswordDialog": {
+    "title": "Смена пароля",
+    "description": "Установите новый пароль для вашего аккаунта.",
+    "newPassword": "Новый пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "cancel": "Отмена",
+    "update": "Обновить",
+    "errors": {
+      "mismatch": "Пароли не совпадают",
+      "tooShort": "Пароль должен содержать не менее 8 символов"
+    }
+  },
+  "locationDeleteDialog": {
+    "title": "Удалить филиал",
+    "description": "Вы уверены, что хотите удалить филиал \"{{name}}\"? Это действие нельзя отменить.",
+    "cancel": "Отмена",
+    "confirm": "Удалить"
   }
 }

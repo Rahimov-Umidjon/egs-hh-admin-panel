@@ -92,5 +92,650 @@
   },
   "carrier": {
     "not_approved": "The user is awaiting approval."
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage company details and locations",
+    "status": {
+      "pending": "Under review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "changePassword": "Change password",
+    "edit": "Edit",
+    "email": "Email",
+    "username": "Username",
+    "stateIncorporated": "Registered region",
+    "businessStartedAt": "Business start date",
+    "yearsInBusiness": "Years in business",
+    "tin": "TIN",
+    "tinNotProvided": "Not provided",
+    "locations": {
+      "title": "Locations",
+      "add": "Add location",
+      "primary": "Head office",
+      "contactPrimary": "(primary)",
+      "editAria": "Edit location",
+      "deleteAria": "Delete location",
+      "empty": {
+        "title": "No locations added yet",
+        "description": "Add your company's first location."
+      }
+    },
+    "error": {
+      "title": "Couldn't load profile data",
+      "description": "Check your internet connection and try again.",
+      "retry": "Retry"
+    },
+    "logo": {
+      "changeAria": "Change logo",
+      "success": "Logo updated",
+      "invalidType": {
+        "title": "Invalid file type",
+        "description": "Only PNG, JPEG, WEBP, or SVG images are allowed."
+      },
+      "tooLarge": {
+        "title": "File is too large",
+        "description": "Logo size must not exceed {{size}}MB."
+      },
+      "error": {
+        "title": "Couldn't upload logo",
+        "description": "Please try again in a moment."
+      }
+    }
+  },
+  "applications": {
+    "title": "Applications",
+    "subtitle": "Review applications submitted for vacancies",
+    "searchPlaceholder": "Search by driver or vacancy...",
+    "statusPlaceholder": "Status",
+    "statusAll": "All statuses",
+    "status": {
+      "pending": "Pending",
+      "invited": "Invited",
+      "hired": "Hired",
+      "rejected": "Rejected"
+    },
+    "employmentType": {
+      "full_time": "Full-time",
+      "part_time": "Part-time"
+    },
+    "clearFilters": "Clear",
+    "totalCountPrefix": "Total",
+    "totalCountSuffix": "applications",
+    "emptyTitle": "No applications found",
+    "emptyDescription": "Try adjusting your search or filter",
+    "columns": {
+      "candidate": "Candidate",
+      "vacancy": "Vacancy",
+      "employmentType": "Employment type",
+      "salary": "Salary",
+      "date": "Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "noName": "Name not provided",
+    "actions": {
+      "view": "View",
+      "invite": "Invite",
+      "reject": "Reject"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next",
+      "range": "{{from}}–{{to}} of {{total}}"
+    },
+    "dialog": {
+      "confirmInviteTitle": "Confirm inviting this candidate?",
+      "confirmRejectTitle": "Confirm rejecting this application?",
+      "description": "The application from \"{{name}}\" for \"{{vacancy}}\" will be changed to \"{{status}}\".",
+      "rejectionReasonPlaceholder": "Rejection reason (optional)",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    }
+  },
+  "vacancies": {
+    "title": "Vacancies",
+    "subtitle": "Manage open job positions",
+    "create": "New vacancy",
+    "searchPlaceholder": "Search by title...",
+    "currencyPlaceholder": "Currency",
+    "currencyAll": "All currencies",
+    "statusPlaceholder": "Status",
+    "statusAll": "All statuses",
+    "status": {
+      "draft": "Draft",
+      "published": "Published",
+      "closed": "Closed"
+    },
+    "employmentType": {
+      "full_time": "Full-time",
+      "part_time": "Part-time",
+      "contract": "Contract",
+      "internship": "Internship",
+      "remote": "Remote",
+      "temporary": "Temporary"
+    },
+    "salaryFromPlaceholder": "Salary from",
+    "salaryToPlaceholder": "Salary to",
+    "clearFilters": "Clear",
+    "totalCountPrefix": "Total",
+    "totalCountSuffix": "vacancies",
+    "emptyTitle": "No vacancies found",
+    "emptyDescription": "Try adjusting your search or filter",
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "changeStatusTo": "Move to {{status}}"
+    },
+    "applicationCount": "{{count}} applications",
+    "publishedLabel": "Published: {{date}}",
+    "expiresLabel": "Valid until {{date}}",
+    "loadedAll": "All vacancies loaded",
+    "deleteDialog": {
+      "title": "Confirm deleting this vacancy?",
+      "description": "\"{{title}}\" will be permanently deleted. This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "statusDialog": {
+      "title": "Confirm status change?",
+      "description": "The status of \"{{title}}\" will be changed to \"{{status}}\".",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "form": {
+      "editTitle": "Edit vacancy",
+      "createTitle": "New vacancy",
+      "editDescription": "Update the vacancy information",
+      "createDescription": "Enter information about the new position",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. USA Truck Driver",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Detailed information about the vacancy",
+      "employmentTypeLabel": "Employment type",
+      "selectPlaceholder": "Select",
+      "statusLabel": "Status",
+      "salaryFromLabel": "Salary (from)",
+      "salaryToLabel": "Salary (to)",
+      "currencyLabel": "Currency",
+      "expiresAtLabel": "Expiration date",
+      "requirementsLabel": "Requirements",
+      "requirementPlaceholder": "e.g. Class CE license",
+      "addRequirement": "Add requirement",
+      "responsibilitiesLabel": "Responsibilities",
+      "responsibilityPlaceholder": "e.g. Safe cargo transport",
+      "addResponsibility": "Add responsibility",
+      "cancel": "Cancel",
+      "save": "Save",
+      "createSubmit": "Create",
+      "validation": {
+        "titleMin": "Enter at least 3 characters",
+        "descriptionMin": "Enter at least 10 characters",
+        "negativeSalary": "Cannot be negative",
+        "requirementRequired": "Cannot be empty",
+        "requirementsMin": "Add at least 1 requirement",
+        "responsibilityRequired": "Cannot be empty",
+        "responsibilitiesMin": "Add at least 1 responsibility",
+        "salaryToMin": "Maximum salary cannot be less than the minimum"
+      }
+    },
+    "details": {
+      "descriptionTitle": "Description",
+      "requirementsTitle": "Requirements",
+      "responsibilitiesTitle": "Responsibilities",
+      "companyTitle": "Company",
+      "yearsInBusiness": "Years in business: {{years}}",
+      "primaryBadge": "Primary",
+      "expiresUntil": "Valid until {{date}}"
+    },
+    "confirmInvite": {
+      "title": "Confirm inviting this candidate?",
+      "confirmButton": "Invite"
+    },
+    "confirmReject": {
+      "title": "Confirm rejecting this candidate?",
+      "description": "You can provide a rejection reason (optional).",
+      "confirmButton": "Reject",
+      "reasonLabel": "Rejection reason",
+      "reasonPlaceholder": "e.g. not enough experience..."
+    }
+  },
+  "vacancyDetail": {
+    "vacancyIdLabel": "Vacancy ID: #{{id}}",
+    "more": "More",
+    "noStatusChanges": "No status changes available",
+    "deleteVacancy": "Delete vacancy",
+    "notFoundTitle": "Vacancy not found",
+    "backToVacancies": "Back to vacancies",
+    "summary": {
+      "salary": "Salary",
+      "published": "Published",
+      "expires": "Expires",
+      "created": "Created"
+    },
+    "stats": {
+      "views": "Views",
+      "applications": "Applications",
+      "daysRemaining": "Days remaining",
+      "until": "until {{date}}"
+    },
+    "content": {
+      "jobDescription": "Job Description",
+      "requirements": "Requirements",
+      "responsibilities": "Responsibilities"
+    },
+    "info": {
+      "title": "Vacancy Information",
+      "vacancyId": "Vacancy ID",
+      "status": "Status",
+      "employmentType": "Employment type",
+      "salary": "Salary",
+      "publishedAt": "Published at",
+      "expiresAt": "Expires at",
+      "createdAt": "Created at"
+    },
+    "applicationsSection": {
+      "title": "Applications",
+      "searchPlaceholder": "Search applicants...",
+      "clear": "Clear",
+      "empty": "No applications yet",
+      "columns": {
+        "applicant": "Applicant",
+        "phone": "Phone",
+        "status": "Status",
+        "appliedAt": "Applied At",
+        "lastUpdated": "Last Updated",
+        "actions": "Actions"
+      },
+      "driverIdLabel": "Driver ID: #{{id}}",
+      "actions": {
+        "viewProfile": "View profile",
+        "addToEmployees": "Add to employees"
+      },
+      "pagination": {
+        "range": "{{from}}–{{to}} of {{total}}"
+      }
+    },
+    "panel": {
+      "unknown": "Unknown",
+      "driverInformation": "Driver information",
+      "driverNumber": "Driver number",
+      "phoneNumber": "Phone number",
+      "copyPhoneAria": "Copy phone number",
+      "resume": "Resume",
+      "birthDate": "Birth date",
+      "experience": "Experience",
+      "experienceYears": "{{count}} years",
+      "desiredSalary": "Desired salary",
+      "address": "Address",
+      "transportTypes": "Transport types",
+      "workFormat": "Work format",
+      "application": "Application",
+      "appliedAt": "Applied at",
+      "lastUpdated": "Last updated",
+      "rejectionReason": "Rejection reason",
+      "applicantMessage": "Applicant message",
+      "driverIdShort": "Driver #{{id}}"
+    }
+  },
+  "employeeCreate": {
+    "title": "New employee",
+    "description": "Add a new driver or create an employee from an existing vacancy application",
+    "driverSection": {
+      "title": "Driver information",
+      "fioLabel": "Full name",
+      "fioPlaceholder": "e.g. Muhammad Aliyev",
+      "phoneLabel": "Phone number",
+      "phonePlaceholder": "+998901234567",
+      "numberLabel": "Driver number",
+      "numberPlaceholder": "DRV-001",
+      "telegramLabel": "Telegram chat ID (optional)",
+      "telegramPlaceholder": "123456789"
+    },
+    "applicationSection": {
+      "title": "Vacancy application",
+      "searchPlaceholder": "Search by driver name...",
+      "loading": "Loading...",
+      "noResults": "Nothing found",
+      "typeToSearch": "Start typing to search",
+      "invitedBadge": "Invited",
+      "unnamedApplication": "Application #{{id}}",
+      "unnamedVacancy": "Vacancy #{{id}}",
+      "clearAria": "Clear"
+    },
+    "workSection": {
+      "title": "Work information",
+      "employeeNumberLabel": "Employee number",
+      "employeeNumberPlaceholder": "EMP-0001",
+      "positionLabel": "Position",
+      "positionPlaceholder": "Driver",
+      "employmentTypeLabel": "Employment type",
+      "payPeriodLabel": "Pay period",
+      "payPeriod": {
+        "monthly": "Monthly",
+        "weekly": "Weekly",
+        "daily": "Daily",
+        "hourly": "Hourly"
+      },
+      "salaryLabel": "Salary",
+      "currencyLabel": "Currency",
+      "startedAtLabel": "Start date",
+      "notesLabel": "Notes (optional)",
+      "notesPlaceholder": "Additional notes..."
+    },
+    "cancel": "Cancel",
+    "create": "Create",
+    "rootError": "Select a vacancy application",
+    "validation": {
+      "required": "This field is required",
+      "min2": "At least 2 characters",
+      "negativeSalary": "Cannot be negative",
+      "phoneInvalid": "Enter a valid phone number",
+      "dateRequired": "Select a date"
+    }
+  },
+  "employees": {
+    "title": "Employees",
+    "subtitle": "Company employee roster and management",
+    "create": "New employee",
+    "searchPlaceholder": "Search by employee number, full name...",
+    "sourcePlaceholder": "Source",
+    "sourceAll": "All sources",
+    "source": {
+      "manual": "Manual",
+      "vacancy": "Via vacancy"
+    },
+    "clearFilters": "Clear",
+    "totalCountPrefix": "Total",
+    "totalCountSuffix": "employees",
+    "emptyTitle": "No employees found",
+    "emptyDescription": "Try adjusting your search or filter",
+    "status": {
+      "active": "Active",
+      "paused": "Paused",
+      "ended": "Terminated"
+    },
+    "columns": {
+      "employee": "Employee",
+      "position": "Position",
+      "status": "Status",
+      "source": "Source",
+      "salary": "Salary",
+      "startedAt": "Start date",
+      "createdAt": "Created",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "activate": "Activate",
+      "pause": "Pause",
+      "terminate": "Terminate"
+    },
+    "pauseDialog": {
+      "title": "Pause employee",
+      "descriptionWithName": "Do you want to temporarily pause {{name}}? They can be reactivated later.",
+      "descriptionGeneric": "Do you want to temporarily pause this employee?",
+      "confirm": "Pause",
+      "reasonLabel": "Reason (optional)",
+      "reasonPlaceholder": "e.g. vacation, illness..."
+    },
+    "resumeDialog": {
+      "title": "Activate employee",
+      "descriptionWithName": "Do you want to reactivate {{name}}?",
+      "descriptionGeneric": "Do you want to reactivate this employee?",
+      "confirm": "Activate"
+    },
+    "terminateConfirm": {
+      "title": "Terminate employee",
+      "descriptionWithName": "Do you want to terminate {{name}}? This action cannot be undone.",
+      "descriptionGeneric": "Do you want to terminate this employee? This action cannot be undone.",
+      "confirm": "Terminate",
+      "typeLabel": "Termination type",
+      "typePlaceholder": "Select a type",
+      "reasonLabel": "Detailed note",
+      "reasonPlaceholder": "Enter the reason"
+    },
+    "terminationTypes": {
+      "resigned": "Resigned voluntarily",
+      "fired": "Fired",
+      "contract_expired": "Contract expired",
+      "mutual_agreement": "By mutual agreement",
+      "other": "Other reason"
+    },
+    "pagination": {
+      "range": "{{from}}–{{to}} of {{total}}"
+    }
+  },
+  "employeeDetails": {
+    "sections": {
+      "driverInformation": "Driver information",
+      "employment": "Employment",
+      "timeline": "Timeline",
+      "notes": "Notes",
+      "additionalInfo": "Additional info"
+    },
+    "driverNumber": "Driver number",
+    "phoneNumber": "Phone number",
+    "copyPhoneAria": "Copy phone number",
+    "position": "Position",
+    "employmentType": "Employment type",
+    "salary": "Salary",
+    "payPeriod": "Pay period",
+    "source": "Source",
+    "startedAt": "Started at",
+    "endedAt": "Ended at",
+    "terminationReason": "Termination reason",
+    "createdAt": "Created at",
+    "lastUpdated": "Last updated",
+    "employmentTypeValues": {
+      "full_time": "Full-time",
+      "part_time": "Part-time",
+      "contract": "Contract",
+      "temporary": "Internship"
+    },
+    "sourceValues": {
+      "manual": "Manual",
+      "vacancy": "Via vacancy"
+    },
+    "payPeriodValues": {
+      "monthly": "Monthly",
+      "weekly": "Weekly",
+      "daily": "Daily",
+      "hourly": "Hourly"
+    }
+  },
+  "employeeTerminateDialog": {
+    "title": "Terminate employee",
+    "descriptionWithName": "Do you want to terminate {{name}}?",
+    "descriptionGeneric": "Do you want to terminate this employee?",
+    "descriptionSuffix": "This action cannot be undone afterwards.",
+    "typeLabel": "Termination reason (type)",
+    "reasonLabel": "Detailed note",
+    "reasonPlaceholder": "e.g. disciplinary action, staff reduction, etc.",
+    "confirmWarning": "Click \"Terminate\" once more to confirm.",
+    "cancel": "Cancel",
+    "confirmFirst": "Terminate",
+    "confirmSecond": "Yes, terminate"
+  },
+  "Vehicles": {
+    "title": "Vehicles",
+    "subtitle": "Fleet list and management",
+    "addNew": "New vehicle",
+    "searchPlaceholder": "Search by plate number, VIN, brand...",
+    "status": {
+      "placeholder": "Status",
+      "all": "All statuses",
+      "active": "Active",
+      "inactive": "Inactive",
+      "repair": "In repair",
+      "sold": "Sold"
+    },
+    "availability": {
+      "placeholder": "Availability",
+      "all": "All",
+      "available": "Available",
+      "unavailable": "Busy"
+    },
+    "clearFilters": "Clear",
+    "totalCount": "Total {{count}} vehicles",
+    "loadError": {
+      "title": "Failed to load vehicles",
+      "retry": "Retry"
+    },
+    "empty": {
+      "filteredTitle": "No vehicles found",
+      "title": "No vehicles added yet",
+      "filteredSubtitle": "Try changing the search or filters",
+      "subtitle": "Add the first vehicle to the fleet"
+    },
+    "table": {
+      "vehicle": "Vehicle",
+      "vin": "VIN",
+      "transportType": "Transport type",
+      "year": "Year",
+      "mileage": "Mileage",
+      "status": "Status",
+      "availability": "Availability",
+      "createdAt": "Added",
+      "actions": "Actions"
+    },
+    "actionsMenu": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "deleteConfirm": {
+      "title": "Delete vehicle",
+      "description": "Are you sure you want to delete {{label}}? This action cannot be undone.",
+      "confirm": "Delete"
+    },
+    "form": {
+      "editTitle": "Edit vehicle",
+      "createTitle": "Add new vehicle",
+      "editDescription": "Update the vehicle information",
+      "createDescription": "Fill in the details to add a new vehicle to the fleet",
+      "loading": "Loading...",
+      "transportType": {
+        "label": "Transport type",
+        "placeholder": "Select"
+      },
+      "statusLabel": "Status",
+      "plateNumber": {
+        "label": "Plate number",
+        "placeholder": "01A123BC"
+      },
+      "vin": {
+        "label": "VIN code",
+        "placeholder": "1HGCM82633A123456"
+      },
+      "brand": {
+        "label": "Brand",
+        "placeholder": "Mercedes-Benz"
+      },
+      "model": {
+        "label": "Model",
+        "placeholder": "Actros 1845"
+      },
+      "year": "Manufacture year",
+      "mileage": "Mileage (km)",
+      "isAvailable": {
+        "label": "Available for rental",
+        "description": "When enabled, the vehicle appears in the order list"
+      },
+      "notes": {
+        "label": "Notes (optional)",
+        "placeholder": "Additional information about the vehicle..."
+      },
+      "cancel": "Cancel",
+      "save": "Save",
+      "add": "Add",
+      "errors": {
+        "transportType": "Select a transport type",
+        "plateNumber": "Enter the plate number",
+        "vinRequired": "Enter the VIN code",
+        "vinLength": "VIN code must be 17 characters",
+        "brand": "Enter the brand",
+        "model": "Enter the model",
+        "year": "Enter a valid manufacture year",
+        "mileage": "Mileage cannot be negative"
+      }
+    },
+    "details": {
+      "vehicleInfo": "Vehicle information",
+      "vinCode": "VIN code",
+      "copyVinAria": "Copy VIN code",
+      "transportType": "Transport type",
+      "year": "Manufacture year",
+      "mileage": "Mileage",
+      "historyStatus": "Status and history",
+      "status": "Status",
+      "availability": "Availability",
+      "carrier": "Carrier",
+      "activeRental": "Active rental",
+      "yes": "Yes",
+      "no": "No",
+      "createdAt": "Date added",
+      "updatedAt": "Last updated",
+      "notes": "Notes"
+    }
+  },
+  "sidebar": {
+    "adminPanel": "Admin panel",
+    "menu": "Menu",
+    "dashboard": "Dashboard",
+    "vehicles": "Vehicles",
+    "employees": "Employees",
+    "vacancies": "Vacancies",
+    "applications": "Applications",
+    "profile": "Profile",
+    "logout": "Log out"
+  },
+  "locationDialog": {
+    "editTitle": "Edit branch",
+    "createTitle": "Add new branch",
+    "editDescription": "Update details for \"{{name}}\".",
+    "createDescription": "Enter details for the new branch.",
+    "name": "Branch name",
+    "address": "Address",
+    "city": "City",
+    "region": "Region",
+    "phone": "Phone",
+    "email": "Email (optional)",
+    "emailPlaceholder": "office@company.uz",
+    "cancel": "Cancel",
+    "save": "Save",
+    "add": "Add"
+  },
+  "profileInfoDialog": {
+    "title": "Edit information",
+    "description": "Update your company's primary contact details.",
+    "website": "Website",
+    "websitePlaceholder": "https://company.com",
+    "email": "Email",
+    "emailPlaceholder": "info@company.com",
+    "username": "Username",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "changePasswordDialog": {
+    "title": "Change password",
+    "description": "Set a new password for your account.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "cancel": "Cancel",
+    "update": "Update",
+    "errors": {
+      "mismatch": "Passwords do not match",
+      "tooShort": "Password must be at least 8 characters"
+    }
+  },
+  "locationDeleteDialog": {
+    "title": "Delete branch",
+    "description": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Delete"
   }
 }

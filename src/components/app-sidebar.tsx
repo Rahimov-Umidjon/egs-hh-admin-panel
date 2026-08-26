@@ -9,6 +9,7 @@ import {
     FileUser,
     ShieldCheck,
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import {
     Sidebar,
@@ -37,39 +38,32 @@ import { useAuth } from "@/features/auth/AuthContext"
 // Menyu elementlari — loyihangizdagi route'larga mos
 const navItems = [
     {
-        title: "Boshqaruv paneli",
+        titleKey: "sidebar.dashboard",
         url: "/",
         icon: LayoutDashboard,
     },
-    // {
-    //     title: "Yuklar",
-    //     url: "/loads",
-    //     icon: Truck,
-    // },
     {
-        title: "Haydovchilar",
-        url: "/drivers",
+        titleKey: "sidebar.vehicles",
+        url: "/vehicles",
         icon: Users,
     },
     {
-        title: "Employees",
+        titleKey: "sidebar.employees",
         url: "/employees",
         icon: ShieldCheck,
     },
-
     {
-        title: "Vakansiyalar",
+        titleKey: "sidebar.vacancies",
         url: "/vacancies",
         icon: Briefcase,
     },
     {
-        title: "Arizalar",
+        titleKey: "sidebar.applications",
         url: "/aplications",
         icon: FileUser,
     },
-
     {
-        title: "Profile",
+        titleKey: "sidebar.profile",
         url: "/profile",
         icon: BarChart3,
     },
@@ -78,6 +72,7 @@ const navItems = [
 export function AppSidebar() {
     const location = useLocation()
     const { user, logout } = useAuth()
+    const { t } = useTranslation()
 
     return (
         <Sidebar className="rounded-2xl overflow-hidden" collapsible="icon">
@@ -86,11 +81,10 @@ export function AppSidebar() {
                     <SidebarMenuItem className="flex items-center justify-center">
                         <SidebarMenuButton size="lg" asChild>
                             <NavLink to="/">
-
                                 <div className="flex flex-1 text-left text-sm leading-tight">
                                     <img src="./logo.png" alt="logo" />
                                     <span className="truncate text-xs text-muted-foreground">
-                                        Admin panel
+                                        {t("sidebar.adminPanel")}
                                     </span>
                                 </div>
                             </NavLink>
@@ -102,7 +96,7 @@ export function AppSidebar() {
 
             <SidebarContent className="bg-white">
                 <SidebarGroup>
-                    <SidebarGroupLabel>Menyu</SidebarGroupLabel>
+                    <SidebarGroupLabel>{t("sidebar.menu")}</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {navItems.map((item) => {
@@ -116,11 +110,11 @@ export function AppSidebar() {
                                         <SidebarMenuButton
                                             asChild
                                             isActive={isActive}
-                                            tooltip={item.title}
+                                            tooltip={t(item.titleKey)}
                                         >
                                             <NavLink to={item.url}>
                                                 <item.icon />
-                                                <span>{item.title}</span>
+                                                <span>{t(item.titleKey)}</span>
                                             </NavLink>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
@@ -163,7 +157,7 @@ export function AppSidebar() {
                             >
                                 <DropdownMenuItem onClick={logout}>
                                     <LogOut className="mr-2 size-4" />
-                                    Chiqish
+                                    {t("sidebar.logout")}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                             </DropdownMenuContent>

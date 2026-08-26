@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -14,7 +15,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useUpdatePassword } from "@/features/profile"
- 
 
 interface ChangePasswordDialogProps {
   open: boolean
@@ -25,6 +25,7 @@ export function ChangePasswordDialog({
   open,
   onOpenChange,
 }: ChangePasswordDialogProps) {
+  const { t } = useTranslation()
   const [password, setPassword] = useState("")
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -44,11 +45,11 @@ export function ChangePasswordDialog({
 
   const handleSubmit = () => {
     if (password !== passwordConfirmation) {
-      toast.error("Parollar bir-biriga mos kelmadi")
+      toast.error(t("changePasswordDialog.errors.mismatch"))
       return
     }
     if (password.length < 8) {
-      toast.error("Parol kamida 8 ta belgidan iborat bo'lishi kerak")
+      toast.error(t("changePasswordDialog.errors.tooShort"))
       return
     }
 
@@ -62,15 +63,13 @@ export function ChangePasswordDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Parolni almashtirish</DialogTitle>
-          <DialogDescription>
-            Hisobingiz uchun yangi parol o'rnating.
-          </DialogDescription>
+          <DialogTitle>{t("changePasswordDialog.title")}</DialogTitle>
+          <DialogDescription>{t("changePasswordDialog.description")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label htmlFor="password">Yangi parol</Label>
+            <Label htmlFor="password">{t("changePasswordDialog.newPassword")}</Label>
             <div className="relative">
               <Input
                 id="password"
@@ -94,7 +93,9 @@ export function ChangePasswordDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password_confirmation">Parolni tasdiqlang</Label>
+            <Label htmlFor="password_confirmation">
+              {t("changePasswordDialog.confirmPassword")}
+            </Label>
             <Input
               id="password_confirmation"
               type={showPassword ? "text" : "password"}
@@ -110,10 +111,10 @@ export function ChangePasswordDialog({
             onClick={() => handleOpenChange(false)}
             disabled={updatePassword.isPending}
           >
-            Bekor qilish
+            {t("changePasswordDialog.cancel")}
           </Button>
           <Button onClick={handleSubmit} disabled={updatePassword.isPending}>
-            Yangilash
+            {t("changePasswordDialog.update")}
           </Button>
         </DialogFooter>
       </DialogContent>

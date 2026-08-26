@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -35,6 +36,7 @@ export function LocationEditDialog({
   location,
   onOpenChange,
 }: LocationEditDialogProps) {
+  const { t } = useTranslation()
   const [form, setForm] = useState(emptyForm)
 
   const isEditMode = !!location
@@ -100,23 +102,23 @@ export function LocationEditDialog({
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            {isEditMode ? "Filialni tahrirlash" : "Yangi filial qo'shish"}
+            {isEditMode ? t("locationDialog.editTitle") : t("locationDialog.createTitle")}
           </DialogTitle>
           <DialogDescription>
             {isEditMode
-              ? `"${location?.name}" filiali ma'lumotlarini yangilang.`
-              : "Yangi filial uchun ma'lumotlarni kiriting."}
+              ? t("locationDialog.editDescription", { name: location?.name })
+              : t("locationDialog.createDescription")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 gap-4 py-2 sm:grid-cols-2">
           <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="loc_name">Filial nomi</Label>
+            <Label htmlFor="loc_name">{t("locationDialog.name")}</Label>
             <Input id="loc_name" value={form.name} onChange={setField("name")} />
           </div>
 
           <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="loc_address">Manzil</Label>
+            <Label htmlFor="loc_address">{t("locationDialog.address")}</Label>
             <Input
               id="loc_address"
               value={form.addressLine1}
@@ -125,26 +127,26 @@ export function LocationEditDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="loc_city">Shahar</Label>
+            <Label htmlFor="loc_city">{t("locationDialog.city")}</Label>
             <Input id="loc_city" value={form.city} onChange={setField("city")} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="loc_region">Viloyat</Label>
+            <Label htmlFor="loc_region">{t("locationDialog.region")}</Label>
             <Input id="loc_region" value={form.region} onChange={setField("region")} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="loc_phone">Telefon</Label>
+            <Label htmlFor="loc_phone">{t("locationDialog.phone")}</Label>
             <Input id="loc_phone" value={form.phone} onChange={setField("phone")} />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="loc_email">Email (ixtiyoriy)</Label>
+            <Label htmlFor="loc_email">{t("locationDialog.email")}</Label>
             <Input
               id="loc_email"
               type="email"
-              placeholder="office@kompaniya.uz"
+              placeholder={t("locationDialog.emailPlaceholder")}
               value={form.email}
               onChange={setField("email")}
             />
@@ -153,10 +155,10 @@ export function LocationEditDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
-            Bekor qilish
+            {t("locationDialog.cancel")}
           </Button>
           <Button onClick={handleSubmit} disabled={isPending}>
-            {isEditMode ? "Saqlash" : "Qo'shish"}
+            {isEditMode ? t("locationDialog.save") : t("locationDialog.add")}
           </Button>
         </DialogFooter>
       </DialogContent>

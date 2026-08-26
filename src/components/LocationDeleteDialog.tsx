@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next"
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,6 +23,7 @@ export function LocationDeleteDialog({
   location,
   onOpenChange,
 }: LocationDeleteDialogProps) {
+  const { t } = useTranslation()
   const deleteLocation = useDeleteLocation()
 
   const handleConfirm = () => {
@@ -34,22 +37,21 @@ export function LocationDeleteDialog({
     <AlertDialog open={!!location} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Filialni o'chirish</AlertDialogTitle>
+          <AlertDialogTitle>{t("locationDeleteDialog.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            "{location?.name}" filialini o'chirmoqchimisiz? Bu amalni ortga
-            qaytarib bo'lmaydi.
+            {t("locationDeleteDialog.description", { name: location?.name })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteLocation.isPending}>
-            Bekor qilish
+            {t("locationDeleteDialog.cancel")}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={deleteLocation.isPending}
             className="bg-rose-600 hover:bg-rose-700 focus:ring-rose-600"
           >
-            O'chirish
+            {t("locationDeleteDialog.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

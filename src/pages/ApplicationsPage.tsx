@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
     ChevronLeft,
     ChevronRight,
@@ -56,33 +57,28 @@ import { cn } from "@/lib/utils"
 import { useApplications, useChangeApplicationStatus } from "@/features/applications/useApplications"
 import { useNavigate } from "react-router-dom"
 
-const statusMeta: Record<
-    ApplicationStatus,
-    { label: string; dot: string; text: string }
-> = {
+// Faqat rang/uslub — tarjima emas, shuning uchun i18n tashqarisida qoladi
+const statusStyles: Record<ApplicationStatus, { dot: string; text: string }> = {
     pending: {
-        label: "Kutilmoqda",
         dot: "bg-amber-400",
         text: "text-amber-700 dark:text-amber-400",
     },
     invited: {
-        label: "Taklif qilingan",
         dot: "bg-emerald-500",
         text: "text-emerald-700 dark:text-emerald-400",
     },
     rejected: {
-        label: "Rad etilgan",
         dot: "bg-rose-400",
         text: "text-rose-700 dark:text-rose-400",
     },
-}
-
-const employmentLabels: Record<string, string> = {
-    full_time: "To'liq stavka",
-    part_time: "Yarim stavka",
+    hired: {
+        dot: "bg-blue-500",
+        text: "text-blue-700 dark:text-blue-400",
+    },
 }
 
 export default function ApplicationsPage() {
+    const { t } = useTranslation()
     const [search, setSearch] = useState("")
     const [status, setStatus] = useState<ApplicationStatus | undefined>()
     const [page, setPage] = useState(1)
@@ -138,9 +134,9 @@ export default function ApplicationsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="text-2xl font-semibold tracking-tight">Arizalar</h2>
+                <h2 className="text-2xl font-semibold tracking-tight">{t("applications.title")}</h2>
                 <p className="text-sm text-muted-foreground">
-                    Vakansiyalarga tushgan arizalarni ko'rib chiqish
+                    {t("applications.subtitle")}
                 </p>
             </div>
 
@@ -149,7 +145,7 @@ export default function ApplicationsPage() {
                 <div className="relative max-w-sm flex-1 min-w-[200px]">
                     <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
-                        placeholder="Haydovchi yoki vakansiya bo'yicha qidirish..."
+                        placeholder={t("applications.searchPlaceholder")}
                         value={search}
                         onChange={(e) => {
                             setSearch(e.target.value)
@@ -167,13 +163,13 @@ export default function ApplicationsPage() {
                     }}
                 >
                     <SelectTrigger className="w-44">
-                        <SelectValue placeholder="Status" />
+                        <SelectValue placeholder={t("applications.statusPlaceholder")} />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="all">Barcha statuslar</SelectItem>
-                        <SelectItem value="pending">Kutilmoqda</SelectItem>
-                        <SelectItem value="invited">Taklif qilingan</SelectItem>
-                        <SelectItem value="rejected">Rad etilgan</SelectItem>
+                        <SelectItem value="all">{t("applications.statusAll")}</SelectItem>
+                        <SelectItem value="pending">{t("applications.status.pending")}</SelectItem>
+                        <SelectItem value="invited">{t("applications.status.invited")}</SelectItem>
+                        <SelectItem value="rejected">{t("applications.status.rejected")}</SelectItem>
                     </SelectContent>
                 </Select>
 
@@ -185,13 +181,15 @@ export default function ApplicationsPage() {
                         className="text-muted-foreground hover:text-foreground cursor-pointer"
                     >
                         <X className="mr-1 size-3.5" />
-                        Tozalash
+                        {t("applications.clearFilters")}
                     </Button>
                 )}
 
                 {!isLoading && (
                     <p className="ml-auto shrink-0 text-sm text-muted-foreground">
-                        Jami <span className="font-medium text-foreground">{total}</span> ta ariza
+                        {t("applications.totalCountPrefix")}{" "}
+                        <span className="font-medium text-foreground">{total}</span>{" "}
+                        {t("applications.totalCountSuffix")}
                     </p>
                 )}
             </div>
@@ -207,8 +205,8 @@ export default function ApplicationsPage() {
             {!isLoading && applications.length === 0 && (
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed py-24 text-center text-muted-foreground">
                     <ClipboardList className="mb-3 size-10 opacity-40" />
-                    <p className="font-medium text-foreground">Arizalar topilmadi</p>
-                    <p className="text-sm">Qidiruv yoki filtrni o'zgartirib ko'ring</p>
+                    <p className="font-medium text-foreground">{t("applications.emptyTitle")}</p>
+                    <p className="text-sm">{t("applications.emptyDescription")}</p>
                 </div>
             )}
 
@@ -217,18 +215,23 @@ export default function ApplicationsPage() {
                     <Table>
                         <TableHeader>
                             <TableRow className="hover:bg-transparent">
-                                <TableHead>Nomzod</TableHead>
-                                <TableHead>Vakansiya</TableHead>
-                                <TableHead>Ish turi</TableHead>
-                                <TableHead>Maosh</TableHead>
-                                <TableHead>Sana</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Amallar</TableHead>
+                                <TableHead>{t("applications.columns.candidate")}</TableHead>
+                                <TableHead>{t("applications.columns.vacancy")}</TableHead>
+                                <TableHead>{t("applications.columns.employmentType")}</TableHead>
+                                <TableHead>{t("applications.columns.salary")}</TableHead>
+                                <TableHead>{t("applications.columns.date")}</TableHead>
+                                <TableHead>{t("applications.columns.status")}</TableHead>
+                                <TableHead className="text-right">{t("applications.columns.actions")}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {applications.map((application) => {
-                                const meta = statusMeta[application.status] ?? statusMeta.pending
+                                const style = statusStyles[application.status] ?? statusStyles.pending
+                                const statusLabel = t(`applications.status.${application.status}`)
+                                const employmentLabel = t(
+                                    `applications.employmentType.${application.vacancy.employment_type}`,
+                                    { defaultValue: application.vacancy.employment_type }
+                                )
                                 const canAct = application.status === "pending"
 
                                 return (
@@ -236,7 +239,7 @@ export default function ApplicationsPage() {
                                         <TableCell>
                                             <div className="space-y-0.5">
                                                 <p className="font-medium text-foreground">
-                                                    {application.driver.fio ?? "Ism kiritilmagan"}
+                                                    {application.driver.fio ?? t("applications.noName")}
                                                 </p>
                                                 <p className="text-xs text-muted-foreground">
                                                     {application.driver.phone_number}
@@ -256,8 +259,7 @@ export default function ApplicationsPage() {
                                         </TableCell>
 
                                         <TableCell className="text-muted-foreground">
-                                            {employmentLabels[application.vacancy.employment_type] ??
-                                                application.vacancy.employment_type}
+                                            {employmentLabel}
                                         </TableCell>
 
                                         <TableCell className="tabular-nums">
@@ -275,10 +277,10 @@ export default function ApplicationsPage() {
                                         <TableCell>
                                             <Badge
                                                 variant="outline"
-                                                className={cn("border-0 bg-muted px-2 py-0.5 text-xs font-medium", meta.text)}
+                                                className={cn("border-0 bg-muted px-2 py-0.5 text-xs font-medium", style.text)}
                                             >
-                                                <span className={cn("mr-1.5 size-1.5 rounded-full", meta.dot)} />
-                                                {meta.label}
+                                                <span className={cn("mr-1.5 size-1.5 rounded-full", style.dot)} />
+                                                {statusLabel}
                                             </Badge>
                                         </TableCell>
 
@@ -300,7 +302,7 @@ export default function ApplicationsPage() {
                                                             className="cursor-pointer"
                                                         >
                                                             <Eye className="mr-2 size-4" />
-                                                            Ko'rish
+                                                            {t("applications.actions.view")}
                                                         </DropdownMenuItem>
 
                                                         {canAct && (
@@ -310,14 +312,14 @@ export default function ApplicationsPage() {
                                                                     className="cursor-pointer text-emerald-700 focus:text-emerald-700 dark:text-emerald-400"
                                                                 >
                                                                     <ThumbsUp className="mr-2 size-4" />
-                                                                    Taklif qilish
+                                                                    {t("applications.actions.invite")}
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuItem
                                                                     onClick={() => requestStatusChange(application, "rejected")}
                                                                     className="cursor-pointer text-rose-700 focus:text-rose-700 dark:text-rose-400"
                                                                 >
                                                                     <ThumbsDown className="mr-2 size-4" />
-                                                                    Rad etish
+                                                                    {t("applications.actions.reject")}
                                                                 </DropdownMenuItem>
                                                             </>
                                                         )}
@@ -337,7 +339,11 @@ export default function ApplicationsPage() {
             {pagination && pagination.last_page > 1 && (
                 <div className="flex items-center justify-between">
                     <p className="text-sm text-muted-foreground">
-                        {pagination.from}–{pagination.to} / jami {pagination.total} ta
+                        {t("applications.pagination.range", {
+                            from: pagination.from,
+                            to: pagination.to,
+                            total: pagination.total,
+                        })}
                     </p>
                     <div className="flex items-center gap-2">
                         <Button
@@ -348,7 +354,7 @@ export default function ApplicationsPage() {
                             className="cursor-pointer"
                         >
                             <ChevronLeft className="mr-1 size-4" />
-                            Oldingi
+                            {t("applications.pagination.prev")}
                         </Button>
 
                         <span className="text-sm text-muted-foreground">
@@ -362,7 +368,7 @@ export default function ApplicationsPage() {
                             onClick={() => setPage((p) => p + 1)}
                             className="cursor-pointer"
                         >
-                            Keyingi
+                            {t("applications.pagination.next")}
                             <ChevronRight className="ml-1 size-4" />
                         </Button>
                     </div>
@@ -380,22 +386,24 @@ export default function ApplicationsPage() {
                     <AlertDialogHeader>
                         <AlertDialogTitle>
                             {actionTarget?.status === "invited"
-                                ? "Nomzodni taklif qilishni tasdiqlaysizmi?"
-                                : "Arizani rad etishni tasdiqlaysizmi?"}
+                                ? t("applications.dialog.confirmInviteTitle")
+                                : t("applications.dialog.confirmRejectTitle")}
                         </AlertDialogTitle>
                         <AlertDialogDescription>
-                            "{actionTarget?.application.driver.fio ?? actionTarget?.application.driver.phone_number}"
-                            ning "{actionTarget?.application.vacancy.title}" vakansiyasiga yuborgan arizasi{" "}
-                            <span className="font-medium text-foreground">
-                                {actionTarget && statusMeta[actionTarget.status].label}
-                            </span>{" "}
-                            ga o'zgartiriladi.
+                            {actionTarget &&
+                                t("applications.dialog.description", {
+                                    name:
+                                        actionTarget.application.driver.fio ??
+                                        actionTarget.application.driver.phone_number,
+                                    vacancy: actionTarget.application.vacancy.title,
+                                    status: t(`applications.status.${actionTarget.status}`),
+                                })}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
 
                     {actionTarget?.status === "rejected" && (
                         <Textarea
-                            placeholder="Rad etish sababi (ixtiyoriy)"
+                            placeholder={t("applications.dialog.rejectionReasonPlaceholder")}
                             value={rejectionReason}
                             onChange={(e) => setRejectionReason(e.target.value)}
                             className="min-h-20"
@@ -403,12 +411,12 @@ export default function ApplicationsPage() {
                     )}
 
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
+                        <AlertDialogCancel>{t("applications.dialog.cancel")}</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={confirmStatusChange}
                             disabled={changeStatusMutation.isPending}
                         >
-                            Tasdiqlash
+                            {t("applications.dialog.confirm")}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

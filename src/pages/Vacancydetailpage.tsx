@@ -2,6 +2,7 @@
 // Route: /vacancies/:id
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import {
     Award,
@@ -81,41 +82,31 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { VacancyFormDialog } from "@/components/Vacancyformdialog" 
+import { VacancyFormDialog } from "@/components/Vacancyformdialog"
 import { EmployeeCreateDialog, type SelectedApplication } from "@/components/Employeecreatedialog"
 import { useConfirm } from "@/components/confirm-provider"
 
 
 // ------------------------------------------------------------------
-// Static maps
+// Static maps (faqat stillar — labellar t() orqali olinadi)
 // ------------------------------------------------------------------
 
-const statusMeta: Record<string, { label: string; dot: string; text: string; badge: string }> = {
+const statusStyles: Record<string, { dot: string; text: string; badge: string }> = {
     draft: {
-        label: "Draft",
         dot: "bg-amber-400",
         text: "text-amber-700 dark:text-amber-400",
         badge: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400",
     },
     published: {
-        label: "Published",
         dot: "bg-emerald-500",
         text: "text-emerald-700 dark:text-emerald-400",
         badge: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
     },
     closed: {
-        label: "Closed",
         dot: "bg-rose-400",
         text: "text-rose-700 dark:text-rose-400",
         badge: "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400",
     },
-}
-
-const employmentTypeLabels: Record<EmploymentType, string> = {
-    full_time: "Full-time",
-    part_time: "Part-time",
-    contract: "Contract",
-    temporary: "Internship",
 }
 
 const nextStatusOptions: Record<VacancyStatus, VacancyStatus[]> = {
@@ -124,22 +115,18 @@ const nextStatusOptions: Record<VacancyStatus, VacancyStatus[]> = {
     closed: [],
 }
 
-// Adjust if your ApplicationStatus enum has more values (e.g. "hired", "withdrawn")
-const applicationStatusMeta: Record<string, { label: string; dot: string; text: string; badge: string }> = {
+const applicationStatusStyles: Record<string, { dot: string; text: string; badge: string }> = {
     pending: {
-        label: "Pending",
         dot: "bg-amber-400",
         text: "text-amber-700 dark:text-amber-400",
         badge: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400",
     },
     invited: {
-        label: "Invited",
         dot: "bg-emerald-500",
         text: "text-emerald-700 dark:text-emerald-400",
         badge: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
     },
     rejected: {
-        label: "Rejected",
         dot: "bg-rose-400",
         text: "text-rose-700 dark:text-rose-400",
         badge: "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400",
@@ -217,11 +204,11 @@ type Application = {
 }
 
 export default function VacancyDetailPage() {
+    const { t } = useTranslation()
     const { id } = useParams<{ id: string }>()
     const vacancyId = id ? Number(id) : null
     const navigate = useNavigate()
     const confirm = useConfirm()
-
 
     const { data: vacancy, isLoading } = useVacancy(vacancyId)
     const [selectedAppId, setSelectedAppId] = useState<number | null>(null)
@@ -234,6 +221,14 @@ export default function VacancyDetailPage() {
     const [editOpen, setEditOpen] = useState(false)
     const [createOpen, setCreateOpen] = useState(false)
     const [employeeCreateApp, setEmployeeCreateApp] = useState<SelectedApplication | null>(null)
+
+    // labellarni tarjima orqali olish uchun helperlar
+    const getVacancyStatusLabel = (status: string) =>
+        t(`vacancies.status.${status}`, { defaultValue: status })
+    const getEmploymentTypeLabel = (type: string) =>
+        t(`vacancies.employmentType.${type}`, { defaultValue: type })
+    const getApplicationStatusLabel = (status: string) =>
+        t(`applications.status.${status}`, { defaultValue: status })
 
     const hasActiveFilters = Boolean(search || appStatus)
     const clearFilters = () => {
@@ -261,8 +256,8 @@ export default function VacancyDetailPage() {
 
     const handleInvite = async (applicationId: number) => {
         const ok = await confirm({
-            title: "Nomzodni taklif qilishni tasdiqlaysizmi?",
-            confirmText: "Taklif qilish",
+            title: t("vacancies.confirmInvite.title"),
+            confirmText: t("vacancies.confirmInvite.confirmButton"),
         })
         if (!ok) return
         changeApplicationStatus.mutate({ id: applicationId, status: "invited" })
@@ -270,13 +265,13 @@ export default function VacancyDetailPage() {
 
     const handleReject = async (applicationId: number) => {
         const { confirmed, value } = await confirm({
-            title: "Nomzodni rad etishni tasdiqlaysizmi?",
-            description: "Rad etish sababini kiritishingiz mumkin (ixtiyoriy).",
-            confirmText: "Rad etish",
+            title: t("vacancies.confirmReject.title"),
+            description: t("vacancies.confirmReject.description"),
+            confirmText: t("vacancies.confirmReject.confirmButton"),
             variant: "destructive",
             input: {
-                label: "Rad etish sababi",
-                placeholder: "Masalan: tajriba yetarli emas...",
+                label: t("vacancies.confirmReject.reasonLabel"),
+                placeholder: t("vacancies.confirmReject.reasonPlaceholder"),
                 multiline: true,
                 required: false, // majburiy qilish uchun true qiling
             },
@@ -294,7 +289,7 @@ export default function VacancyDetailPage() {
     const deleteMutation = useDeleteVacancy()
     const updateStatusMutation = useUpdateVacancyStatus()
 
-    const meta = vacancy ? statusMeta[vacancy.status] ?? statusMeta.draft : null
+    const style = vacancy ? statusStyles[vacancy.status] ?? statusStyles.draft : null
     const availableStatuses = vacancy
         ? nextStatusOptions[vacancy.status as VacancyStatus] ?? []
         : []
@@ -302,9 +297,9 @@ export default function VacancyDetailPage() {
     const handleDelete = async () => {
         if (!vacancy) return
         const ok = await confirm({
-            title: "Vakansiyani o'chirishni tasdiqlaysizmi?",
-            description: `"${vacancy.title}" vakansiyasi butunlay o'chiriladi. Bu amalni orqaga qaytarib bo'lmaydi.`,
-            confirmText: "O'chirish",
+            title: t("vacancies.deleteDialog.title"),
+            description: t("vacancies.deleteDialog.description", { title: vacancy.title }),
+            confirmText: t("vacancies.deleteDialog.confirm"),
             variant: "destructive",
         })
         if (!ok) return
@@ -317,14 +312,11 @@ export default function VacancyDetailPage() {
     const handleStatusChange = async (newStatus: VacancyStatus) => {
         if (!vacancy) return
         const ok = await confirm({
-            title: "Statusni o'zgartirishni tasdiqlaysizmi?",
-            description: (
-                <>
-                    "{vacancy.title}" vakansiyasi statusi{" "}
-                    <span className="font-medium text-foreground">{statusMeta[newStatus].label}</span>
-                    {" "}ga o'zgartiriladi.
-                </>
-            ),
+            title: t("vacancies.statusDialog.title"),
+            description: t("vacancies.statusDialog.description", {
+                title: vacancy.title,
+                status: getVacancyStatusLabel(newStatus),
+            }),
         })
         if (!ok) return
 
@@ -346,7 +338,6 @@ export default function VacancyDetailPage() {
         return range
     }
 
-
     if (isLoading) {
         return (
             <div className="space-y-6">
@@ -362,9 +353,9 @@ export default function VacancyDetailPage() {
         return (
             <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed py-24 text-center text-muted-foreground">
                 <Briefcase className="mb-3 size-10 opacity-40" />
-                <p className="font-medium text-foreground">Vacancy not found</p>
+                <p className="font-medium text-foreground">{t("vacancyDetail.notFoundTitle")}</p>
                 <Button variant="link" asChild>
-                    <Link to="/vacancies">Back to vacancies</Link>
+                    <Link to="/vacancies">{t("vacancyDetail.backToVacancies")}</Link>
                 </Button>
             </div>
         )
@@ -377,7 +368,7 @@ export default function VacancyDetailPage() {
             {/* Breadcrumb */}
             <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                 <Link to="/vacancies" className="hover:text-foreground">
-                    Vacancies
+                    {t("vacancies.title")}
                 </Link>
                 <span>/</span>
                 <span className="text-foreground">{vacancy.title}</span>
@@ -388,41 +379,43 @@ export default function VacancyDetailPage() {
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
                         <h1 className="text-2xl font-semibold tracking-tight">{vacancy.title}</h1>
-                        {meta && (
-                            <Badge variant="outline" className={cn("border-0 px-2 py-0.5 text-xs font-medium", meta.badge)}>
-                                {meta.label}
+                        {style && (
+                            <Badge variant="outline" className={cn("border-0 px-2 py-0.5 text-xs font-medium", style.badge)}>
+                                {getVacancyStatusLabel(vacancy.status)}
                             </Badge>
                         )}
                     </div>
-                    <p className="text-sm text-muted-foreground">Vacancy ID: #{vacancy.id}</p>
+                    <p className="text-sm text-muted-foreground">
+                        {t("vacancyDetail.vacancyIdLabel", { id: vacancy.id })}
+                    </p>
                 </div>
 
                 <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
                         <Pencil className="size-4" />
-                        Edit vacancy
+                        {t("vacancies.actions.edit")}
                     </Button>
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm">
-                                More
+                                {t("vacancyDetail.more")}
                                 <MoreVertical className="size-4" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-52">
                             {availableStatuses.length === 0 && (
-                                <DropdownMenuItem disabled>No status changes available</DropdownMenuItem>
+                                <DropdownMenuItem disabled>{t("vacancyDetail.noStatusChanges")}</DropdownMenuItem>
                             )}
                             {availableStatuses.map((s) => (
                                 <DropdownMenuItem
                                     key={s}
-                                    className={cn("cursor-pointer", statusMeta[s].text)}
+                                    className={cn("cursor-pointer", statusStyles[s].text)}
                                     disabled={updateStatusMutation.isPending}
                                     onClick={() => handleStatusChange(s)}
                                 >
                                     {s === "closed" ? <X className="size-4" /> : <Check className="size-4" />}
-                                    Move to {statusMeta[s].label}
+                                    {t("vacancies.actions.changeStatusTo", { status: getVacancyStatusLabel(s) })}
                                 </DropdownMenuItem>
                             ))}
                         </DropdownMenuContent>
@@ -436,7 +429,7 @@ export default function VacancyDetailPage() {
                         disabled={deleteMutation.isPending}
                     >
                         <Trash2 className="size-4" />
-                        Delete vacancy
+                        {t("vacancyDetail.deleteVacancy")}
                     </Button>
                 </div>
             </div>
@@ -451,7 +444,7 @@ export default function VacancyDetailPage() {
                         <div>
                             <p className="font-semibold leading-tight text-foreground">{vacancy.title}</p>
                             <p className="text-xs text-muted-foreground">
-                                {employmentTypeLabels[vacancy.employment_type as EmploymentType] ?? vacancy.employment_type}
+                                {getEmploymentTypeLabel(vacancy.employment_type as EmploymentType)}
                             </p>
                         </div>
                     </div>
@@ -460,7 +453,7 @@ export default function VacancyDetailPage() {
 
                     <div>
                         <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <Banknote className="size-3.5" /> Salary
+                            <Banknote className="size-3.5" /> {t("vacancyDetail.summary.salary")}
                         </p>
                         <p className="text-sm font-semibold tabular-nums">
                             ${vacancy.salary_from.toLocaleString()} – ${vacancy.salary_to.toLocaleString()}{" "}
@@ -472,7 +465,7 @@ export default function VacancyDetailPage() {
 
                     <div>
                         <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <CalendarClock className="size-3.5" /> Published
+                            <CalendarClock className="size-3.5" /> {t("vacancyDetail.summary.published")}
                         </p>
                         <p className="text-sm font-semibold">{formatDate(vacancy.published_at) ?? "—"}</p>
                     </div>
@@ -481,7 +474,7 @@ export default function VacancyDetailPage() {
 
                     <div>
                         <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <CalendarClock className="size-3.5" /> Expires
+                            <CalendarClock className="size-3.5" /> {t("vacancyDetail.summary.expires")}
                         </p>
                         <p className="text-sm font-semibold">{formatDate(vacancy.expires_at) ?? "—"}</p>
                     </div>
@@ -490,13 +483,13 @@ export default function VacancyDetailPage() {
 
                     <div>
                         <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <CalendarClock className="size-3.5" /> Created
+                            <CalendarClock className="size-3.5" /> {t("vacancyDetail.summary.created")}
                         </p>
                         <div className="flex items-center gap-2">
                             <p className="text-sm font-semibold">{formatDate(vacancy.created_at) ?? "—"}</p>
-                            {meta && (
-                                <Badge variant="outline" className={cn("border-0 px-2 py-0 text-[10px] font-medium", meta.badge)}>
-                                    {meta.label}
+                            {style && (
+                                <Badge variant="outline" className={cn("border-0 px-2 py-0 text-[10px] font-medium", style.badge)}>
+                                    {getVacancyStatusLabel(vacancy.status)}
                                 </Badge>
                             )}
                         </div>
@@ -506,18 +499,18 @@ export default function VacancyDetailPage() {
 
             {/* Stat cards */}
             <div className="grid grid-cols-3 max-w-[80%] gap-3">
-                <Card className="rounded-2xl border-none bg-muted shadow-none   p-0">
+                <Card className="rounded-2xl border-none bg-muted shadow-none p-0">
                     <CardContent className="p-4">
                         <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <Eye className="size-3.5" /> Views
+                            <Eye className="size-3.5" /> {t("vacancyDetail.stats.views")}
                         </p>
                         <p className="mt-1 text-2xl font-semibold tabular-nums">{vacancy.view_count ?? 0}</p>
                     </CardContent>
                 </Card>
-                <Card className="rounded-2xl border-none bg-muted shadow-none   p-0">
+                <Card className="rounded-2xl border-none bg-muted shadow-none p-0">
                     <CardContent className="p-4">
                         <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <Users className="size-3.5" /> Applications
+                            <Users className="size-3.5" /> {t("vacancyDetail.stats.applications")}
                         </p>
                         <p className="mt-1 text-2xl font-semibold tabular-nums">
                             {vacancy.application_count ?? applicationsTotal}
@@ -527,13 +520,13 @@ export default function VacancyDetailPage() {
                 <Card className="rounded-2xl border-none bg-muted shadow-none p-0">
                     <CardContent className="p-4">
                         <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <Clock className="size-3.5" /> Days remaining
+                            <Clock className="size-3.5" /> {t("vacancyDetail.stats.daysRemaining")}
                         </p>
                         <p className="mt-1 text-2xl font-semibold tabular-nums">
                             {remaining ?? "—"}
                             {remaining !== null && (
                                 <span className="ml-1 text-xs font-normal text-muted-foreground">
-                                    until {formatDate(vacancy.expires_at)}
+                                    {t("vacancyDetail.stats.until", { date: formatDate(vacancy.expires_at) })}
                                 </span>
                             )}
                         </p>
@@ -547,7 +540,7 @@ export default function VacancyDetailPage() {
                 <Card className="rounded-2xl lg:col-span-2 shadow-none p-0">
                     <CardContent className="space-y-5 p-5">
                         <div className="space-y-1.5">
-                            <h4 className="text-sm font-semibold text-foreground">Job Description</h4>
+                            <h4 className="text-sm font-semibold text-foreground">{t("vacancyDetail.content.jobDescription")}</h4>
                             <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
                                 {vacancy.description}
                             </p>
@@ -556,7 +549,7 @@ export default function VacancyDetailPage() {
                         {(vacancy.requirements?.length ?? 0) > 0 && (
                             <div className="space-y-1.5">
                                 <h4 className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
-                                    <ListChecks className="size-4" /> Requirements
+                                    <ListChecks className="size-4" /> {t("vacancyDetail.content.requirements")}
                                 </h4>
                                 <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
                                     {vacancy.requirements!.map((req: string, i: number) => (
@@ -568,7 +561,7 @@ export default function VacancyDetailPage() {
 
                         {(vacancy.responsibilities?.length ?? 0) > 0 && (
                             <div className="space-y-1.5">
-                                <h4 className="text-sm font-semibold text-foreground">Responsibilities</h4>
+                                <h4 className="text-sm font-semibold text-foreground">{t("vacancyDetail.content.responsibilities")}</h4>
                                 <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
                                     {vacancy.responsibilities!.map((res: string, i: number) => (
                                         <li key={i}>{res}</li>
@@ -582,15 +575,15 @@ export default function VacancyDetailPage() {
                 {/* Right: vacancy information panel */}
                 <Card className="rounded-2xl shadow-none h-max p-0">
                     <CardContent className="p-5">
-                        <h4 className="mb-3 text-sm font-semibold text-foreground">Vacancy Information</h4>
+                        <h4 className="mb-3 text-sm font-semibold text-foreground">{t("vacancyDetail.info.title")}</h4>
                         <dl className="space-y-3 text-sm">
-                            <InfoRow label="Vacancy ID" value={`#${vacancy.id}`} />
+                            <InfoRow label={t("vacancyDetail.info.vacancyId")} value={`#${vacancy.id}`} />
                             <InfoRow
-                                label="Status"
+                                label={t("vacancyDetail.info.status")}
                                 value={
-                                    meta ? (
-                                        <Badge variant="outline" className={cn("border-0 px-2 py-0.5 text-xs font-medium", meta.badge)}>
-                                            {meta.label}
+                                    style ? (
+                                        <Badge variant="outline" className={cn("border-0 px-2 py-0.5 text-xs font-medium", style.badge)}>
+                                            {getVacancyStatusLabel(vacancy.status)}
                                         </Badge>
                                     ) : (
                                         "—"
@@ -598,16 +591,16 @@ export default function VacancyDetailPage() {
                                 }
                             />
                             <InfoRow
-                                label="Employment type"
-                                value={employmentTypeLabels[vacancy.employment_type as EmploymentType] ?? vacancy.employment_type}
+                                label={t("vacancyDetail.info.employmentType")}
+                                value={getEmploymentTypeLabel(vacancy.employment_type as EmploymentType)}
                             />
                             <InfoRow
-                                label="Salary"
+                                label={t("vacancyDetail.info.salary")}
                                 value={`$${vacancy.salary_from.toLocaleString()} – $${vacancy.salary_to.toLocaleString()} ${vacancy.salary_currency}`}
                             />
-                            <InfoRow label="Published at" value={formatDateTime(vacancy.published_at) ?? "—"} />
-                            <InfoRow label="Expires at" value={formatDateTime(vacancy.expires_at) ?? "—"} />
-                            <InfoRow label="Created at" value={formatDateTime(vacancy.created_at) ?? "—"} />
+                            <InfoRow label={t("vacancyDetail.info.publishedAt")} value={formatDateTime(vacancy.published_at) ?? "—"} />
+                            <InfoRow label={t("vacancyDetail.info.expiresAt")} value={formatDateTime(vacancy.expires_at) ?? "—"} />
+                            <InfoRow label={t("vacancyDetail.info.createdAt")} value={formatDateTime(vacancy.created_at) ?? "—"} />
                         </dl>
                     </CardContent>
                 </Card>
@@ -618,7 +611,7 @@ export default function VacancyDetailPage() {
                 <CardContent className="p-5">
                     <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                         <h4 className="flex items-center gap-1.5 text-base font-semibold text-foreground">
-                            Applications
+                            {t("vacancyDetail.applicationsSection.title")}
                             <span className="font-normal text-muted-foreground">{applicationsTotal}</span>
                         </h4>
 
@@ -631,7 +624,7 @@ export default function VacancyDetailPage() {
                                         setSearch(e.target.value)
                                         setPage(1)
                                     }}
-                                    placeholder="Search applicants..."
+                                    placeholder={t("vacancyDetail.applicationsSection.searchPlaceholder")}
                                     className="h-8 w-56 pl-8 text-sm"
                                 />
                             </div>
@@ -644,20 +637,20 @@ export default function VacancyDetailPage() {
                                 }}
                             >
                                 <SelectTrigger className="h-8 w-40 text-sm">
-                                    <SelectValue placeholder="Status" />
+                                    <SelectValue placeholder={t("applications.statusPlaceholder")} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">All statuses</SelectItem>
-                                    <SelectItem value="pending">Pending</SelectItem>
-                                    <SelectItem value="invited">Invited</SelectItem>
-                                    <SelectItem value="rejected">Rejected</SelectItem>
+                                    <SelectItem value="all">{t("applications.statusAll")}</SelectItem>
+                                    <SelectItem value="pending">{t("applications.status.pending")}</SelectItem>
+                                    <SelectItem value="invited">{t("applications.status.invited")}</SelectItem>
+                                    <SelectItem value="rejected">{t("applications.status.rejected")}</SelectItem>
                                 </SelectContent>
                             </Select>
 
                             {hasActiveFilters && (
                                 <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 text-muted-foreground">
                                     <X className="mr-1 size-3.5" />
-                                    Clear
+                                    {t("vacancyDetail.applicationsSection.clear")}
                                 </Button>
                             )}
                         </div>
@@ -673,7 +666,7 @@ export default function VacancyDetailPage() {
 
                     {!applicationsLoading && applications.length === 0 && (
                         <div className="rounded-lg border border-dashed py-10 text-center text-sm text-muted-foreground">
-                            No applications yet
+                            {t("vacancyDetail.applicationsSection.empty")}
                         </div>
                     )}
 
@@ -682,18 +675,17 @@ export default function VacancyDetailPage() {
                             <Table>
                                 <TableHeader>
                                     <TableRow className="bg-muted/50 hover:bg-muted/50">
-                                        <TableHead>Applicant</TableHead>
-                                        <TableHead>Phone</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead>Applied At</TableHead>
-                                        <TableHead>Last Updated</TableHead>
-                                        <TableHead className="text-right">Actions</TableHead>
+                                        <TableHead>{t("vacancyDetail.applicationsSection.columns.applicant")}</TableHead>
+                                        <TableHead>{t("vacancyDetail.applicationsSection.columns.phone")}</TableHead>
+                                        <TableHead>{t("vacancyDetail.applicationsSection.columns.status")}</TableHead>
+                                        <TableHead>{t("vacancyDetail.applicationsSection.columns.appliedAt")}</TableHead>
+                                        <TableHead>{t("vacancyDetail.applicationsSection.columns.lastUpdated")}</TableHead>
+                                        <TableHead className="text-right">{t("vacancyDetail.applicationsSection.columns.actions")}</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {applications.map((app) => {
-                                        const appMeta = applicationStatusMeta[app?.status] ?? applicationStatusMeta.pending
-
+                                        const appStyle = applicationStatusStyles[app?.status] ?? applicationStatusStyles.pending
                                         const canDecide = app.status === "pending"
 
                                         return (
@@ -731,7 +723,7 @@ export default function VacancyDetailPage() {
                                                                             : "bg-muted-foreground/40"
                                                                     )}
                                                                 />
-                                                                Driver ID: #{app.driver?.id}
+                                                                {t("vacancyDetail.applicationsSection.driverIdLabel", { id: app.driver?.id })}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -740,8 +732,8 @@ export default function VacancyDetailPage() {
                                                     {app.driver?.phone_number ?? "—"}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Badge variant="outline" className={cn("border-0 px-2 py-0.5 text-xs font-medium", appMeta.badge)}>
-                                                        {appMeta.label}
+                                                    <Badge variant="outline" className={cn("border-0 px-2 py-0.5 text-xs font-medium", appStyle.badge)}>
+                                                        {getApplicationStatusLabel(app.status)}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell className="text-sm text-muted-foreground">
@@ -752,9 +744,6 @@ export default function VacancyDetailPage() {
                                                 </TableCell>
                                                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                                                     <div className="flex items-center justify-end gap-1.5">
-
-
-
                                                         <DropdownMenu>
                                                             <DropdownMenuTrigger asChild>
                                                                 <Button size="sm" variant="ghost" className="h-7 px-2 text-xs">
@@ -768,7 +757,7 @@ export default function VacancyDetailPage() {
                                                                     onClick={() => handleInvite(app.id)}
                                                                 >
                                                                     <UserCheck className="size-4" />
-                                                                    Invite
+                                                                    {t("applications.actions.invite")}
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuItem
                                                                     className="cursor-pointer text-rose-700 focus:text-rose-700 dark:text-rose-400"
@@ -776,33 +765,32 @@ export default function VacancyDetailPage() {
                                                                     onClick={() => handleReject(app.id)}
                                                                 >
                                                                     <UserX className="size-4" />
-                                                                    Reject
+                                                                    {t("applications.actions.reject")}
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuSeparator />
                                                                 <DropdownMenuItem className="cursor-pointer" onClick={() => setSelectedAppId(app.id)}>
                                                                     <UserRound className="size-4" />
-                                                                    View profile
+                                                                    {t("vacancyDetail.applicationsSection.actions.viewProfile")}
                                                                 </DropdownMenuItem>
 
-                                                                {
-                                                                    app.status === 'invited' ? (
-                                                                        <DropdownMenuItem
-                                                                            className="cursor-pointer"
-                                                                            onClick={() => {
-                                                                                setEmployeeCreateApp({
-                                                                                    id: app.id,
-                                                                                    driverName: app.driver?.fio ?? `Ariza #${app.id}`,
-                                                                                    vacancyTitle: vacancy?.title,
-                                                                                })
-                                                                                setCreateOpen(true)
-                                                                            }}
-                                                                        >
-                                                                            <Plus className="size-4" />
-                                                                            Xodimlarga qo'shish
-                                                                        </DropdownMenuItem>
-                                                                    ) : ''
-                                                                }
-
+                                                                {app.status === "invited" ? (
+                                                                    <DropdownMenuItem
+                                                                        className="cursor-pointer"
+                                                                        onClick={() => {
+                                                                            setEmployeeCreateApp({
+                                                                                id: app.id,
+                                                                                driverName: app.driver?.fio ?? `Ariza #${app.id}`,
+                                                                                vacancyTitle: vacancy?.title,
+                                                                            })
+                                                                            setCreateOpen(true)
+                                                                        }}
+                                                                    >
+                                                                        <Plus className="size-4" />
+                                                                        {t("vacancyDetail.applicationsSection.actions.addToEmployees")}
+                                                                    </DropdownMenuItem>
+                                                                ) : (
+                                                                    ""
+                                                                )}
                                                             </DropdownMenuContent>
                                                         </DropdownMenu>
                                                     </div>
@@ -819,7 +807,11 @@ export default function VacancyDetailPage() {
                     {pagination && pagination.last_page > 1 && (
                         <div className="mt-4 flex flex-col items-center justify-between gap-3 sm:flex-row">
                             <p className="text-sm text-muted-foreground">
-                                {pagination.from}–{pagination.to} of {pagination.total}
+                                {t("vacancyDetail.applicationsSection.pagination.range", {
+                                    from: pagination.from,
+                                    to: pagination.to,
+                                    total: pagination.total,
+                                })}
                             </p>
 
                             <Pagination className="mx-0 w-auto">
@@ -878,18 +870,6 @@ export default function VacancyDetailPage() {
                             </Pagination>
                         </div>
                     )}
-
-                    {/* {applicationsFetching && !applicationsLoading && (
-                        <div className="mt-2 flex justify-center">
-                            <Loader2 className="size-4 animate-spin text-muted-foreground" />
-                        </div>
-                    )}
-
-                    {applicationsFetching && !applicationsLoading && (
-                        <div className="mt-2 flex justify-center">
-                            <Loader2 className="size-4 animate-spin text-muted-foreground" />
-                        </div>
-                    )} */}
                 </CardContent>
             </Card>
 
@@ -898,7 +878,6 @@ export default function VacancyDetailPage() {
                 onOpenChange={setEditOpen}
                 vacancy={vacancy}
             />
-
 
             {/* Side panel: applicant detail */}
             <ApplicantSidePanel
@@ -921,7 +900,7 @@ export default function VacancyDetailPage() {
     )
 }
 
-function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
+function InfoRow({ label, value }: { label: React.ReactNode; value: React.ReactNode }) {
     return (
         <div className="flex items-center justify-between gap-3">
             <dt className="text-muted-foreground">{label}</dt>
@@ -937,6 +916,7 @@ function ApplicantSidePanel({
     applicationId: number | null
     onOpenChange: (open: boolean) => void
 }) {
+    const { t } = useTranslation()
     const { data: application, isLoading } = useApplication(applicationId)
 
     const driver = application?.driver
@@ -944,9 +924,18 @@ function ApplicantSidePanel({
     const [copied, setCopied] = useState(false)
     const [avatarFailed, setAvatarFailed] = useState(false)
 
-    const appMeta = application
-        ? applicationStatusMeta[application.status] ?? applicationStatusMeta.pending
+    const applicationStatusStyles: Record<string, { badge: string }> = {
+        pending: { badge: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400" },
+        invited: { badge: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400" },
+        rejected: { badge: "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400" },
+    }
+
+    const appStyle = application
+        ? applicationStatusStyles[application.status] ?? applicationStatusStyles.pending
         : null
+
+    const getApplicationStatusLabel = (status: string) =>
+        t(`applications.status.${status}`, { defaultValue: status })
 
     const isOnline = !!driver?.is_online
 
@@ -997,7 +986,7 @@ function ApplicantSidePanel({
                         {/* Header */}
                         <SheetHeader
                             className={cn(
-                                "relative  border-b bg-linear-to-b px-6 py-4",
+                                "relative border-b bg-linear-to-b px-6 py-4",
                                 isOnline
                                     ? "from-emerald-500/[0.07] via-background to-background"
                                     : "from-muted/40 via-background to-background"
@@ -1044,11 +1033,11 @@ function ApplicantSidePanel({
 
                                     <div className="min-w-0">
                                         <SheetTitle className="truncate text-lg font-semibold tracking-tight">
-                                            {driver?.fio ?? "Unknown"}
+                                            {driver?.fio ?? t("vacancyDetail.panel.unknown")}
                                         </SheetTitle>
 
                                         <p className="mt-0.5 text-sm text-muted-foreground">
-                                            Driver #{driver?.id ?? "—"}
+                                            {t("vacancyDetail.panel.driverIdShort", { id: driver?.id ?? "—" })}
                                         </p>
                                     </div>
                                 </div>
@@ -1059,20 +1048,20 @@ function ApplicantSidePanel({
                         <div className="flex-1 space-y-7 p-5">
                             {/* Driver information */}
                             <section>
-                                <SectionTitle>Driver information</SectionTitle>
+                                <SectionTitle>{t("vacancyDetail.panel.driverInformation")}</SectionTitle>
 
                                 <div className="mt-3 grid grid-cols-2 gap-3">
-                                    <InfoCard icon={Briefcase} label="Driver number" value={driver?.number ?? "—"} />
+                                    <InfoCard icon={Briefcase} label={t("vacancyDetail.panel.driverNumber")} value={driver?.number ?? "—"} />
                                     <InfoCard
                                         icon={Phone}
-                                        label="Phone number"
+                                        label={t("vacancyDetail.panel.phoneNumber")}
                                         value={driver?.phone_number ?? "—"}
                                         action={
                                             driver?.phone_number && (
                                                 <button
                                                     onClick={handleCopyPhone}
                                                     className="text-muted-foreground/60 transition-colors hover:text-foreground"
-                                                    aria-label="Copy phone number"
+                                                    aria-label={t("vacancyDetail.panel.copyPhoneAria")}
                                                 >
                                                     {copied ? (
                                                         <Check className="size-3.5 text-emerald-500" />
@@ -1089,21 +1078,21 @@ function ApplicantSidePanel({
                             {/* Resume */}
                             {resume && (
                                 <section>
-                                    <SectionTitle>Resume</SectionTitle>
+                                    <SectionTitle>{t("vacancyDetail.panel.resume")}</SectionTitle>
 
                                     <div className="mt-3 grid grid-cols-2 gap-3">
-                                        <InfoCard icon={Cake} label="Birth date" value={birthDate ?? "—"} />
+                                        <InfoCard icon={Cake} label={t("vacancyDetail.panel.birthDate")} value={birthDate ?? "—"} />
                                         <InfoCard
                                             icon={Award}
-                                            label="Experience"
+                                            label={t("vacancyDetail.panel.experience")}
                                             value={
                                                 resume.experience_years !== null
-                                                    ? `${resume.experience_years} years`
+                                                    ? t("vacancyDetail.panel.experienceYears", { count: resume.experience_years })
                                                     : "—"
                                             }
                                         />
-                                        <InfoCard icon={Banknote} label="Desired salary" value={desiredSalary ?? "—"} />
-                                        <InfoCard icon={MapPin} label="Address" value={resume.address ?? "—"} />
+                                        <InfoCard icon={Banknote} label={t("vacancyDetail.panel.desiredSalary")} value={desiredSalary ?? "—"} />
+                                        <InfoCard icon={MapPin} label={t("vacancyDetail.panel.address")} value={resume.address ?? "—"} />
                                     </div>
 
                                     {resume.description && (
@@ -1116,11 +1105,11 @@ function ApplicantSidePanel({
 
                                     {resume.transport_types?.length > 0 && (
                                         <div className="mt-3">
-                                            <SectionTitle><Truck size={20} /> Transport types</SectionTitle>
+                                            <SectionTitle><Truck size={20} /> {t("vacancyDetail.panel.transportTypes")}</SectionTitle>
                                             <div className="flex flex-wrap gap-1.5 mt-2">
-                                                {resume.transport_types.map((t) => (
-                                                    <Badge key={t.id} className="rounded-full px-2.5 py-0.5 text-xs font-normal">
-                                                        {t.name}
+                                                {resume.transport_types.map((tType) => (
+                                                    <Badge key={tType.id} className="rounded-full px-2.5 py-0.5 text-xs font-normal">
+                                                        {tType.name}
                                                     </Badge>
                                                 ))}
                                             </div>
@@ -1129,7 +1118,7 @@ function ApplicantSidePanel({
 
                                     {resume.work_formats?.length > 0 && (
                                         <div className="mt-3">
-                                            <SectionTitle><Briefcase size={20} />  Work format</SectionTitle>
+                                            <SectionTitle><Briefcase size={20} /> {t("vacancyDetail.panel.workFormat")}</SectionTitle>
 
                                             <div className="flex flex-wrap gap-1.5 mt-2">
                                                 {resume.work_formats.map((w) => (
@@ -1145,24 +1134,24 @@ function ApplicantSidePanel({
 
                             {/* Application */}
                             <section>
-                                <SectionTitle>Application</SectionTitle>
+                                <SectionTitle>{t("vacancyDetail.panel.application")}</SectionTitle>
 
                                 <div className="mt-3 overflow-hidden rounded-2xl border bg-card">
                                     <DetailRow
                                         icon={Clock}
-                                        label="Status"
+                                        label={t("vacancyDetail.applicationsSection.columns.status")}
                                         value={
-                                            appMeta && (
-                                                <Badge variant="outline" className={cn("border-0 px-2 py-0.5 text-xs font-medium", appMeta.badge)}>
-                                                    {appMeta.label}
+                                            appStyle && (
+                                                <Badge variant="outline" className={cn("border-0 px-2 py-0.5 text-xs font-medium", appStyle.badge)}>
+                                                    {getApplicationStatusLabel(application.status)}
                                                 </Badge>
                                             )
                                         }
                                     />
-                                    <DetailRow icon={CalendarClock} label="Applied at" value={formatDateTime(application.applied_at) ?? "—"} />
-                                    <DetailRow icon={CalendarClock} label="Last updated" value={formatDateTime(application.updated_at) ?? "—"} />
+                                    <DetailRow icon={CalendarClock} label={t("vacancyDetail.panel.appliedAt")} value={formatDateTime(application.applied_at) ?? "—"} />
+                                    <DetailRow icon={CalendarClock} label={t("vacancyDetail.panel.lastUpdated")} value={formatDateTime(application.updated_at) ?? "—"} />
                                     {application.rejection_reason && (
-                                        <DetailRow icon={UserX} label="Rejection reason" value={application.rejection_reason} />
+                                        <DetailRow icon={UserX} label={t("vacancyDetail.panel.rejectionReason")} value={application.rejection_reason} />
                                     )}
                                 </div>
                             </section>
@@ -1170,7 +1159,7 @@ function ApplicantSidePanel({
                             {/* Message */}
                             {application.message && (
                                 <section>
-                                    <SectionTitle>Applicant message</SectionTitle>
+                                    <SectionTitle>{t("vacancyDetail.panel.applicantMessage")}</SectionTitle>
                                     <div className="mt-3 rounded-2xl border bg-muted/30 p-4">
                                         <div className="flex gap-3">
                                             <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-background">
@@ -1184,18 +1173,6 @@ function ApplicantSidePanel({
                                 </section>
                             )}
                         </div>
-
-                        {/* Footer */}
-                        {/* <div className="sticky bottom-0 border-t bg-background/80 p-4 backdrop-blur-sm">
-                            <p className="text-center text-xs text-muted-foreground">
-                                Application details
-                                {application.updated_at && (
-                                    <span className="text-muted-foreground/60">
-                                        {" · "}updated {formatDateTime(application.updated_at)}
-                                    </span>
-                                )}
-                            </p>
-                        </div> */}
                     </div>
                 )}
             </SheetContent>
@@ -1218,7 +1195,7 @@ function InfoCard({
     action,
 }: {
     icon: React.ComponentType<{ className?: string }>
-    label: string
+    label: React.ReactNode
     value: React.ReactNode
     action?: React.ReactNode
 }) {
@@ -1234,7 +1211,6 @@ function InfoCard({
             <p className="mt-3 text-xs font-medium text-muted-foreground">
                 {label}
             </p>
-
 
             <Tooltip>
                 <TooltipTrigger asChild>
@@ -1257,7 +1233,7 @@ function DetailRow({
     value,
 }: {
     icon: React.ComponentType<{ className?: string }>
-    label: string
+    label: React.ReactNode
     value: React.ReactNode
 }) {
     return (
@@ -1278,4 +1254,3 @@ function DetailRow({
         </div>
     )
 }
-

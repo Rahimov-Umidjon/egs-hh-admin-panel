@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -26,13 +27,13 @@ export function ProfileInfoDialog({
   onOpenChange,
   profile,
 }: ProfileInfoDialogProps) {
+  const { t } = useTranslation()
   const [website, setWebsite] = useState(profile.website)
   const [email, setEmail] = useState(profile.email)
   const [username, setUsername] = useState(profile.username)
 
   const updateInfo = useUpdateProfileInfo()
 
-  // Dialog har safar ochilganda joriy ma'lumotlar bilan qayta to'ldiriladi
   useEffect(() => {
     if (open) {
       setWebsite(profile.website)
@@ -52,37 +53,35 @@ export function ProfileInfoDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Ma'lumotlarni tahrirlash</DialogTitle>
-          <DialogDescription>
-            Kompaniyangizning asosiy aloqa ma'lumotlarini yangilang.
-          </DialogDescription>
+          <DialogTitle>{t("profileInfoDialog.title")}</DialogTitle>
+          <DialogDescription>{t("profileInfoDialog.description")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label htmlFor="website">Veb-sayt</Label>
+            <Label htmlFor="website">{t("profileInfoDialog.website")}</Label>
             <Input
               id="website"
               type="url"
-              placeholder="https://kompaniya.com"
+              placeholder={t("profileInfoDialog.websitePlaceholder")}
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("profileInfoDialog.email")}</Label>
             <Input
               id="email"
               type="email"
-              placeholder="info@kompaniya.com"
+              placeholder={t("profileInfoDialog.emailPlaceholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="username">Foydalanuvchi nomi</Label>
+            <Label htmlFor="username">{t("profileInfoDialog.username")}</Label>
             <Input
               id="username"
               value={username}
@@ -97,10 +96,10 @@ export function ProfileInfoDialog({
             onClick={() => onOpenChange(false)}
             disabled={updateInfo.isPending}
           >
-            Bekor qilish
+            {t("profileInfoDialog.cancel")}
           </Button>
           <Button onClick={handleSubmit} disabled={updateInfo.isPending}>
-            Saqlash
+            {t("profileInfoDialog.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

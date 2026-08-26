@@ -1,8 +1,10 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, Plus, X } from "lucide-react"
 import { z } from "zod"
+import { useTranslation } from "react-i18next"
+import type { TFunction } from "i18next"
 
 import {
   Dialog,
@@ -34,35 +36,37 @@ import type {  Vacancy, VacancyID, VacancyPayload } from "@/types"
 import { useCreateVacancy, useUpdateVacancy } from "@/features/vacancies"
 
 
+// Xabarlar tarjima qilinishi kerak bo'lgani uchun schema endi t() ni oladigan
+// funksiya sifatida e'lon qilingan va komponent ichida useMemo bilan yaratiladi.
+function createVacancySchema(t: TFunction) {
+  return z
+    .object({
+      title: z.string().min(3, t("vacancies.form.validation.titleMin")),
+      description: z.string().min(10, t("vacancies.form.validation.descriptionMin")),
+      employment_type: z
+        .enum(["full_time", "part_time", "contract", "temporary"])
+        .optional(),
+      salary_from: z.coerce.number().min(0, t("vacancies.form.validation.negativeSalary")),
+      salary_to: z.coerce.number().min(0, t("vacancies.form.validation.negativeSalary")),
+      salary_currency: z.enum(["USD", "EUR", "UZS"]),
+      status: z.enum(["draft", "published", "closed"]),
+      expires_at: z.string().optional(),
+      requirements: z
+        .array(z.object({ value: z.string().min(1, t("vacancies.form.validation.requirementRequired")) }))
+        .min(1, t("vacancies.form.validation.requirementsMin")),
+      responsibilities: z
+        .array(z.object({ value: z.string().min(1, t("vacancies.form.validation.responsibilityRequired")) }))
+        .min(1, t("vacancies.form.validation.responsibilitiesMin")),
+    })
+    .refine((data) => data.salary_to >= data.salary_from, {
+      message: t("vacancies.form.validation.salaryToMin"),
+      path: ["salary_to"],
+    })
+}
 
-
-
-const vacancySchema = z
-  .object({
-    title: z.string().min(3, "Kamida 3 ta belgi kiriting"),
-    description: z.string().min(10, "Kamida 10 ta belgi kiriting"),
-    employment_type: z
-      .enum(["full_time", "part_time", "contract", "temporary"])
-      .optional(),
-    salary_from: z.coerce.number().min(0, "Manfiy bo'lishi mumkin emas"),
-    salary_to: z.coerce.number().min(0, "Manfiy bo'lishi mumkin emas"),
-    salary_currency: z.enum(["USD", "EUR", "UZS"]),
-    status: z.enum(["draft", "published", "closed"]),
-    expires_at: z.string().optional(),
-    requirements: z
-      .array(z.object({ value: z.string().min(1, "Bo'sh bo'lishi mumkin emas") }))
-      .min(1, "Kamida 1 ta talab kiriting"),
-    responsibilities: z
-      .array(z.object({ value: z.string().min(1, "Bo'sh bo'lishi mumkin emas") }))
-      .min(1, "Kamida 1 ta vazifa kiriting"),
-  })
-  .refine((data) => data.salary_to >= data.salary_from, {
-    message: "Maksimal maosh minimaldan kichik bo'lishi mumkin emas",
-    path: ["salary_to"],
-  })
-
-type VacancyFormInput = z.input<typeof vacancySchema>   // salary_from/salary_to: unknown (coerce oldidan)
-type VacancyFormValues = z.output<typeof vacancySchema> // salary_from/salary_to: number (coerce keyin)
+type VacancySchema = ReturnType<typeof createVacancySchema>
+type VacancyFormInput = z.input<VacancySchema>   // salary_from/salary_to: unknown (coerce oldidan)
+type VacancyFormValues = z.output<VacancySchema> // salary_from/salary_to: number (coerce keyin)
 
 const emptyValues: VacancyFormInput = {
   title: "",
@@ -88,10 +92,14 @@ export function VacancyFormDialog({
   onOpenChange,
   vacancy,
 }: VacancyFormDialogProps) {
+  const { t, i18n } = useTranslation()
   const isEditMode = !!vacancy
   const createMutation = useCreateVacancy()
   const updateMutation = useUpdateVacancy()
   const isPending = createMutation.isPending || updateMutation.isPending
+
+  // Til o'zgarsa, validatsiya xabarlari ham qayta tuziladi
+  const vacancySchema = useMemo(() => createVacancySchema(t), [i18n.language])
 
   const form = useForm<VacancyFormInput, unknown, VacancyFormValues>({
     resolver: zodResolver(vacancySchema),
@@ -164,12 +172,12 @@ export function VacancyFormDialog({
       <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {isEditMode ? "Vakansiyani tahrirlash" : "Yangi vakansiya"}
+            {isEditMode ? t("vacancies.form.editTitle") : t("vacancies.form.createTitle")}
           </DialogTitle>
           <DialogDescription>
             {isEditMode
-              ? "Vakansiya ma'lumotlarini yangilang"
-              : "Yangi ish o'rni haqida ma'lumot kiriting"}
+              ? t("vacancies.form.editDescription")
+              : t("vacancies.form.createDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -180,9 +188,9 @@ export function VacancyFormDialog({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Sarlavha</FormLabel>
+                  <FormLabel>{t("vacancies.form.titleLabel")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Masalan: USA Truck Driver" {...field} />
+                    <Input placeholder={t("vacancies.form.titlePlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -194,11 +202,11 @@ export function VacancyFormDialog({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tavsif</FormLabel>
+                  <FormLabel>{t("vacancies.form.descriptionLabel")}</FormLabel>
                   <FormControl>
                     <Textarea
                       rows={4}
-                      placeholder="Vakansiya haqida batafsil ma'lumot"
+                      placeholder={t("vacancies.form.descriptionPlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -213,18 +221,18 @@ export function VacancyFormDialog({
                 name="employment_type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Bandlik turi</FormLabel>
+                    <FormLabel>{t("vacancies.form.employmentTypeLabel")}</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Tanlang" />
+                          <SelectValue placeholder={t("vacancies.form.selectPlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="full_time">To'liq stavka</SelectItem>
-                        <SelectItem value="part_time">Yarim stavka</SelectItem>
-                        <SelectItem value="contract">Shartnoma</SelectItem>
-                        <SelectItem value="temporary">Vaqtinchalik</SelectItem>
+                        <SelectItem value="full_time">{t("vacancies.employmentType.full_time")}</SelectItem>
+                        <SelectItem value="part_time">{t("vacancies.employmentType.part_time")}</SelectItem>
+                        <SelectItem value="contract">{t("vacancies.employmentType.contract")}</SelectItem>
+                        <SelectItem value="temporary">{t("vacancies.employmentType.temporary")}</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -237,17 +245,17 @@ export function VacancyFormDialog({
                 name="status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Holat</FormLabel>
+                    <FormLabel>{t("vacancies.form.statusLabel")}</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Tanlang" />
+                          <SelectValue placeholder={t("vacancies.form.selectPlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="draft">Qoralama</SelectItem>
-                        <SelectItem value="published">Chop etilgan</SelectItem>
-                        <SelectItem value="closed">Yopilgan</SelectItem>
+                        <SelectItem value="draft">{t("vacancies.status.draft")}</SelectItem>
+                        <SelectItem value="published">{t("vacancies.status.published")}</SelectItem>
+                        <SelectItem value="closed">{t("vacancies.status.closed")}</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -262,7 +270,7 @@ export function VacancyFormDialog({
                 name="salary_from"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Maosh (dan)</FormLabel>
+                    <FormLabel>{t("vacancies.form.salaryFromLabel")}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -280,7 +288,7 @@ export function VacancyFormDialog({
                 name="salary_to"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Maosh (gacha)</FormLabel>
+                    <FormLabel>{t("vacancies.form.salaryToLabel")}</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -298,7 +306,7 @@ export function VacancyFormDialog({
                 name="salary_currency"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Valyuta</FormLabel>
+                    <FormLabel>{t("vacancies.form.currencyLabel")}</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
@@ -322,7 +330,7 @@ export function VacancyFormDialog({
               name="expires_at"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amal qilish muddati</FormLabel>
+                  <FormLabel>{t("vacancies.form.expiresAtLabel")}</FormLabel>
                   <FormControl>
                     <Input type="date" {...field} />
                   </FormControl>
@@ -332,7 +340,7 @@ export function VacancyFormDialog({
             />
 
             <div className="space-y-2">
-              <FormLabel>Talablar</FormLabel>
+              <FormLabel>{t("vacancies.form.requirementsLabel")}</FormLabel>
               {requirementsArray.fields.map((field, index) => (
                 <div key={field.id} className="flex gap-2">
                   <FormField
@@ -342,7 +350,7 @@ export function VacancyFormDialog({
                       <FormItem className="flex-1">
                         <FormControl>
                           <Input
-                            placeholder="Masalan: CE toifali guvohnoma"
+                            placeholder={t("vacancies.form.requirementPlaceholder")}
                             {...field}
                           />
                         </FormControl>
@@ -367,12 +375,12 @@ export function VacancyFormDialog({
                 size="sm"
                 onClick={() => requirementsArray.append({ value: "" })}
               >
-                <Plus className="mr-1 size-4" /> Talab qo'shish
+                <Plus className="mr-1 size-4" /> {t("vacancies.form.addRequirement")}
               </Button>
             </div>
 
             <div className="space-y-2">
-              <FormLabel>Vazifalar</FormLabel>
+              <FormLabel>{t("vacancies.form.responsibilitiesLabel")}</FormLabel>
               {responsibilitiesArray.fields.map((field, index) => (
                 <div key={field.id} className="flex gap-2">
                   <FormField
@@ -382,7 +390,7 @@ export function VacancyFormDialog({
                       <FormItem className="flex-1">
                         <FormControl>
                           <Input
-                            placeholder="Masalan: Yukni xavfsiz tashish"
+                            placeholder={t("vacancies.form.responsibilityPlaceholder")}
                             {...field}
                           />
                         </FormControl>
@@ -407,7 +415,7 @@ export function VacancyFormDialog({
                 size="sm"
                 onClick={() => responsibilitiesArray.append({ value: "" })}
               >
-                <Plus className="mr-1 size-4" /> Vazifa qo'shish
+                <Plus className="mr-1 size-4" /> {t("vacancies.form.addResponsibility")}
               </Button>
             </div>
 
@@ -417,11 +425,11 @@ export function VacancyFormDialog({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Bekor qilish
+                {t("vacancies.form.cancel")}
               </Button>
               <Button type="submit" disabled={isPending}>
                 {isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
-                {isEditMode ? "Saqlash" : "Yaratish"}
+                {isEditMode ? t("vacancies.form.save") : t("vacancies.form.createSubmit")}
               </Button>
             </DialogFooter>
           </form>

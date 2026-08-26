@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { AuthProvider } from "@/features/auth/AuthContext"
 import { ProtectedRoute } from "@/components/ProtectedRoute"
 import { AdminLayout } from "@/layouts/AdminLayout"
-import LoginPage from "@/pages/LoginPage"
+import LoginPage from "@/pages/LoginPage" 
 
 const DashboardPage = lazy(() => import("@/pages/DashboardPage"))
 const DriversPage = lazy(() => import("@/pages/DriversPage"))
@@ -15,6 +15,7 @@ const ApplicationsPage = lazy(() => import("./pages/ApplicationsPage"))
 const ApplicationShowPage = lazy(() => import("./pages/ApplicationResumePage"))
 const VacancyDetailPage = lazy(() => import("./pages/Vacancydetailpage"))
 const EmployeesPage = lazy(() => import("./pages/EmployeesPage"))
+const VehiclesPage = lazy(() => import("./pages/VehiclesPage"))
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/aplications" element={<ApplicationsPage />} />
                 <Route path="/carrier/applications/:id" element={<ApplicationShowPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/vehicles" element={<VehiclesPage />} />
                 <Route path="/employees" element={<EmployeesPage />} />
               </Route>
             </Route>

@@ -1,11 +1,15 @@
-import { useState } from "react" 
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   Eye,
   MoreVertical,
+  PauseCircle,
   Pencil,
+  PlayCircle,
   Plus,
   Search,
   Users,
+  UserX,
   X,
 } from "lucide-react"
 
@@ -46,30 +50,19 @@ import {
 
 import { cn } from "@/lib/utils"
 import { useDebouncedValue } from "@/hooks/use-debounced-value"
-import { useEmployees } from "@/features/employees/useEmployees"
-import type { EmployeeSource } from "@/types"
+import { useEmployees, useUpdateEmployee } from "@/features/employees/useEmployees"
+import type { EmployeeSource, TerminationType } from "@/types"
 import { EmployeeFormDialog } from "@/components/EmployeeFormDialog"
 import { EmployeeDetailsSheet } from "@/components/EmployeeDetailsSheet"
 import { EmployeeCreateDialog } from "@/components/Employeecreatedialog"
+import { EmployeeTerminateDialog } from "@/components/EmployeeTerminateDialog"
+import { useConfirm } from "@/components/confirm-provider"
 
-const statusMeta: Record<string, { label: string; badge: string }> = {
-  active: {
-    label: "Faol",
-    badge: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
-  },
-  inactive: {
-    label: "Faol emas",
-    badge: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400",
-  },
-  terminated: {
-    label: "Ishdan bo'shatilgan",
-    badge: "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400",
-  },
-}
-
-const sourceLabels: Record<string, string> = {
-  manual: "Qo'lda",
-  vacancy: "Vakansiya orqali",
+// stillar — labellar t() orqali olinadi
+const statusStyles: Record<string, { badge: string }> = {
+  active: { badge: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400" },
+  paused: { badge: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400" },
+  ended: { badge: "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400" },
 }
 
 function formatDate(value?: string | null) {
@@ -97,9 +90,9 @@ function getPageRange(current: number, last: number): (number | "ellipsis")[] {
 }
 
 export default function EmployeesPage() {
- 
+  const { t } = useTranslation()
+
   const [search, setSearch] = useState("")
-  //   const [status, setStatus] = useState<EmployeeStatus | undefined>()
   const [source, setSource] = useState<EmployeeSource | undefined>()
   const [createdFrom, setCreatedFrom] = useState("")
   const [createdTo, setCreatedTo] = useState("")
@@ -112,9 +105,13 @@ export default function EmployeesPage() {
 
   const hasActiveFilters = Boolean(search || source || createdFrom || createdTo)
 
+  const [terminatingId, setTerminatingId] = useState<number | null>(null)
+
+  const getStatusLabel = (status: string) => t(`employees.status.${status}`, { defaultValue: status })
+  const getSourceLabel = (src: string) => t(`employees.source.${src}`, { defaultValue: src })
+
   const clearFilters = () => {
     setSearch("")
-    // setStatus(undefined)
     setSource(undefined)
     setCreatedFrom("")
     setCreatedTo("")
@@ -123,7 +120,6 @@ export default function EmployeesPage() {
 
   const { data, isLoading, isFetching } = useEmployees({
     search: debouncedSearch || undefined,
-    // status,
     source,
     created_from: debouncedCreatedFrom || undefined,
     created_to: debouncedCreatedTo || undefined,
@@ -140,6 +136,89 @@ export default function EmployeesPage() {
   const [editingId, setEditingId] = useState<number | null>(null)
   const [viewingId, setViewingId] = useState<number | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
+  const updateMutation = useUpdateEmployee()
+
+  const confirm = useConfirm()
+
+  const handlePause = (id: number, name?: string) => {
+    confirm({
+      title: t("employees.pauseDialog.title"),
+      description: name
+        ? t("employees.pauseDialog.descriptionWithName", { name })
+        : t("employees.pauseDialog.descriptionGeneric"),
+      confirmText: t("employees.pauseDialog.confirm"),
+      fields: [
+        {
+          name: "pause_reason",
+          label: t("employees.pauseDialog.reasonLabel"),
+          placeholder: t("employees.pauseDialog.reasonPlaceholder"),
+          multiline: true,
+        },
+      ],
+      onConfirm: async (values) => {
+        await updateMutation.mutateAsync({
+          id,
+          payload: { status: "paused", pause_reason: values.pause_reason || undefined },
+        })
+      },
+    })
+  }
+
+  const handleResume = (id: number, name?: string) => {
+    confirm({
+      title: t("employees.resumeDialog.title"),
+      description: name
+        ? t("employees.resumeDialog.descriptionWithName", { name })
+        : t("employees.resumeDialog.descriptionGeneric"),
+      confirmText: t("employees.resumeDialog.confirm"),
+      onConfirm: async () => {
+        await updateMutation.mutateAsync({ id, payload: { status: "active" } })
+      },
+    })
+  }
+
+  const handleTerminate = (id: number, name?: string) => {
+    confirm({
+      title: t("employees.terminateConfirm.title"),
+      description: name
+        ? t("employees.terminateConfirm.descriptionWithName", { name })
+        : t("employees.terminateConfirm.descriptionGeneric"),
+      confirmText: t("employees.terminateConfirm.confirm"),
+      variant: "destructive",
+      fields: [
+        {
+          name: "termination_type",
+          label: t("employees.terminateConfirm.typeLabel"),
+          placeholder: t("employees.terminateConfirm.typePlaceholder"),
+          required: true,
+          options: [
+            { value: "resigned", label: t("employees.terminationTypes.resigned") },
+            { value: "fired", label: t("employees.terminationTypes.fired") },
+            { value: "contract_expired", label: t("employees.terminationTypes.contract_expired") },
+            { value: "mutual_agreement", label: t("employees.terminationTypes.mutual_agreement") },
+            { value: "other", label: t("employees.terminationTypes.other") },
+          ],
+        },
+        {
+          name: "termination_reason",
+          label: t("employees.terminateConfirm.reasonLabel"),
+          placeholder: t("employees.terminateConfirm.reasonPlaceholder"),
+          required: true,
+          multiline: true,
+        },
+      ],
+      onConfirm: async (values) => {
+        await updateMutation.mutateAsync({
+          id,
+          payload: {
+            status: "ended",
+            termination_type: values.termination_type as TerminationType,
+            termination_reason: values.termination_reason,
+          },
+        })
+      },
+    })
+  }
 
   const openEdit = (id: number) => {
     setEditingId(id)
@@ -150,13 +229,11 @@ export default function EmployeesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight">Xodimlar</h2>
-          <p className="text-sm text-muted-foreground">
-            Kompaniya xodimlari ro'yxati va boshqaruvi
-          </p>
+          <h2 className="text-2xl font-semibold tracking-tight">{t("employees.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("employees.subtitle")}</p>
         </div>
         <Button onClick={() => setCreateOpen(true)} className="shadow-sm">
-          <Plus className="mr-2 size-4" /> Yangi xodim
+          <Plus className="mr-2 size-4" /> {t("employees.create")}
         </Button>
       </div>
 
@@ -165,7 +242,7 @@ export default function EmployeesPage() {
         <div className="relative max-w-sm flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Xodim raqami, F.I.Sh bo'yicha qidirish..."
+            placeholder={t("employees.searchPlaceholder")}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value)
@@ -175,24 +252,6 @@ export default function EmployeesPage() {
           />
         </div>
 
-        {/* <Select
-          value={status ?? "all"}
-          onValueChange={(v) => {
-            setStatus(v === "all" ? undefined : (v as EmployeeStatus))
-            setPage(1)
-          }}
-        >
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Barcha statuslar</SelectItem>
-            <SelectItem value="active">Faol</SelectItem>
-            <SelectItem value="inactive">Faol emas</SelectItem>
-            <SelectItem value="terminated">Ishdan bo'shatilgan</SelectItem>
-          </SelectContent>
-        </Select> */}
-
         <Select
           value={source ?? "all"}
           onValueChange={(v) => {
@@ -201,12 +260,12 @@ export default function EmployeesPage() {
           }}
         >
           <SelectTrigger className="w-44">
-            <SelectValue placeholder="Manba" />
+            <SelectValue placeholder={t("employees.sourcePlaceholder")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Barcha manbalar</SelectItem>
-            <SelectItem value="manual">Qo'lda</SelectItem>
-            <SelectItem value="vacancy">Vakansiya orqali</SelectItem>
+            <SelectItem value="all">{t("employees.sourceAll")}</SelectItem>
+            <SelectItem value="manual">{t("employees.source.manual")}</SelectItem>
+            <SelectItem value="vacancy">{t("employees.source.vacancy")}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -237,19 +296,19 @@ export default function EmployeesPage() {
             className="text-muted-foreground hover:text-foreground"
           >
             <X className="mr-1 size-3.5" />
-            Tozalash
+            {t("employees.clearFilters")}
           </Button>
         )}
 
         {!isLoading && (
           <p className="ml-auto shrink-0 text-sm text-muted-foreground">
-            Jami <span className="font-medium text-foreground">{pagination?.total ?? 0}</span> ta xodim
+            {t("employees.totalCountPrefix")}{" "}
+            <span className="font-medium text-foreground">{pagination?.total ?? 0}</span>{" "}
+            {t("employees.totalCountSuffix")}
           </p>
         )}
       </div>
 
-      {/* <Card className="rounded-2xl shadow-none p-0"> */}
-      {/* <CardContent className="p-5"> */}
       {isLoading && (
         <div className="space-y-2">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -261,8 +320,8 @@ export default function EmployeesPage() {
       {!isLoading && employees.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed py-24 text-center text-muted-foreground">
           <Users className="mb-3 size-10 opacity-40" />
-          <p className="font-medium text-foreground">Xodimlar topilmadi</p>
-          <p className="text-sm">Qidiruv yoki filtrni o'zgartirib ko'ring</p>
+          <p className="font-medium text-foreground">{t("employees.emptyTitle")}</p>
+          <p className="text-sm">{t("employees.emptyDescription")}</p>
         </div>
       )}
 
@@ -271,19 +330,19 @@ export default function EmployeesPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50">
-                <TableHead>Xodim</TableHead>
-                <TableHead>Lavozim</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Manba</TableHead>
-                <TableHead>Maosh</TableHead>
-                <TableHead>Boshlangan sana</TableHead>
-                <TableHead>Yaratilgan</TableHead>
-                <TableHead className="text-right">Amallar</TableHead>
+                <TableHead>{t("employees.columns.employee")}</TableHead>
+                <TableHead>{t("employees.columns.position")}</TableHead>
+                <TableHead>{t("employees.columns.status")}</TableHead>
+                <TableHead>{t("employees.columns.source")}</TableHead>
+                <TableHead>{t("employees.columns.salary")}</TableHead>
+                <TableHead>{t("employees.columns.startedAt")}</TableHead>
+                <TableHead>{t("employees.columns.createdAt")}</TableHead>
+                <TableHead className="text-right">{t("employees.columns.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {employees.map((emp) => {
-                const meta = statusMeta[emp.status] ?? statusMeta.active
+                const style = statusStyles[emp.status] ?? statusStyles.active
                 return (
                   <TableRow
                     key={emp.id}
@@ -324,13 +383,13 @@ export default function EmployeesPage() {
                     <TableCell>
                       <Badge
                         variant="outline"
-                        className={cn("border-0 px-2 py-0.5 text-xs font-medium", meta.badge)}
+                        className={cn("border-0 px-2 py-0.5 text-xs font-medium", style.badge)}
                       >
-                        {meta.label}
+                        {getStatusLabel(emp.status)}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {sourceLabels[emp.source] ?? emp.source}
+                      {getSourceLabel(emp.source)}
                     </TableCell>
                     <TableCell className="text-sm font-medium tabular-nums">
                       {Number(emp.salary).toLocaleString()} {emp.salary_currency}
@@ -341,6 +400,7 @@ export default function EmployeesPage() {
                     <TableCell className="text-sm text-muted-foreground">
                       {formatDate(emp.created_at)}
                     </TableCell>
+
                     <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -354,14 +414,42 @@ export default function EmployeesPage() {
                             onClick={() => setViewingId(emp.id)}
                           >
                             <Eye className="size-4" />
-                            Ko'rish
+                            {t("employees.actions.view")}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="cursor-pointer"
                             onClick={() => openEdit(emp.id)}
                           >
                             <Pencil className="size-4" />
-                            Tahrirlash
+                            {t("employees.actions.edit")}
+                          </DropdownMenuItem>
+
+                          {emp.status === "paused" ? (
+                            <DropdownMenuItem
+                              className="cursor-pointer text-emerald-600 focus:text-emerald-600"
+                              onClick={() => handleResume(emp.id, emp.driver?.fio)}
+                            >
+                              <PlayCircle className="size-4" />
+                              {t("employees.actions.activate")}
+                            </DropdownMenuItem>
+                          ) : (
+                            <DropdownMenuItem
+                              className="cursor-pointer text-amber-600 focus:text-amber-600"
+                              onClick={() => handlePause(emp.id, emp.driver?.fio)}
+                              disabled={emp.status === "ended"}
+                            >
+                              <PauseCircle className="size-4" />
+                              {t("employees.actions.pause")}
+                            </DropdownMenuItem>
+                          )}
+
+                          <DropdownMenuItem
+                            className="cursor-pointer text-rose-600 focus:text-rose-600"
+                            onClick={() => handleTerminate(emp.id, emp.driver?.fio)}
+                            disabled={emp.status === "ended"}
+                          >
+                            <UserX className="size-4" />
+                            {t("employees.actions.terminate")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -377,7 +465,11 @@ export default function EmployeesPage() {
       {pagination && pagination.last_page > 1 && (
         <div className="mt-4 flex flex-col items-center justify-between gap-3 sm:flex-row">
           <p className="text-sm text-muted-foreground">
-            {pagination.from}–{pagination.to} / {pagination.total}
+            {t("employees.pagination.range", {
+              from: pagination.from,
+              to: pagination.to,
+              total: pagination.total,
+            })}
           </p>
 
           <Pagination className="mx-0 w-auto">
@@ -436,8 +528,6 @@ export default function EmployeesPage() {
           </Pagination>
         </div>
       )}
-      {/* </CardContent> */}
-      {/* </Card> */}
 
       <EmployeeFormDialog
         open={formOpen}
@@ -457,12 +547,16 @@ export default function EmployeesPage() {
         open={createOpen}
         onOpenChange={(open) => {
           setCreateOpen(open)
-          // if (!open) setEmployeeCreateApp(null)
         }}
         defaultMode="new_driver"
-        // initialApplication={employeeCreateApp}
       />
 
+      <EmployeeTerminateDialog
+        open={terminatingId !== null}
+        onOpenChange={(open) => !open && setTerminatingId(null)}
+        employeeId={terminatingId}
+        employeeName={employees.find((e) => e.id === terminatingId)?.driver?.fio}
+      />
     </div>
   )
 }

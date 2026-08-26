@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
     Award,
     Banknote,
@@ -28,53 +29,12 @@ import { useEmployee } from "@/features/employees/useEmployees"
 import type { EmploymentType } from "@/types"
 
 // ------------------------------------------------------------------
-// Static maps
+// Static styles
 // ------------------------------------------------------------------
 
-// const statusMeta: Record<string, { label: string; dot: string; text: string; badge: string }> = {
-//     active: {
-//         label: "Active",
-//         dot: "bg-emerald-500",
-//         text: "text-emerald-700 dark:text-emerald-400",
-//         badge: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
-//     },
-//     inactive: {
-//         label: "Inactive",
-//         dot: "bg-amber-400",
-//         text: "text-amber-700 dark:text-amber-400",
-//         badge: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400",
-//     },
-//     terminated: {
-//         label: "Terminated",
-//         dot: "bg-rose-400",
-//         text: "text-rose-700 dark:text-rose-400",
-//         badge: "bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400",
-//     },
-// }
-
-const employmentTypeLabels: Record<string, string> = {
-    full_time: "Full-time",
-    part_time: "Part-time",
-    contract: "Contract",
-    temporary: "Internship",
-}
-
-const sourceMeta: Record<string, { label: string; badge: string }> = {
-    manual: {
-        label: "Manual",
-        badge: "bg-slate-50 text-slate-700 dark:bg-slate-500/10 dark:text-slate-300",
-    },
-    vacancy: {
-        label: "Via vacancy",
-        badge: "bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400",
-    },
-}
-
-const payPeriodLabels: Record<string, string> = {
-    monthly: "Monthly",
-    weekly: "Weekly",
-    daily: "Daily",
-    hourly: "Hourly",
+const sourceStyles: Record<string, { badge: string }> = {
+    manual: { badge: "bg-slate-50 text-slate-700 dark:bg-slate-500/10 dark:text-slate-300" },
+    vacancy: { badge: "bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400" },
 }
 
 // ------------------------------------------------------------------
@@ -108,13 +68,20 @@ interface EmployeeDetailsSheetProps {
 }
 
 export function EmployeeDetailsSheet({ employeeId, onOpenChange }: EmployeeDetailsSheetProps) {
+    const { t } = useTranslation()
     const { data: employee, isLoading } = useEmployee(employeeId)
 
     const driver = employee?.driver
     const [copied, setCopied] = useState(false)
     const [avatarFailed, setAvatarFailed] = useState(false)
 
-     const srcMeta = employee ? sourceMeta[employee.source] ?? sourceMeta.manual : null
+    const srcStyle = employee ? sourceStyles[employee.source] ?? sourceStyles.manual : null
+
+    const getSourceLabel = (src: string) => t(`employeeDetails.sourceValues.${src}`, { defaultValue: src })
+    const getEmploymentTypeLabel = (type: string) =>
+        t(`employeeDetails.employmentTypeValues.${type}`, { defaultValue: type })
+    const getPayPeriodLabel = (period: string) =>
+        t(`employeeDetails.payPeriodValues.${period}`, { defaultValue: period })
 
     const isOnline = !!driver?.is_online
 
@@ -216,8 +183,6 @@ export function EmployeeDetailsSheet({ employeeId, onOpenChange }: EmployeeDetai
                                         </p>
                                     </div>
                                 </div>
-
-                                 
                             </div>
                         </SheetHeader>
 
@@ -226,20 +191,20 @@ export function EmployeeDetailsSheet({ employeeId, onOpenChange }: EmployeeDetai
                             {/* Driver information */}
                             {driver && (
                                 <section>
-                                    <SectionTitle>Driver information</SectionTitle>
+                                    <SectionTitle>{t("employeeDetails.sections.driverInformation")}</SectionTitle>
 
                                     <div className="mt-3 grid grid-cols-2 gap-3">
-                                        <InfoCard icon={Briefcase} label="Driver number" value={driver.number ?? "—"} />
+                                        <InfoCard icon={Briefcase} label={t("employeeDetails.driverNumber")} value={driver.number ?? "—"} />
                                         <InfoCard
                                             icon={Phone}
-                                            label="Phone number"
+                                            label={t("employeeDetails.phoneNumber")}
                                             value={driver.phone_number ?? "—"}
                                             action={
                                                 driver.phone_number && (
                                                     <button
                                                         onClick={handleCopyPhone}
                                                         className="text-muted-foreground/60 transition-colors hover:text-foreground"
-                                                        aria-label="Copy phone number"
+                                                        aria-label={t("employeeDetails.copyPhoneAria")}
                                                     >
                                                         {copied ? (
                                                             <Check className="size-3.5 text-emerald-500" />
@@ -256,77 +221,74 @@ export function EmployeeDetailsSheet({ employeeId, onOpenChange }: EmployeeDetai
 
                             {/* Employment */}
                             <section>
-                                <SectionTitle>Employment</SectionTitle>
+                                <SectionTitle>{t("employeeDetails.sections.employment")}</SectionTitle>
 
                                 <div className="mt-3 grid grid-cols-2 gap-3">
-                                    <InfoCard icon={Briefcase} label="Position" value={employee.position} />
+                                    <InfoCard icon={Briefcase} label={t("employeeDetails.position")} value={employee.position} />
                                     <InfoCard
                                         icon={Award}
-                                        label="Employment type"
-                                        value={
-                                            employmentTypeLabels[employee.employment_type as EmploymentType] ??
-                                            employee.employment_type
-                                        }
+                                        label={t("employeeDetails.employmentType")}
+                                        value={getEmploymentTypeLabel(employee.employment_type as EmploymentType)}
                                     />
                                     <InfoCard
                                         icon={Banknote}
-                                        label="Salary"
+                                        label={t("employeeDetails.salary")}
                                         value={`${Number(employee.salary).toLocaleString()} ${employee.salary_currency}`}
                                     />
                                     <InfoCard
                                         icon={Clock}
-                                        label="Pay period"
-                                        value={payPeriodLabels[employee.pay_period] ?? employee.pay_period}
+                                        label={t("employeeDetails.payPeriod")}
+                                        value={getPayPeriodLabel(employee.pay_period)}
                                     />
                                 </div>
                             </section>
 
                             {/* Timeline */}
                             <section>
-                                <SectionTitle>Timeline</SectionTitle>
+                                <SectionTitle>{t("employeeDetails.sections.timeline")}</SectionTitle>
 
                                 <div className="mt-3 overflow-hidden rounded-2xl border bg-card">
                                     <DetailRow
                                         icon={Tag}
-                                        label="Source"
+                                        label={t("employeeDetails.source")}
                                         value={
-                                            srcMeta && (
+                                            srcStyle && (
                                                 <Badge
                                                     variant="outline"
-                                                    className={cn("border-0 px-2 py-0.5 text-xs font-medium", srcMeta.badge)}
+                                                    className={cn("border-0 px-2 py-0.5 text-xs font-medium", srcStyle.badge)}
                                                 >
-                                                    {srcMeta.label}
+                                                    {getSourceLabel(employee.source)}
                                                 </Badge>
                                             )
                                         }
                                     />
                                     <DetailRow
                                         icon={CalendarClock}
-                                        label="Started at"
+                                        label={t("employeeDetails.startedAt")}
                                         value={formatDate(employee.started_at) ?? "—"}
                                     />
                                     {employee.ended_at && (
                                         <DetailRow
                                             icon={CalendarClock}
-                                            label="Ended at"
+                                            label={t("employeeDetails.endedAt")}
                                             value={formatDate(employee.ended_at) ?? "—"}
                                         />
                                     )}
                                     {employee.termination_reason && (
                                         <DetailRow
                                             icon={Building2}
-                                            label="Termination reason"
+                                            label={t("employeeDetails.terminationReason")}
                                             value={employee.termination_reason}
                                         />
                                     )}
                                     <DetailRow
                                         icon={CalendarClock}
-                                        label="Created at"
+                                        label={t("employeeDetails.createdAt")}
                                         value={formatDateTime(employee.created_at) ?? "—"}
                                     />
                                     <DetailRow
                                         icon={CalendarClock}
-                                        label="Last updated"
+                                        label={t("employeeDetails.lastUpdated")}
                                         value={formatDateTime(employee.updated_at) ?? "—"}
                                     />
                                 </div>
@@ -335,7 +297,7 @@ export function EmployeeDetailsSheet({ employeeId, onOpenChange }: EmployeeDetai
                             {/* Notes */}
                             {employee.notes && (
                                 <section>
-                                    <SectionTitle>Notes</SectionTitle>
+                                    <SectionTitle>{t("employeeDetails.sections.notes")}</SectionTitle>
                                     <div className="mt-3 rounded-2xl border bg-muted/30 p-4">
                                         <div className="flex gap-3">
                                             <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-background">
@@ -352,7 +314,7 @@ export function EmployeeDetailsSheet({ employeeId, onOpenChange }: EmployeeDetai
                             {/* Meta */}
                             {employee.meta && Object.keys(employee.meta).length > 0 && (
                                 <section>
-                                    <SectionTitle>Additional info</SectionTitle>
+                                    <SectionTitle>{t("employeeDetails.sections.additionalInfo")}</SectionTitle>
                                     <div className="mt-3 overflow-hidden rounded-2xl border bg-card">
                                         {Object.entries(employee.meta).map(([key, value]) => (
                                             <DetailRow
@@ -394,7 +356,7 @@ function InfoCard({
     action,
 }: {
     icon: React.ComponentType<{ className?: string }>
-    label: string
+    label: React.ReactNode
     value: React.ReactNode
     action?: React.ReactNode
 }) {
@@ -432,7 +394,7 @@ function DetailRow({
     value,
 }: {
     icon: React.ComponentType<{ className?: string }>
-    label: string
+    label: React.ReactNode
     value: React.ReactNode
 }) {
     return (

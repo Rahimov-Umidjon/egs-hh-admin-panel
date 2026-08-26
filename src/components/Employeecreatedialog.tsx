@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, Search, X } from "lucide-react"
 import { z } from "zod"
+import { useTranslation, type TFunction } from "react-i18next"
 
 import {
   Dialog,
@@ -40,40 +41,38 @@ import {
 } from "@/features/employees/useEmployees"
 
 // ------------------------------------------------------------------
-// Shared employee fields schema
+// Shared employee fields schema — t() ga bog'liq bo'lgani uchun funksiya ko'rinishida
 // ------------------------------------------------------------------
 
-const employeeFieldsSchema = z.object({
-  employee_number: z.string().min(1, "Kiritilishi shart"),
-  position: z.string().min(2, "Kamida 2 ta belgi"),
-  employment_type: z.enum([
-    "full_time",
-    "part_time",
-    "contract",
-    "temporary",
-  ]),
-  salary: z.number().min(0, "Manfiy bo'lishi mumkin emas"),
-  salary_currency: z.enum(["USD", "EUR", "UZS"]),
-  pay_period: z.enum(["monthly", "weekly", "daily", "hourly"]),
-  started_at: z.string().min(1, "Sana tanlang"),
-  notes: z.string().optional(),
-})
+function buildEmployeeFieldsSchema(t: TFunction) {
+  return z.object({
+    employee_number: z.string().min(1, t("employeeCreate.validation.required")),
+    position: z.string().min(2, t("employeeCreate.validation.min2")),
+    employment_type: z.enum([
+      "full_time",
+      "part_time",
+      "contract",
+      "temporary",
+    ]),
+    salary: z.number().min(0, t("employeeCreate.validation.negativeSalary")),
+    salary_currency: z.enum(["USD", "EUR", "UZS"]),
+    pay_period: z.enum(["monthly", "weekly", "daily", "hourly"]),
+    started_at: z.string().min(1, t("employeeCreate.validation.dateRequired")),
+    notes: z.string().optional(),
+  })
+}
 
+function buildNewDriverSchema(t: TFunction) {
+  return buildEmployeeFieldsSchema(t).extend({
+    fio: z.string().min(2, t("employeeCreate.validation.min2")),
+    phone_number: z.string().min(9, t("employeeCreate.validation.phoneInvalid")),
+    number: z.string().min(1, t("employeeCreate.validation.required")),
+    telegram_chat_id: z.string().optional(),
+  })
+}
 
-
-
-// New driver mode
-const newDriverSchema = employeeFieldsSchema.extend({
-  fio: z.string().min(2, "Kamida 2 ta belgi"),
-  phone_number: z.string().min(9, "Telefon raqamni to'g'ri kiriting"),
-  number: z.string().min(1, "Kiritilishi shart"),
-  telegram_chat_id: z.string().optional(),
-})
-type NewDriverFormValues = z.infer<typeof newDriverSchema>
-
-// From application mode
-const fromApplicationSchema = employeeFieldsSchema
-type FromApplicationFormValues = z.infer<typeof fromApplicationSchema>
+type NewDriverFormValues = z.infer<ReturnType<typeof buildNewDriverSchema>>
+type FromApplicationFormValues = z.infer<ReturnType<typeof buildEmployeeFieldsSchema>>
 
 const emptyNewDriverValues: NewDriverFormValues = {
   fio: "",
@@ -110,11 +109,13 @@ interface EmployeeCreateDialogProps {
   initialApplication?: SelectedApplication | null
 }
 
-export function EmployeeCreateDialog({ open,
+export function EmployeeCreateDialog({
+  open,
   onOpenChange,
   defaultMode = "new_driver",
-  initialApplication = null
+  initialApplication = null,
 }: EmployeeCreateDialogProps) {
+  const { t } = useTranslation()
 
   const [mode, setMode] = useState<Mode>(defaultMode)
   const [selectedApplication, setSelectedApplication] = useState<SelectedApplication | null>(
@@ -125,6 +126,8 @@ export function EmployeeCreateDialog({ open,
   const createMutation = useCreateEmployee()
   const isPending = createWithDriverMutation.isPending || createMutation.isPending
 
+  const newDriverSchema = useMemo(() => buildNewDriverSchema(t), [t])
+  const fromApplicationSchema = useMemo(() => buildEmployeeFieldsSchema(t), [t])
 
   const newDriverForm = useForm<NewDriverFormValues>({
     resolver: zodResolver(newDriverSchema),
@@ -171,7 +174,7 @@ export function EmployeeCreateDialog({ open,
   const onSubmitFromApplication = (values: FromApplicationFormValues) => {
     if (!selectedApplication) {
       fromApplicationForm.setError("root", {
-        message: "Vakansiya arizasini tanlang",
+        message: t("employeeCreate.rootError"),
       })
       return
     }
@@ -197,56 +200,26 @@ export function EmployeeCreateDialog({ open,
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Yangi xodim</DialogTitle>
+          <DialogTitle>{t("employeeCreate.title")}</DialogTitle>
           <DialogDescription>
-            Yangi haydovchi qo'shib yoki mavjud vakansiya arizasidan xodim yarating
+            {t("employeeCreate.description")}
           </DialogDescription>
         </DialogHeader>
-
-        {/* Mode toggle */}
-        {/* <div className="grid grid-cols-2 gap-2 rounded-xl bg-muted p-1">
-          <button
-            type="button"
-            onClick={() => setMode("new_driver")}
-            className={cn(
-              "flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition-colors",
-              mode === "new_driver"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <UserPlus className="size-4" />
-            Yangi haydovchi
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode("from_application")}
-            className={cn(
-              "flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition-colors",
-              mode === "from_application"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <User className="size-4" />
-            Vakansiya arizasidan
-          </button>
-        </div> */}
 
         {mode === "new_driver" ? (
           <Form {...newDriverForm}>
             <form onSubmit={newDriverForm.handleSubmit(onSubmitNewDriver)} className="space-y-5">
               <div className="space-y-1.5">
-                <h4 className="text-sm font-semibold text-foreground">Haydovchi ma'lumotlari</h4>
+                <h4 className="text-sm font-semibold text-foreground">{t("employeeCreate.driverSection.title")}</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={newDriverForm.control}
                     name="fio"
                     render={({ field }) => (
                       <FormItem className="col-span-2">
-                        <FormLabel>F.I.Sh</FormLabel>
+                        <FormLabel>{t("employeeCreate.driverSection.fioLabel")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="Masalan: Muhammad Aliyev" {...field} />
+                          <Input placeholder={t("employeeCreate.driverSection.fioPlaceholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -257,9 +230,9 @@ export function EmployeeCreateDialog({ open,
                     name="phone_number"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Telefon raqami</FormLabel>
+                        <FormLabel>{t("employeeCreate.driverSection.phoneLabel")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="+998901234567" {...field} />
+                          <Input placeholder={t("employeeCreate.driverSection.phonePlaceholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -270,9 +243,9 @@ export function EmployeeCreateDialog({ open,
                     name="number"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Haydovchi raqami</FormLabel>
+                        <FormLabel>{t("employeeCreate.driverSection.numberLabel")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="DRV-001" {...field} />
+                          <Input placeholder={t("employeeCreate.driverSection.numberPlaceholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -283,9 +256,9 @@ export function EmployeeCreateDialog({ open,
                     name="telegram_chat_id"
                     render={({ field }) => (
                       <FormItem className="col-span-2">
-                        <FormLabel>Telegram chat ID (ixtiyoriy)</FormLabel>
+                        <FormLabel>{t("employeeCreate.driverSection.telegramLabel")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="123456789" {...field} />
+                          <Input placeholder={t("employeeCreate.driverSection.telegramPlaceholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -298,11 +271,11 @@ export function EmployeeCreateDialog({ open,
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={handleClose}>
-                  Bekor qilish
+                  {t("employeeCreate.cancel")}
                 </Button>
                 <Button type="submit" disabled={isPending}>
                   {isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
-                  Yaratish
+                  {t("employeeCreate.create")}
                 </Button>
               </DialogFooter>
             </form>
@@ -314,7 +287,7 @@ export function EmployeeCreateDialog({ open,
               className="space-y-5"
             >
               <div className="space-y-1.5">
-                <h4 className="text-sm font-semibold text-foreground">Vakansiya arizasi</h4>
+                <h4 className="text-sm font-semibold text-foreground">{t("employeeCreate.applicationSection.title")}</h4>
                 <ApplicationPicker
                   selected={selectedApplication}
                   onSelect={setSelectedApplication}
@@ -330,11 +303,11 @@ export function EmployeeCreateDialog({ open,
 
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={handleClose}>
-                  Bekor qilish
+                  {t("employeeCreate.cancel")}
                 </Button>
                 <Button type="submit" disabled={isPending}>
                   {isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
-                  Yaratish
+                  {t("employeeCreate.create")}
                 </Button>
               </DialogFooter>
             </form>
@@ -351,19 +324,21 @@ export function EmployeeCreateDialog({ open,
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function EmployeeCommonFields({ control }: { control: any }) {
+  const { t } = useTranslation()
+
   return (
     <div className="space-y-5">
       <div className="space-y-1.5">
-        <h4 className="text-sm font-semibold text-foreground">Ish ma'lumotlari</h4>
+        <h4 className="text-sm font-semibold text-foreground">{t("employeeCreate.workSection.title")}</h4>
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={control}
             name="employee_number"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Xodim raqami</FormLabel>
+                <FormLabel>{t("employeeCreate.workSection.employeeNumberLabel")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="EMP-0001" {...field} />
+                  <Input placeholder={t("employeeCreate.workSection.employeeNumberPlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -374,9 +349,9 @@ function EmployeeCommonFields({ control }: { control: any }) {
             name="position"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Lavozim</FormLabel>
+                <FormLabel>{t("employeeCreate.workSection.positionLabel")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Driver" {...field} />
+                  <Input placeholder={t("employeeCreate.workSection.positionPlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -390,7 +365,7 @@ function EmployeeCommonFields({ control }: { control: any }) {
             name="employment_type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Bandlik turi</FormLabel>
+                <FormLabel>{t("employeeCreate.workSection.employmentTypeLabel")}</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -398,10 +373,10 @@ function EmployeeCommonFields({ control }: { control: any }) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="full_time">To'liq stavka</SelectItem>
-                    <SelectItem value="part_time">Yarim stavka</SelectItem>
-                    <SelectItem value="contract">Shartnoma</SelectItem>
-                    <SelectItem value="temporary">Vaqtinchalik</SelectItem>
+                    <SelectItem value="full_time">{t("vacancies.employmentType.full_time")}</SelectItem>
+                    <SelectItem value="part_time">{t("vacancies.employmentType.part_time")}</SelectItem>
+                    <SelectItem value="contract">{t("vacancies.employmentType.contract")}</SelectItem>
+                    <SelectItem value="temporary">{t("vacancies.employmentType.temporary")}</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -413,7 +388,7 @@ function EmployeeCommonFields({ control }: { control: any }) {
             name="pay_period"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>To'lov davri</FormLabel>
+                <FormLabel>{t("employeeCreate.workSection.payPeriodLabel")}</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -421,10 +396,10 @@ function EmployeeCommonFields({ control }: { control: any }) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="monthly">Oylik</SelectItem>
-                    <SelectItem value="weekly">Haftalik</SelectItem>
-                    <SelectItem value="daily">Kunlik</SelectItem>
-                    <SelectItem value="hourly">Soatlik</SelectItem>
+                    <SelectItem value="monthly">{t("employeeCreate.workSection.payPeriod.monthly")}</SelectItem>
+                    <SelectItem value="weekly">{t("employeeCreate.workSection.payPeriod.weekly")}</SelectItem>
+                    <SelectItem value="daily">{t("employeeCreate.workSection.payPeriod.daily")}</SelectItem>
+                    <SelectItem value="hourly">{t("employeeCreate.workSection.payPeriod.hourly")}</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -439,7 +414,7 @@ function EmployeeCommonFields({ control }: { control: any }) {
             name="salary"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Maosh</FormLabel>
+                <FormLabel>{t("employeeCreate.workSection.salaryLabel")}</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -456,7 +431,7 @@ function EmployeeCommonFields({ control }: { control: any }) {
             name="salary_currency"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Valyuta</FormLabel>
+                <FormLabel>{t("employeeCreate.workSection.currencyLabel")}</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -478,7 +453,7 @@ function EmployeeCommonFields({ control }: { control: any }) {
             name="started_at"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Boshlangan sana</FormLabel>
+                <FormLabel>{t("employeeCreate.workSection.startedAtLabel")}</FormLabel>
                 <FormControl>
                   <Input type="date" {...field} />
                 </FormControl>
@@ -494,9 +469,9 @@ function EmployeeCommonFields({ control }: { control: any }) {
         name="notes"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Izoh (ixtiyoriy)</FormLabel>
+            <FormLabel>{t("employeeCreate.workSection.notesLabel")}</FormLabel>
             <FormControl>
-              <Textarea rows={3} placeholder="Qo'shimcha izoh..." {...field} />
+              <Textarea rows={3} placeholder={t("employeeCreate.workSection.notesPlaceholder")} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -523,6 +498,7 @@ function ApplicationPicker({
   selected: SelectedApplication | null
   onSelect: (app: SelectedApplication | null) => void
 }) {
+  const { t } = useTranslation()
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebouncedValue(search, 400)
 
@@ -532,8 +508,6 @@ function ApplicationPicker({
     page: 1,
   } as never)
 
-  // NOTE: `useApplications` javobidagi element shakli loyihangizdagi haqiqiy
-  // Application tipiga qarab moslashtirilishi kerak bo'lishi mumkin
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const results = ((data as any)?.data ?? []) as Array<{
     id: number
@@ -558,6 +532,7 @@ function ApplicationPicker({
           size="icon"
           className="size-7 shrink-0"
           onClick={() => onSelect(null)}
+          aria-label={t("employeeCreate.applicationSection.clearAria")}
         >
           <X className="size-3.5" />
         </Button>
@@ -570,7 +545,7 @@ function ApplicationPicker({
       <div className="relative">
         <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
-          placeholder="Haydovchi ismi bo'yicha qidirish..."
+          placeholder={t("employeeCreate.applicationSection.searchPlaceholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-9"
@@ -581,13 +556,15 @@ function ApplicationPicker({
         {isLoading && (
           <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
             <Loader2 className="mr-2 size-4 animate-spin" />
-            Yuklanmoqda...
+            {t("employeeCreate.applicationSection.loading")}
           </div>
         )}
 
         {!isLoading && results.length === 0 && (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            {search ? "Hech narsa topilmadi" : "Qidiruv uchun yozing"}
+            {search
+              ? t("employeeCreate.applicationSection.noResults")
+              : t("employeeCreate.applicationSection.typeToSearch")}
           </p>
         )}
 
@@ -599,20 +576,23 @@ function ApplicationPicker({
               onClick={() =>
                 onSelect({
                   id: app.id,
-                  driverName: app.driver?.fio ?? `Ariza #${app.id}`,
+                  driverName: app.driver?.fio ?? t("employeeCreate.applicationSection.unnamedApplication", { id: app.id }),
                   vacancyTitle:
-                    app.vacancy?.title ?? (app.vacancy_id ? `Vakansiya #${app.vacancy_id}` : undefined),
+                    app.vacancy?.title ??
+                    (app.vacancy_id
+                      ? t("employeeCreate.applicationSection.unnamedVacancy", { id: app.vacancy_id })
+                      : undefined),
                 })
               }
               className="flex w-full items-center justify-between gap-2 border-b px-3 py-2.5 text-left transition-colors last:border-b-0 hover:bg-muted/50"
             >
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-foreground">
-                  {app.driver?.fio ?? `Ariza #${app.id}`}
+                  {app.driver?.fio ?? t("employeeCreate.applicationSection.unnamedApplication", { id: app.id })}
                 </p>
                 {(app.vacancy?.title || app.vacancy_id) && (
                   <p className="truncate text-xs text-muted-foreground">
-                    {app.vacancy?.title ?? `Vakansiya #${app.vacancy_id}`}
+                    {app.vacancy?.title ?? t("employeeCreate.applicationSection.unnamedVacancy", { id: app.vacancy_id })}
                   </p>
                 )}
               </div>
@@ -620,7 +600,7 @@ function ApplicationPicker({
                 variant="outline"
                 className="shrink-0 border-0 bg-emerald-50 px-2 py-0 text-[10px] font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400"
               >
-                Invited
+                {t("employeeCreate.applicationSection.invitedBadge")}
               </Badge>
             </button>
           ))}

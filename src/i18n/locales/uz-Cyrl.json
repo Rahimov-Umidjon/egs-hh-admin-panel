@@ -92,5 +92,650 @@
   },
   "carrier": {
     "not_approved": "Фойдаланувчи тасдиқлаш жараёнида."
+  },
+  "profile": {
+    "title": "Профил",
+    "subtitle": "Компания маълумотларини ва филиалларни бошқариш",
+    "status": {
+      "pending": "Кўриб чиқилмоқда",
+      "approved": "Тасдиқланган",
+      "rejected": "Рад этилган"
+    },
+    "changePassword": "Паролни алмаштириш",
+    "edit": "Таҳрирлаш",
+    "email": "Email",
+    "username": "Фойдаланувчи номи",
+    "stateIncorporated": "Рўйхатдан ўтган ҳудуд",
+    "businessStartedAt": "Фаолият бошланган сана",
+    "yearsInBusiness": "Фаолият даври",
+    "tin": "СТИР",
+    "tinNotProvided": "Киритилмаган",
+    "locations": {
+      "title": "Филиаллар",
+      "add": "Филиал қўшиш",
+      "primary": "Бош офис",
+      "contactPrimary": "(асосий)",
+      "editAria": "Филиални таҳрирлаш",
+      "deleteAria": "Филиални ўчириш",
+      "empty": {
+        "title": "Ҳали филиаллар қўшилмаган",
+        "description": "Компаниянгизнинг биринчи филиалини қўшинг."
+      }
+    },
+    "error": {
+      "title": "Профил маълумотларини юклаб бўлмади",
+      "description": "Интернет алоқасини текширинг ва қайта уриниб кўринг.",
+      "retry": "Қайта уриниш"
+    },
+    "logo": {
+      "changeAria": "Логотипни ўзгартириш",
+      "success": "Логотип янгиланди",
+      "invalidType": {
+        "title": "Нотўғри файл тури",
+        "description": "Фақат PNG, JPEG, WEBP ёки SVG форматидаги расм юкланг."
+      },
+      "tooLarge": {
+        "title": "Файл ҳажми катта",
+        "description": "Логотип ҳажми {{size}}МБ дан ошмаслиги керак."
+      },
+      "error": {
+        "title": "Логотипни юклаб бўлмади",
+        "description": "Бироздан сўнг қайта уриниб кўринг."
+      }
+    }
+  },
+  "applications": {
+    "title": "Аризалар",
+    "subtitle": "Вакансияларга тушган аризаларни кўриб чиқиш",
+    "searchPlaceholder": "Ҳайдовчи ёки вакансия бўйича қидириш...",
+    "statusPlaceholder": "Статус",
+    "statusAll": "Барча статуслар",
+    "status": {
+      "pending": "Кутилмоқда",
+      "invited": "Таклиф қилинган",
+      "hired": "Йолланган",
+      "rejected": "Рад этилган"
+    },
+    "employmentType": {
+      "full_time": "Тўлиқ ставка",
+      "part_time": "Ярим ставка"
+    },
+    "clearFilters": "Тозалаш",
+    "totalCountPrefix": "Жами",
+    "totalCountSuffix": "та ариза",
+    "emptyTitle": "Аризалар топилмади",
+    "emptyDescription": "Қидирув ёки филтрни ўзгартириб кўринг",
+    "columns": {
+      "candidate": "Номзод",
+      "vacancy": "Вакансия",
+      "employmentType": "Иш тури",
+      "salary": "Маош",
+      "date": "Сана",
+      "status": "Статус",
+      "actions": "Амаллар"
+    },
+    "noName": "Исм киритилмаган",
+    "actions": {
+      "view": "Кўриш",
+      "invite": "Таклиф қилиш",
+      "reject": "Рад этиш"
+    },
+    "pagination": {
+      "prev": "Олдинги",
+      "next": "Кейинги",
+      "range": "{{from}}–{{to}} / жами {{total}} та"
+    },
+    "dialog": {
+      "confirmInviteTitle": "Номзодни таклиф қилишни тасдиқлайсизми?",
+      "confirmRejectTitle": "Аризани рад этишни тасдиқлайсизми?",
+      "description": "«{{name}}» номзодининг «{{vacancy}}» вакансиясига юборган аризаси «{{status}}» ҳолатига ўзгартирилади.",
+      "rejectionReasonPlaceholder": "Рад этиш сабаби (ихтиёрий)",
+      "cancel": "Бекор қилиш",
+      "confirm": "Тасдиқлаш"
+    }
+  },
+  "vacancies": {
+    "title": "Вакансиялар",
+    "subtitle": "Очиқ иш ўринларини бошқариш",
+    "create": "Янги вакансия",
+    "searchPlaceholder": "Сарлавҳа бўйича қидириш...",
+    "currencyPlaceholder": "Валюта",
+    "currencyAll": "Барча валюталар",
+    "statusPlaceholder": "Статус",
+    "statusAll": "Барча статуслар",
+    "status": {
+      "draft": "Қоралама",
+      "published": "Чоп этилган",
+      "closed": "Ёпилган"
+    },
+    "employmentType": {
+      "full_time": "Тўлиқ ставка",
+      "part_time": "Ярим ставка",
+      "contract": "Шартнома асосида",
+      "internship": "Амалиёт",
+      "remote": "Масофавий",
+      "temporary": "Вақтинчалик"
+    },
+    "salaryFromPlaceholder": "Ойлик дан",
+    "salaryToPlaceholder": "Ойлик гача",
+    "clearFilters": "Тозалаш",
+    "totalCountPrefix": "Жами",
+    "totalCountSuffix": "та вакансия",
+    "emptyTitle": "Вакансиялар топилмади",
+    "emptyDescription": "Қидирув ёки филтрни ўзгартириб кўринг",
+    "actions": {
+      "view": "Кўриш",
+      "edit": "Таҳрирлаш",
+      "delete": "Ўчириш",
+      "changeStatusTo": "{{status}} ҳолатига ўтказиш"
+    },
+    "applicationCount": "{{count}} та ариза",
+    "publishedLabel": "Эълон: {{date}}",
+    "expiresLabel": "{{date}} гача амал қилади",
+    "loadedAll": "Барча вакансиялар юкланди",
+    "deleteDialog": {
+      "title": "Вакансияни ўчиришни тасдиқлайсизми?",
+      "description": "«{{title}}» вакансияси бутунлай ўчирилади. Бу амални орқага қайтариб бўлмайди.",
+      "cancel": "Бекор қилиш",
+      "confirm": "Ўчириш"
+    },
+    "statusDialog": {
+      "title": "Статусни ўзгартиришни тасдиқлайсизми?",
+      "description": "«{{title}}» вакансияси статуси «{{status}}» га ўзгартирилади.",
+      "cancel": "Бекор қилиш",
+      "confirm": "Тасдиқлаш"
+    },
+    "form": {
+      "editTitle": "Вакансияни таҳрирлаш",
+      "createTitle": "Янги вакансия",
+      "editDescription": "Вакансия маълумотларини янгиланг",
+      "createDescription": "Янги иш ўрни ҳақида маълумот киритинг",
+      "titleLabel": "Сарлавҳа",
+      "titlePlaceholder": "Масалан: USA Truck Driver",
+      "descriptionLabel": "Тавсиф",
+      "descriptionPlaceholder": "Вакансия ҳақида батафсил маълумот",
+      "employmentTypeLabel": "Бандлик тури",
+      "selectPlaceholder": "Танланг",
+      "statusLabel": "Ҳолат",
+      "salaryFromLabel": "Маош (дан)",
+      "salaryToLabel": "Маош (гача)",
+      "currencyLabel": "Валюта",
+      "expiresAtLabel": "Амал қилиш муддати",
+      "requirementsLabel": "Талаблар",
+      "requirementPlaceholder": "Масалан: CE тоифали гувоҳнома",
+      "addRequirement": "Талаб қўшиш",
+      "responsibilitiesLabel": "Вазифалар",
+      "responsibilityPlaceholder": "Масалан: Юкни хавфсиз ташиш",
+      "addResponsibility": "Вазифа қўшиш",
+      "cancel": "Бекор қилиш",
+      "save": "Сақлаш",
+      "createSubmit": "Яратиш",
+      "validation": {
+        "titleMin": "Камида 3 та белги киритинг",
+        "descriptionMin": "Камида 10 та белги киритинг",
+        "negativeSalary": "Манфий бўлиши мумкин эмас",
+        "requirementRequired": "Бўш бўлиши мумкин эмас",
+        "requirementsMin": "Камида 1 та талаб киритинг",
+        "responsibilityRequired": "Бўш бўлиши мумкин эмас",
+        "responsibilitiesMin": "Камида 1 та вазифа киритинг",
+        "salaryToMin": "Максимал маош минималдан кичик бўлиши мумкин эмас"
+      }
+    },
+    "details": {
+      "descriptionTitle": "Тавсиф",
+      "requirementsTitle": "Талаблар",
+      "responsibilitiesTitle": "Мажбуриятлар",
+      "companyTitle": "Компания",
+      "yearsInBusiness": "Фаолият даври: {{years}}",
+      "primaryBadge": "Асосий",
+      "expiresUntil": "{{date}} гача амал қилади"
+    },
+    "confirmInvite": {
+      "title": "Номзодни таклиф қилишни тасдиқлайсизми?",
+      "confirmButton": "Таклиф қилиш"
+    },
+    "confirmReject": {
+      "title": "Номзодни рад этишни тасдиқлайсизми?",
+      "description": "Рад этиш сабабини киритишингиз мумкин (ихтиёрий).",
+      "confirmButton": "Рад этиш",
+      "reasonLabel": "Рад этиш сабаби",
+      "reasonPlaceholder": "Масалан: тажриба етарли эмас..."
+    }
+  },
+  "vacancyDetail": {
+    "vacancyIdLabel": "Вакансия ID: #{{id}}",
+    "more": "Кўпроқ",
+    "noStatusChanges": "Статус ўзгартириш имкони йўқ",
+    "deleteVacancy": "Вакансияни ўчириш",
+    "notFoundTitle": "Вакансия топилмади",
+    "backToVacancies": "Вакансияларга қайтиш",
+    "summary": {
+      "salary": "Маош",
+      "published": "Чоп этилган",
+      "expires": "Амал қилиш муддати",
+      "created": "Яратилган"
+    },
+    "stats": {
+      "views": "Кўришлар",
+      "applications": "Аризалар",
+      "daysRemaining": "Қолган кунлар",
+      "until": "{{date}} гача"
+    },
+    "content": {
+      "jobDescription": "Иш тавсифи",
+      "requirements": "Талаблар",
+      "responsibilities": "Мажбуриятлар"
+    },
+    "info": {
+      "title": "Вакансия ҳақида маълумот",
+      "vacancyId": "Вакансия ID",
+      "status": "Статус",
+      "employmentType": "Бандлик тури",
+      "salary": "Маош",
+      "publishedAt": "Чоп этилган сана",
+      "expiresAt": "Амал қилиш муддати",
+      "createdAt": "Яратилган сана"
+    },
+    "applicationsSection": {
+      "title": "Аризалар",
+      "searchPlaceholder": "Номзодларни қидириш...",
+      "clear": "Тозалаш",
+      "empty": "Ҳозирча аризалар йўқ",
+      "columns": {
+        "applicant": "Номзод",
+        "phone": "Телефон",
+        "status": "Статус",
+        "appliedAt": "Ариза санаси",
+        "lastUpdated": "Янгиланган сана",
+        "actions": "Амаллар"
+      },
+      "driverIdLabel": "Ҳайдовчи ID: #{{id}}",
+      "actions": {
+        "viewProfile": "Профилни кўриш",
+        "addToEmployees": "Ходимларга қўшиш"
+      },
+      "pagination": {
+        "range": "{{from}}–{{to}} / жами {{total}}"
+      }
+    },
+    "panel": {
+      "unknown": "Номаълум",
+      "driverInformation": "Ҳайдовчи маълумотлари",
+      "driverNumber": "Ҳайдовчи рақами",
+      "phoneNumber": "Телефон рақами",
+      "copyPhoneAria": "Телефон рақамини нусхалаш",
+      "resume": "Резюме",
+      "birthDate": "Туғилган сана",
+      "experience": "Тажриба",
+      "experienceYears": "{{count}} йил",
+      "desiredSalary": "Кутилаётган маош",
+      "address": "Манзил",
+      "transportTypes": "Транспорт турлари",
+      "workFormat": "Иш формати",
+      "application": "Ариза",
+      "appliedAt": "Ариза санаси",
+      "lastUpdated": "Янгиланган сана",
+      "rejectionReason": "Рад этиш сабаби",
+      "applicantMessage": "Номзод хабари",
+      "driverIdShort": "Ҳайдовчи #{{id}}"
+    }
+  },
+  "employeeCreate": {
+    "title": "Янги ходим",
+    "description": "Янги ҳайдовчи қўшиб ёки мавжуд вакансия аризасидан ходим яратинг",
+    "driverSection": {
+      "title": "Ҳайдовчи маълумотлари",
+      "fioLabel": "Ф.И.Ш",
+      "fioPlaceholder": "Масалан: Муҳаммад Алиев",
+      "phoneLabel": "Телефон рақами",
+      "phonePlaceholder": "+998901234567",
+      "numberLabel": "Ҳайдовчи рақами",
+      "numberPlaceholder": "DRV-001",
+      "telegramLabel": "Telegram чат ID (ихтиёрий)",
+      "telegramPlaceholder": "123456789"
+    },
+    "applicationSection": {
+      "title": "Вакансия аризаси",
+      "searchPlaceholder": "Ҳайдовчи исми бўйича қидириш...",
+      "loading": "Юкланмоқда...",
+      "noResults": "Ҳеч нарса топилмади",
+      "typeToSearch": "Қидирув учун ёзинг",
+      "invitedBadge": "Таклиф қилинган",
+      "unnamedApplication": "Ариза #{{id}}",
+      "unnamedVacancy": "Вакансия #{{id}}",
+      "clearAria": "Бекор қилиш"
+    },
+    "workSection": {
+      "title": "Иш маълумотлари",
+      "employeeNumberLabel": "Ходим рақами",
+      "employeeNumberPlaceholder": "EMP-0001",
+      "positionLabel": "Лавозим",
+      "positionPlaceholder": "Ҳайдовчи",
+      "employmentTypeLabel": "Бандлик тури",
+      "payPeriodLabel": "Тўлов даври",
+      "payPeriod": {
+        "monthly": "Ойлик",
+        "weekly": "Ҳафталик",
+        "daily": "Кунлик",
+        "hourly": "Соатлик"
+      },
+      "salaryLabel": "Маош",
+      "currencyLabel": "Валюта",
+      "startedAtLabel": "Бошланган сана",
+      "notesLabel": "Изоҳ (ихтиёрий)",
+      "notesPlaceholder": "Қўшимча изоҳ..."
+    },
+    "cancel": "Бекор қилиш",
+    "create": "Яратиш",
+    "rootError": "Вакансия аризасини танланг",
+    "validation": {
+      "required": "Киритилиши шарт",
+      "min2": "Камида 2 та белги",
+      "negativeSalary": "Манфий бўлиши мумкин эмас",
+      "phoneInvalid": "Телефон рақамни тўғри киритинг",
+      "dateRequired": "Сана танланг"
+    }
+  },
+  "employees": {
+    "title": "Ходимлар",
+    "subtitle": "Компания ходимлари рўйхати ва бошқаруви",
+    "create": "Янги ходим",
+    "searchPlaceholder": "Ходим рақами, Ф.И.Ш бўйича қидириш...",
+    "sourcePlaceholder": "Манба",
+    "sourceAll": "Барча манбалар",
+    "source": {
+      "manual": "Қўлда",
+      "vacancy": "Вакансия орқали"
+    },
+    "clearFilters": "Тозалаш",
+    "totalCountPrefix": "Жами",
+    "totalCountSuffix": "та ходим",
+    "emptyTitle": "Ходимлар топилмади",
+    "emptyDescription": "Қидирув ёки филтрни ўзгартириб кўринг",
+    "status": {
+      "active": "Фаол",
+      "paused": "Тўхтатилган",
+      "ended": "Ишдан бўшатилган"
+    },
+    "columns": {
+      "employee": "Ходим",
+      "position": "Лавозим",
+      "status": "Статус",
+      "source": "Манба",
+      "salary": "Маош",
+      "startedAt": "Бошланган сана",
+      "createdAt": "Яратилган",
+      "actions": "Амаллар"
+    },
+    "actions": {
+      "view": "Кўриш",
+      "edit": "Таҳрирлаш",
+      "activate": "Фаоллаштириш",
+      "pause": "Вақтинча тўхтатиш",
+      "terminate": "Ишдан бўшатиш"
+    },
+    "pauseDialog": {
+      "title": "Ходимни вақтинча тўхтатиш",
+      "descriptionWithName": "{{name}}ни вақтинча тўхтатмоқчимисиз? Уни кейинроқ фаоллаштириш мумкин.",
+      "descriptionGeneric": "Ушбу ходимни вақтинча тўхтатмоқчимисиз?",
+      "confirm": "Тўхтатиш",
+      "reasonLabel": "Сабаби (ихтиёрий)",
+      "reasonPlaceholder": "Масалан: таътил, касаллик..."
+    },
+    "resumeDialog": {
+      "title": "Ходимни фаоллаштириш",
+      "descriptionWithName": "{{name}}ни қайта фаоллаштирмоқчимисиз?",
+      "descriptionGeneric": "Ходимни қайта фаоллаштирмоқчимисиз?",
+      "confirm": "Фаоллаштириш"
+    },
+    "terminateConfirm": {
+      "title": "Ходимни ишдан бўшатиш",
+      "descriptionWithName": "{{name}}ни ишдан бўшатмоқчимисиз? Бу амални бекор қилиб бўлмайди.",
+      "descriptionGeneric": "Ушбу ходимни ишдан бўшатмоқчимисиз? Бу амални бекор қилиб бўлмайди.",
+      "confirm": "Бўшатиш",
+      "typeLabel": "Бўшатиш тури",
+      "typePlaceholder": "Турини танланг",
+      "reasonLabel": "Батафсил изоҳ",
+      "reasonPlaceholder": "Сабабни ёзинг"
+    },
+    "terminationTypes": {
+      "resigned": "Ўз хоҳиши билан",
+      "fired": "Ишдан бўшатилди",
+      "contract_expired": "Шартнома муддати тугади",
+      "mutual_agreement": "Келишилган ҳолда",
+      "other": "Бошқа сабаб"
+    },
+    "pagination": {
+      "range": "{{from}}–{{to}} / {{total}}"
+    }
+  },
+  "employeeDetails": {
+    "sections": {
+      "driverInformation": "Ҳайдовчи маълумотлари",
+      "employment": "Иш маълумотлари",
+      "timeline": "Хронология",
+      "notes": "Изоҳлар",
+      "additionalInfo": "Қўшимча маълумот"
+    },
+    "driverNumber": "Ҳайдовчи рақами",
+    "phoneNumber": "Телефон рақами",
+    "copyPhoneAria": "Телефон рақамини нусхалаш",
+    "position": "Лавозим",
+    "employmentType": "Бандлик тури",
+    "salary": "Маош",
+    "payPeriod": "Тўлов даври",
+    "source": "Манба",
+    "startedAt": "Бошланган сана",
+    "endedAt": "Тугаган сана",
+    "terminationReason": "Бўшатиш сабаби",
+    "createdAt": "Яратилган сана",
+    "lastUpdated": "Охирги янгиланиш",
+    "employmentTypeValues": {
+      "full_time": "Тўлиқ ставка",
+      "part_time": "Ярим ставка",
+      "contract": "Шартнома",
+      "temporary": "Амалиёт"
+    },
+    "sourceValues": {
+      "manual": "Қўлда",
+      "vacancy": "Вакансия орқали"
+    },
+    "payPeriodValues": {
+      "monthly": "Ойлик",
+      "weekly": "Ҳафталик",
+      "daily": "Кунлик",
+      "hourly": "Соатлик"
+    }
+  },
+  "employeeTerminateDialog": {
+    "title": "Ходимни ишдан бўшатиш",
+    "descriptionWithName": "{{name}}ни ишдан бўшатмоқчимисиз?",
+    "descriptionGeneric": "Ушбу ходимни ишдан бўшатмоқчимисиз?",
+    "descriptionSuffix": "Бу амални кейин бекор қилиб бўлмайди.",
+    "typeLabel": "Бўшатиш сабаби (тури)",
+    "reasonLabel": "Батафсил изоҳ",
+    "reasonPlaceholder": "Масалан: интизомий жазо, штат қисқартириш ва ҳ.к.",
+    "confirmWarning": "Тасдиқлаш учун яна бир марта «Бўшатиш»ни босинг.",
+    "cancel": "Бекор қилиш",
+    "confirmFirst": "Бўшатиш",
+    "confirmSecond": "Ҳа, бўшатиш"
+  },
+  "Vehicles": {
+    "title": "Мошиналар",
+    "subtitle": "Автопарк рўйхати ва бошқаруви",
+    "addNew": "Янги мошина",
+    "searchPlaceholder": "Давлат рақами, VIN, бренд бўйича қидириш...",
+    "status": {
+      "placeholder": "Статус",
+      "all": "Барча статуслар",
+      "active": "Фаол",
+      "inactive": "Фаол эмас",
+      "repair": "Таъмирлашда",
+      "sold": "Сотилган"
+    },
+    "availability": {
+      "placeholder": "Мавжудлиги",
+      "all": "Барчаси",
+      "available": "Мавжуд",
+      "unavailable": "Банд"
+    },
+    "clearFilters": "Тозалаш",
+    "totalCount": "Жами {{count}} та мошина",
+    "loadError": {
+      "title": "Мошиналарни юклаб бўлмади",
+      "retry": "Қайта уриниш"
+    },
+    "empty": {
+      "filteredTitle": "Мошиналар топилмади",
+      "title": "Ҳали мошиналар қўшилмаган",
+      "filteredSubtitle": "Қидирув ёки филтрни ўзгартириб кўринг",
+      "subtitle": "Автопаркка биринчи мошинани қўшинг"
+    },
+    "table": {
+      "vehicle": "Мошина",
+      "vin": "VIN",
+      "transportType": "Транспорт тури",
+      "year": "Йили",
+      "mileage": "Пробег",
+      "status": "Статус",
+      "availability": "Мавжудлиги",
+      "createdAt": "Қўшилган",
+      "actions": "Амаллар"
+    },
+    "actionsMenu": {
+      "view": "Кўриш",
+      "edit": "Таҳрирлаш",
+      "delete": "Ўчириш"
+    },
+    "deleteConfirm": {
+      "title": "Мошинани ўчириш",
+      "description": "{{label}} мошинасини ўчирмоқчимисиз? Бу амални бекор қилиб бўлмайди.",
+      "confirm": "Ўчириш"
+    },
+    "form": {
+      "editTitle": "Мошинани таҳрирлаш",
+      "createTitle": "Янги мошина қўшиш",
+      "editDescription": "Мошина маълумотларини янгиланг",
+      "createDescription": "Автопаркка янги мошина қўшиш учун маълумотларни тўлдиринг",
+      "loading": "Юкланмоқда...",
+      "transportType": {
+        "label": "Транспорт тури",
+        "placeholder": "Танланг"
+      },
+      "statusLabel": "Статус",
+      "plateNumber": {
+        "label": "Давлат рақами",
+        "placeholder": "01A123BC"
+      },
+      "vin": {
+        "label": "VIN код",
+        "placeholder": "1HGCM82633A123456"
+      },
+      "brand": {
+        "label": "Бренд",
+        "placeholder": "Mercedes-Benz"
+      },
+      "model": {
+        "label": "Модел",
+        "placeholder": "Actros 1845"
+      },
+      "year": "Ишлаб чиқарилган йили",
+      "mileage": "Пробег (км)",
+      "isAvailable": {
+        "label": "Ижарага бериш учун мавжуд",
+        "description": "Ёқилган бўлса, мошина буюртмалар рўйхатида кўринади"
+      },
+      "notes": {
+        "label": "Изоҳ (ихтиёрий)",
+        "placeholder": "Мошина ҳақида қўшимча маълумот..."
+      },
+      "cancel": "Бекор қилиш",
+      "save": "Сақлаш",
+      "add": "Қўшиш",
+      "errors": {
+        "transportType": "Транспорт турини танланг",
+        "plateNumber": "Давлат рақамини киритинг",
+        "vinRequired": "VIN кодини киритинг",
+        "vinLength": "VIN код 17 та белгидан иборат бўлиши керак",
+        "brand": "Брендни киритинг",
+        "model": "Моделни киритинг",
+        "year": "Ишлаб чиқарилган йилни тўғри киритинг",
+        "mileage": "Пробег манфий бўлиши мумкин эмас"
+      }
+    },
+    "details": {
+      "vehicleInfo": "Мошина маълумотлари",
+      "vinCode": "VIN код",
+      "copyVinAria": "VIN кодни нусхалаш",
+      "transportType": "Транспорт тури",
+      "year": "Ишлаб чиқарилган йили",
+      "mileage": "Пробег",
+      "historyStatus": "Ҳолат ва тарих",
+      "status": "Статус",
+      "availability": "Мавжудлиги",
+      "carrier": "Ташувчи",
+      "activeRental": "Фаол ижара",
+      "yes": "Бор",
+      "no": "Йўқ",
+      "createdAt": "Қўшилган сана",
+      "updatedAt": "Охирги янгиланиш",
+      "notes": "Изоҳ"
+    }
+  },
+  "sidebar": {
+    "adminPanel": "Админ панель",
+    "menu": "Меню",
+    "dashboard": "Бошқарув панели",
+    "vehicles": "Мошиналар",
+    "employees": "Ходимлар",
+    "vacancies": "Вакансиялар",
+    "applications": "Аризалар",
+    "profile": "Профил",
+    "logout": "Чиқиш"
+  },
+  "locationDialog": {
+    "editTitle": "Филиални таҳрирлаш",
+    "createTitle": "Янги филиал қўшиш",
+    "editDescription": "\"{{name}}\" филиали маълумотларини янгиланг.",
+    "createDescription": "Янги филиал учун маълумотларни киритинг.",
+    "name": "Филиал номи",
+    "address": "Манзил",
+    "city": "Шаҳар",
+    "region": "Вилоят",
+    "phone": "Телефон",
+    "email": "Email (ихтиёрий)",
+    "emailPlaceholder": "office@kompaniya.uz",
+    "cancel": "Бекор қилиш",
+    "save": "Сақлаш",
+    "add": "Қўшиш"
+  },
+  "profileInfoDialog": {
+    "title": "Маълумотларни таҳрирлаш",
+    "description": "Компаниянгизнинг асосий алоқа маълумотларини янгиланг.",
+    "website": "Веб-сайт",
+    "websitePlaceholder": "https://kompaniya.com",
+    "email": "Email",
+    "emailPlaceholder": "info@kompaniya.com",
+    "username": "Фойдаланувчи номи",
+    "cancel": "Бекор қилиш",
+    "save": "Сақлаш"
+  },
+  "changePasswordDialog": {
+    "title": "Паролни алмаштириш",
+    "description": "Ҳисобингиз учун янги парол ўрнатинг.",
+    "newPassword": "Янги парол",
+    "confirmPassword": "Паролни тасдиқланг",
+    "cancel": "Бекор қилиш",
+    "update": "Янгилаш",
+    "errors": {
+      "mismatch": "Пароллар бир-бирига мос келмади",
+      "tooShort": "Парол камида 8 та белгидан иборат бўлиши керак"
+    }
+  },
+  "locationDeleteDialog": {
+    "title": "Филиални ўчириш",
+    "description": "\"{{name}}\" филиалини ўчирмоқчимисиз? Бу амални ортга қайтариб бўлмайди.",
+    "cancel": "Бекор қилиш",
+    "confirm": "Ўчириш"
   }
 }

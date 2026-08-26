@@ -24,7 +24,7 @@
     "location__email": "Ofis email"
   },
   "auth": {
-    "invalid_credentials":"Login yoki parol noto'g'ri.",
+    "invalid_credentials": "Login yoki parol noto'g'ri.",
     "login_tab": "Login",
     "register_tab": "Register",
     "welcome_title": "Xush kelibsiz",
@@ -90,7 +90,652 @@
     "language": "Til",
     "logout": "Chiqish"
   },
-  "carrier":{
-    "not_approved":"Foydalanuvchi tasdiqlash jarayonida."
+  "carrier": {
+    "not_approved": "Foydalanuvchi tasdiqlash jarayonida."
+  },
+  "profile": {
+    "title": "Profil",
+    "subtitle": "Kompaniya ma'lumotlarini va filiallarni boshqarish",
+    "status": {
+      "pending": "Ko'rib chiqilmoqda",
+      "approved": "Tasdiqlangan",
+      "rejected": "Rad etilgan"
+    },
+    "changePassword": "Parolni almashtirish",
+    "edit": "Tahrirlash",
+    "email": "Email",
+    "username": "Foydalanuvchi nomi",
+    "stateIncorporated": "Ro'yxatdan o'tgan hudud",
+    "businessStartedAt": "Faoliyat boshlangan sana",
+    "yearsInBusiness": "Faoliyat davri",
+    "tin": "STIR",
+    "tinNotProvided": "Kiritilmagan",
+    "locations": {
+      "title": "Filiallar",
+      "add": "Filial qo'shish",
+      "primary": "Bosh ofis",
+      "contactPrimary": "(asosiy)",
+      "editAria": "Filialni tahrirlash",
+      "deleteAria": "Filialni o'chirish",
+      "empty": {
+        "title": "Hali filiallar qo'shilmagan",
+        "description": "Kompaniyangizning birinchi filialini qo'shing."
+      }
+    },
+    "error": {
+      "title": "Profil ma'lumotlarini yuklab bo'lmadi",
+      "description": "Internet aloqasini tekshiring va qayta urinib ko'ring.",
+      "retry": "Qayta urinish"
+    },
+    "logo": {
+      "changeAria": "Logotipni o'zgartirish",
+      "success": "Logotip yangilandi",
+      "invalidType": {
+        "title": "Noto'g'ri fayl turi",
+        "description": "Faqat PNG, JPEG, WEBP yoki SVG formatidagi rasm yuklang."
+      },
+      "tooLarge": {
+        "title": "Fayl hajmi katta",
+        "description": "Logotip hajmi {{size}}MB dan oshmasligi kerak."
+      },
+      "error": {
+        "title": "Logotipni yuklab bo'lmadi",
+        "description": "Birozdan so'ng qayta urinib ko'ring."
+      }
+    }
+  },
+  "applications": {
+    "title": "Arizalar",
+    "subtitle": "Vakansiyalarga tushgan arizalarni ko'rib chiqish",
+    "searchPlaceholder": "Haydovchi yoki vakansiya bo'yicha qidirish...",
+    "statusPlaceholder": "Status",
+    "statusAll": "Barcha statuslar",
+    "status": {
+      "pending": "Kutilmoqda",
+      "invited": "Taklif qilingan",
+      "hired": "Yollangan",
+      "rejected": "Rad etilgan"
+    },
+    "employmentType": {
+      "full_time": "To'liq stavka",
+      "part_time": "Yarim stavka"
+    },
+    "clearFilters": "Tozalash",
+    "totalCountPrefix": "Jami",
+    "totalCountSuffix": "ta ariza",
+    "emptyTitle": "Arizalar topilmadi",
+    "emptyDescription": "Qidiruv yoki filtrni o'zgartirib ko'ring",
+    "columns": {
+      "candidate": "Nomzod",
+      "vacancy": "Vakansiya",
+      "employmentType": "Ish turi",
+      "salary": "Maosh",
+      "date": "Sana",
+      "status": "Status",
+      "actions": "Amallar"
+    },
+    "noName": "Ism kiritilmagan",
+    "actions": {
+      "view": "Ko'rish",
+      "invite": "Taklif qilish",
+      "reject": "Rad etish"
+    },
+    "pagination": {
+      "prev": "Oldingi",
+      "next": "Keyingi",
+      "range": "{{from}}–{{to}} / jami {{total}} ta"
+    },
+    "dialog": {
+      "confirmInviteTitle": "Nomzodni taklif qilishni tasdiqlaysizmi?",
+      "confirmRejectTitle": "Arizani rad etishni tasdiqlaysizmi?",
+      "description": "\"{{name}}\" nomzodining \"{{vacancy}}\" vakansiyasiga yuborgan arizasi \"{{status}}\" holatiga o'zgartiriladi.",
+      "rejectionReasonPlaceholder": "Rad etish sababi (ixtiyoriy)",
+      "cancel": "Bekor qilish",
+      "confirm": "Tasdiqlash"
+    }
+  },
+  "vacancies": {
+    "title": "Vakansiyalar",
+    "subtitle": "Ochiq ish o'rinlarini boshqarish",
+    "create": "Yangi vakansiya",
+    "searchPlaceholder": "Sarlavha bo'yicha qidirish...",
+    "currencyPlaceholder": "Valyuta",
+    "currencyAll": "Barcha valyutalar",
+    "statusPlaceholder": "Status",
+    "statusAll": "Barcha statuslar",
+    "status": {
+      "draft": "Qoralama",
+      "published": "Chop etilgan",
+      "closed": "Yopilgan"
+    },
+    "employmentType": {
+      "full_time": "To'liq stavka",
+      "part_time": "Yarim stavka",
+      "contract": "Shartnoma asosida",
+      "internship": "Amaliyot",
+      "remote": "Masofaviy",
+      "temporary": "Vaqtinchalik"
+    },
+    "salaryFromPlaceholder": "Oylik dan",
+    "salaryToPlaceholder": "Oylik gacha",
+    "clearFilters": "Tozalash",
+    "totalCountPrefix": "Jami",
+    "totalCountSuffix": "ta vakansiya",
+    "emptyTitle": "Vakansiyalar topilmadi",
+    "emptyDescription": "Qidiruv yoki filtrni o'zgartirib ko'ring",
+    "actions": {
+      "view": "Ko'rish",
+      "edit": "Tahrirlash",
+      "delete": "O'chirish",
+      "changeStatusTo": "{{status}} holatiga o'tkazish"
+    },
+    "applicationCount": "{{count}} ta ariza",
+    "publishedLabel": "E'lon: {{date}}",
+    "expiresLabel": "{{date}} gacha amal qiladi",
+    "loadedAll": "Barcha vakansiyalar yuklandi",
+    "deleteDialog": {
+      "title": "Vakansiyani o'chirishni tasdiqlaysizmi?",
+      "description": "\"{{title}}\" vakansiyasi butunlay o'chiriladi. Bu amalni orqaga qaytarib bo'lmaydi.",
+      "cancel": "Bekor qilish",
+      "confirm": "O'chirish"
+    },
+    "statusDialog": {
+      "title": "Statusni o'zgartirishni tasdiqlaysizmi?",
+      "description": "\"{{title}}\" vakansiyasi statusi \"{{status}}\" ga o'zgartiriladi.",
+      "cancel": "Bekor qilish",
+      "confirm": "Tasdiqlash"
+    },
+    "form": {
+      "editTitle": "Vakansiyani tahrirlash",
+      "createTitle": "Yangi vakansiya",
+      "editDescription": "Vakansiya ma'lumotlarini yangilang",
+      "createDescription": "Yangi ish o'rni haqida ma'lumot kiriting",
+      "titleLabel": "Sarlavha",
+      "titlePlaceholder": "Masalan: USA Truck Driver",
+      "descriptionLabel": "Tavsif",
+      "descriptionPlaceholder": "Vakansiya haqida batafsil ma'lumot",
+      "employmentTypeLabel": "Bandlik turi",
+      "selectPlaceholder": "Tanlang",
+      "statusLabel": "Holat",
+      "salaryFromLabel": "Maosh (dan)",
+      "salaryToLabel": "Maosh (gacha)",
+      "currencyLabel": "Valyuta",
+      "expiresAtLabel": "Amal qilish muddati",
+      "requirementsLabel": "Talablar",
+      "requirementPlaceholder": "Masalan: CE toifali guvohnoma",
+      "addRequirement": "Talab qo'shish",
+      "responsibilitiesLabel": "Vazifalar",
+      "responsibilityPlaceholder": "Masalan: Yukni xavfsiz tashish",
+      "addResponsibility": "Vazifa qo'shish",
+      "cancel": "Bekor qilish",
+      "save": "Saqlash",
+      "createSubmit": "Yaratish",
+      "validation": {
+        "titleMin": "Kamida 3 ta belgi kiriting",
+        "descriptionMin": "Kamida 10 ta belgi kiriting",
+        "negativeSalary": "Manfiy bo'lishi mumkin emas",
+        "requirementRequired": "Bo'sh bo'lishi mumkin emas",
+        "requirementsMin": "Kamida 1 ta talab kiriting",
+        "responsibilityRequired": "Bo'sh bo'lishi mumkin emas",
+        "responsibilitiesMin": "Kamida 1 ta vazifa kiriting",
+        "salaryToMin": "Maksimal maosh minimaldan kichik bo'lishi mumkin emas"
+      }
+    },
+    "details": {
+      "descriptionTitle": "Tavsif",
+      "requirementsTitle": "Talablar",
+      "responsibilitiesTitle": "Majburiyatlar",
+      "companyTitle": "Kompaniya",
+      "yearsInBusiness": "Faoliyat davri: {{years}}",
+      "primaryBadge": "Asosiy",
+      "expiresUntil": "{{date}} gacha amal qiladi"
+    },
+    "confirmInvite": {
+      "title": "Nomzodni taklif qilishni tasdiqlaysizmi?",
+      "confirmButton": "Taklif qilish"
+    },
+    "confirmReject": {
+      "title": "Nomzodni rad etishni tasdiqlaysizmi?",
+      "description": "Rad etish sababini kiritishingiz mumkin (ixtiyoriy).",
+      "confirmButton": "Rad etish",
+      "reasonLabel": "Rad etish sababi",
+      "reasonPlaceholder": "Masalan: tajriba yetarli emas..."
+    }
+  },
+  "vacancyDetail": {
+    "vacancyIdLabel": "Vakansiya ID: #{{id}}",
+    "more": "Ko'proq",
+    "noStatusChanges": "Status o'zgartirish imkoni yo'q",
+    "deleteVacancy": "Vakansiyani o'chirish",
+    "notFoundTitle": "Vakansiya topilmadi",
+    "backToVacancies": "Vakansiyalarga qaytish",
+    "summary": {
+      "salary": "Maosh",
+      "published": "Chop etilgan",
+      "expires": "Amal qilish muddati",
+      "created": "Yaratilgan"
+    },
+    "stats": {
+      "views": "Ko'rishlar",
+      "applications": "Arizalar",
+      "daysRemaining": "Qolgan kunlar",
+      "until": "{{date}} gacha"
+    },
+    "content": {
+      "jobDescription": "Ish tavsifi",
+      "requirements": "Talablar",
+      "responsibilities": "Majburiyatlar"
+    },
+    "info": {
+      "title": "Vakansiya haqida ma'lumot",
+      "vacancyId": "Vakansiya ID",
+      "status": "Status",
+      "employmentType": "Bandlik turi",
+      "salary": "Maosh",
+      "publishedAt": "Chop etilgan sana",
+      "expiresAt": "Amal qilish muddati",
+      "createdAt": "Yaratilgan sana"
+    },
+    "applicationsSection": {
+      "title": "Arizalar",
+      "searchPlaceholder": "Nomzodlarni qidirish...",
+      "clear": "Tozalash",
+      "empty": "Hozircha arizalar yo'q",
+      "columns": {
+        "applicant": "Nomzod",
+        "phone": "Telefon",
+        "status": "Status",
+        "appliedAt": "Ariza sanasi",
+        "lastUpdated": "Yangilangan sana",
+        "actions": "Amallar"
+      },
+      "driverIdLabel": "Haydovchi ID: #{{id}}",
+      "actions": {
+        "viewProfile": "Profilni ko'rish",
+        "addToEmployees": "Xodimlarga qo'shish"
+      },
+      "pagination": {
+        "range": "{{from}}–{{to}} / jami {{total}}"
+      }
+    },
+    "panel": {
+      "unknown": "Noma'lum",
+      "driverInformation": "Haydovchi ma'lumotlari",
+      "driverNumber": "Haydovchi raqami",
+      "phoneNumber": "Telefon raqami",
+      "copyPhoneAria": "Telefon raqamini nusxalash",
+      "resume": "Rezyume",
+      "birthDate": "Tug'ilgan sana",
+      "experience": "Tajriba",
+      "experienceYears": "{{count}} yil",
+      "desiredSalary": "Kutilayotgan maosh",
+      "address": "Manzil",
+      "transportTypes": "Transport turlari",
+      "workFormat": "Ish formati",
+      "application": "Ariza",
+      "appliedAt": "Ariza sanasi",
+      "lastUpdated": "Yangilangan sana",
+      "rejectionReason": "Rad etish sababi",
+      "applicantMessage": "Nomzod xabari",
+      "driverIdShort": "Haydovchi #{{id}}"
+    }
+  },
+  "employeeCreate": {
+    "title": "Yangi xodim",
+    "description": "Yangi haydovchi qo'shib yoki mavjud vakansiya arizasidan xodim yarating",
+    "driverSection": {
+      "title": "Haydovchi ma'lumotlari",
+      "fioLabel": "F.I.Sh",
+      "fioPlaceholder": "Masalan: Muhammad Aliyev",
+      "phoneLabel": "Telefon raqami",
+      "phonePlaceholder": "+998901234567",
+      "numberLabel": "Haydovchi raqami",
+      "numberPlaceholder": "DRV-001",
+      "telegramLabel": "Telegram chat ID (ixtiyoriy)",
+      "telegramPlaceholder": "123456789"
+    },
+    "applicationSection": {
+      "title": "Vakansiya arizasi",
+      "searchPlaceholder": "Haydovchi ismi bo'yicha qidirish...",
+      "loading": "Yuklanmoqda...",
+      "noResults": "Hech narsa topilmadi",
+      "typeToSearch": "Qidiruv uchun yozing",
+      "invitedBadge": "Taklif qilingan",
+      "unnamedApplication": "Ariza #{{id}}",
+      "unnamedVacancy": "Vakansiya #{{id}}",
+      "clearAria": "Bekor qilish"
+    },
+    "workSection": {
+      "title": "Ish ma'lumotlari",
+      "employeeNumberLabel": "Xodim raqami",
+      "employeeNumberPlaceholder": "EMP-0001",
+      "positionLabel": "Lavozim",
+      "positionPlaceholder": "Driver",
+      "employmentTypeLabel": "Bandlik turi",
+      "payPeriodLabel": "To'lov davri",
+      "payPeriod": {
+        "monthly": "Oylik",
+        "weekly": "Haftalik",
+        "daily": "Kunlik",
+        "hourly": "Soatlik"
+      },
+      "salaryLabel": "Maosh",
+      "currencyLabel": "Valyuta",
+      "startedAtLabel": "Boshlangan sana",
+      "notesLabel": "Izoh (ixtiyoriy)",
+      "notesPlaceholder": "Qo'shimcha izoh..."
+    },
+    "cancel": "Bekor qilish",
+    "create": "Yaratish",
+    "rootError": "Vakansiya arizasini tanlang",
+    "validation": {
+      "required": "Kiritilishi shart",
+      "min2": "Kamida 2 ta belgi",
+      "negativeSalary": "Manfiy bo'lishi mumkin emas",
+      "phoneInvalid": "Telefon raqamni to'g'ri kiriting",
+      "dateRequired": "Sana tanlang"
+    }
+  },
+  "employees": {
+    "title": "Xodimlar",
+    "subtitle": "Kompaniya xodimlari ro'yxati va boshqaruvi",
+    "create": "Yangi xodim",
+    "searchPlaceholder": "Xodim raqami, F.I.Sh bo'yicha qidirish...",
+    "sourcePlaceholder": "Manba",
+    "sourceAll": "Barcha manbalar",
+    "source": {
+      "manual": "Qo'lda",
+      "vacancy": "Vakansiya orqali"
+    },
+    "clearFilters": "Tozalash",
+    "totalCountPrefix": "Jami",
+    "totalCountSuffix": "ta xodim",
+    "emptyTitle": "Xodimlar topilmadi",
+    "emptyDescription": "Qidiruv yoki filtrni o'zgartirib ko'ring",
+    "status": {
+      "active": "Faol",
+      "paused": "To'xtatilgan",
+      "ended": "Ishdan bo'shatilgan"
+    },
+    "columns": {
+      "employee": "Xodim",
+      "position": "Lavozim",
+      "status": "Status",
+      "source": "Manba",
+      "salary": "Maosh",
+      "startedAt": "Boshlangan sana",
+      "createdAt": "Yaratilgan",
+      "actions": "Amallar"
+    },
+    "actions": {
+      "view": "Ko'rish",
+      "edit": "Tahrirlash",
+      "activate": "Faollashtirish",
+      "pause": "Vaqtincha to'xtatish",
+      "terminate": "Ishdan bo'shatish"
+    },
+    "pauseDialog": {
+      "title": "Xodimni vaqtincha to'xtatish",
+      "descriptionWithName": "{{name}}ni vaqtincha to'xtatmoqchimisiz? Uni keyinroq faollashtirish mumkin.",
+      "descriptionGeneric": "Ushbu xodimni vaqtincha to'xtatmoqchimisiz?",
+      "confirm": "To'xtatish",
+      "reasonLabel": "Sababi (ixtiyoriy)",
+      "reasonPlaceholder": "Masalan: ta'til, kasallik..."
+    },
+    "resumeDialog": {
+      "title": "Xodimni faollashtirish",
+      "descriptionWithName": "{{name}}ni qayta faollashtirmoqchimisiz?",
+      "descriptionGeneric": "Xodimni qayta faollashtirmoqchimisiz?",
+      "confirm": "Faollashtirish"
+    },
+    "terminateConfirm": {
+      "title": "Xodimni ishdan bo'shatish",
+      "descriptionWithName": "{{name}}ni ishdan bo'shatmoqchimisiz? Bu amalni bekor qilib bo'lmaydi.",
+      "descriptionGeneric": "Ushbu xodimni ishdan bo'shatmoqchimisiz? Bu amalni bekor qilib bo'lmaydi.",
+      "confirm": "Bo'shatish",
+      "typeLabel": "Bo'shatish turi",
+      "typePlaceholder": "Turini tanlang",
+      "reasonLabel": "Batafsil izoh",
+      "reasonPlaceholder": "Sababni yozing"
+    },
+    "terminationTypes": {
+      "resigned": "O'z xohishi bilan",
+      "fired": "Ishdan bo'shatildi",
+      "contract_expired": "Shartnoma muddati tugadi",
+      "mutual_agreement": "Kelishilgan holda",
+      "other": "Boshqa sabab"
+    },
+    "pagination": {
+      "range": "{{from}}–{{to}} / {{total}}"
+    }
+  },
+  "employeeDetails": {
+    "sections": {
+      "driverInformation": "Haydovchi ma'lumotlari",
+      "employment": "Ish ma'lumotlari",
+      "timeline": "Xronologiya",
+      "notes": "Izohlar",
+      "additionalInfo": "Qo'shimcha ma'lumot"
+    },
+    "driverNumber": "Haydovchi raqami",
+    "phoneNumber": "Telefon raqami",
+    "copyPhoneAria": "Telefon raqamini nusxalash",
+    "position": "Lavozim",
+    "employmentType": "Bandlik turi",
+    "salary": "Maosh",
+    "payPeriod": "To'lov davri",
+    "source": "Manba",
+    "startedAt": "Boshlangan sana",
+    "endedAt": "Tugagan sana",
+    "terminationReason": "Bo'shatish sababi",
+    "createdAt": "Yaratilgan sana",
+    "lastUpdated": "Oxirgi yangilanish",
+    "employmentTypeValues": {
+      "full_time": "To'liq stavka",
+      "part_time": "Yarim stavka",
+      "contract": "Shartnoma",
+      "temporary": "Amaliyot"
+    },
+    "sourceValues": {
+      "manual": "Qo'lda",
+      "vacancy": "Vakansiya orqali"
+    },
+    "payPeriodValues": {
+      "monthly": "Oylik",
+      "weekly": "Haftalik",
+      "daily": "Kunlik",
+      "hourly": "Soatlik"
+    }
+  },
+  "employeeTerminateDialog": {
+    "title": "Xodimni ishdan bo'shatish",
+    "descriptionWithName": "{{name}}ni ishdan bo'shatmoqchimisiz?",
+    "descriptionGeneric": "Ushbu xodimni ishdan bo'shatmoqchimisiz?",
+    "descriptionSuffix": "Bu amalni keyin bekor qilib bo'lmaydi.",
+    "typeLabel": "Bo'shatish sababi (turi)",
+    "reasonLabel": "Batafsil izoh",
+    "reasonPlaceholder": "Masalan: intizomiy jazo, shtat qisqartirish va h.k.",
+    "confirmWarning": "Tasdiqlash uchun yana bir marta \"Bo'shatish\"ni bosing.",
+    "cancel": "Bekor qilish",
+    "confirmFirst": "Bo'shatish",
+    "confirmSecond": "Ha, bo'shatish"
+  },
+  "Vehicles": {
+    "title": "Moshinalar",
+    "subtitle": "Avtopark ro'yxati va boshqaruvi",
+    "addNew": "Yangi moshina",
+    "searchPlaceholder": "Davlat raqami, VIN, brend bo'yicha qidirish...",
+    "status": {
+      "placeholder": "Status",
+      "all": "Barcha statuslar",
+      "active": "Faol",
+      "inactive": "Faol emas",
+      "repair": "Ta'mirlashda",
+      "sold": "Sotilgan"
+    },
+    "availability": {
+      "placeholder": "Mavjudligi",
+      "all": "Barchasi",
+      "available": "Mavjud",
+      "unavailable": "Band"
+    },
+    "clearFilters": "Tozalash",
+    "totalCount": "Jami {{count}} ta moshina",
+    "loadError": {
+      "title": "Moshinalarni yuklab bo'lmadi",
+      "retry": "Qayta urinish"
+    },
+    "empty": {
+      "filteredTitle": "Moshinalar topilmadi",
+      "title": "Hali moshinalar qo'shilmagan",
+      "filteredSubtitle": "Qidiruv yoki filtrni o'zgartirib ko'ring",
+      "subtitle": "Avtoparkka birinchi moshinani qo'shing"
+    },
+    "table": {
+      "vehicle": "Moshina",
+      "vin": "VIN",
+      "transportType": "Transport turi",
+      "year": "Yili",
+      "mileage": "Probeg",
+      "status": "Status",
+      "availability": "Mavjudligi",
+      "createdAt": "Qo'shilgan",
+      "actions": "Amallar"
+    },
+    "actionsMenu": {
+      "view": "Ko'rish",
+      "edit": "Tahrirlash",
+      "delete": "O'chirish"
+    },
+    "deleteConfirm": {
+      "title": "Moshinani o'chirish",
+      "description": "{{label}} moshinasini o'chirmoqchimisiz? Bu amalni bekor qilib bo'lmaydi.",
+      "confirm": "O'chirish"
+    },
+    "form": {
+      "editTitle": "Moshinani tahrirlash",
+      "createTitle": "Yangi moshina qo'shish",
+      "editDescription": "Moshina ma'lumotlarini yangilang",
+      "createDescription": "Avtoparkka yangi moshina qo'shish uchun ma'lumotlarni to'ldiring",
+      "loading": "Yuklanmoqda...",
+      "transportType": {
+        "label": "Transport turi",
+        "placeholder": "Tanlang"
+      },
+      "statusLabel": "Status",
+      "plateNumber": {
+        "label": "Davlat raqami",
+        "placeholder": "01A123BC"
+      },
+      "vin": {
+        "label": "VIN kod",
+        "placeholder": "1HGCM82633A123456"
+      },
+      "brand": {
+        "label": "Brend",
+        "placeholder": "Mercedes-Benz"
+      },
+      "model": {
+        "label": "Model",
+        "placeholder": "Actros 1845"
+      },
+      "year": "Ishlab chiqarilgan yili",
+      "mileage": "Probeg (km)",
+      "isAvailable": {
+        "label": "Ijaraga berish uchun mavjud",
+        "description": "Yoqilgan bo'lsa, moshina buyurtmalar ro'yxatida ko'rinadi"
+      },
+      "notes": {
+        "label": "Izoh (ixtiyoriy)",
+        "placeholder": "Moshina haqida qo'shimcha ma'lumot..."
+      },
+      "cancel": "Bekor qilish",
+      "save": "Saqlash",
+      "add": "Qo'shish",
+      "errors": {
+        "transportType": "Transport turini tanlang",
+        "plateNumber": "Davlat raqamini kiriting",
+        "vinRequired": "VIN kodini kiriting",
+        "vinLength": "VIN kod 17 ta belgidan iborat bo'lishi kerak",
+        "brand": "Brendni kiriting",
+        "model": "Modelni kiriting",
+        "year": "Ishlab chiqarilgan yilni to'g'ri kiriting",
+        "mileage": "Probeg manfiy bo'lishi mumkin emas"
+      }
+    },
+    "details": {
+      "vehicleInfo": "Moshina ma'lumotlari",
+      "vinCode": "VIN kod",
+      "copyVinAria": "VIN kodni nusxalash",
+      "transportType": "Transport turi",
+      "year": "Ishlab chiqarilgan yili",
+      "mileage": "Probeg",
+      "historyStatus": "Holat va tarix",
+      "status": "Status",
+      "availability": "Mavjudligi",
+      "carrier": "Tashuvchi",
+      "activeRental": "Faol ijara",
+      "yes": "Bor",
+      "no": "Yo'q",
+      "createdAt": "Qo'shilgan sana",
+      "updatedAt": "Oxirgi yangilanish",
+      "notes": "Izoh"
+    }
+  },
+  "sidebar": {
+    "adminPanel": "Admin panel",
+    "menu": "Menyu",
+    "dashboard": "Boshqaruv paneli",
+    "vehicles": "Moshinalar",
+    "employees": "Xodimlar",
+    "vacancies": "Vakansiyalar",
+    "applications": "Arizalar",
+    "profile": "Profil",
+    "logout": "Chiqish"
+  },
+  "locationDialog": {
+    "editTitle": "Filialni tahrirlash",
+    "createTitle": "Yangi filial qo'shish",
+    "editDescription": "\"{{name}}\" filiali ma'lumotlarini yangilang.",
+    "createDescription": "Yangi filial uchun ma'lumotlarni kiriting.",
+    "name": "Filial nomi",
+    "address": "Manzil",
+    "city": "Shahar",
+    "region": "Viloyat",
+    "phone": "Telefon",
+    "email": "Email (ixtiyoriy)",
+    "emailPlaceholder": "office@kompaniya.uz",
+    "cancel": "Bekor qilish",
+    "save": "Saqlash",
+    "add": "Qo'shish"
+  },
+  "profileInfoDialog": {
+    "title": "Ma'lumotlarni tahrirlash",
+    "description": "Kompaniyangizning asosiy aloqa ma'lumotlarini yangilang.",
+    "website": "Veb-sayt",
+    "websitePlaceholder": "https://kompaniya.com",
+    "email": "Email",
+    "emailPlaceholder": "info@kompaniya.com",
+    "username": "Foydalanuvchi nomi",
+    "cancel": "Bekor qilish",
+    "save": "Saqlash"
+  },
+  "changePasswordDialog": {
+    "title": "Parolni almashtirish",
+    "description": "Hisobingiz uchun yangi parol o'rnating.",
+    "newPassword": "Yangi parol",
+    "confirmPassword": "Parolni tasdiqlang",
+    "cancel": "Bekor qilish",
+    "update": "Yangilash",
+    "errors": {
+      "mismatch": "Parollar bir-biriga mos kelmadi",
+      "tooShort": "Parol kamida 8 ta belgidan iborat bo'lishi kerak"
+    }
+  },
+  "locationDeleteDialog": {
+    "title": "Filialni o'chirish",
+    "description": "\"{{name}}\" filialini o'chirmoqchimisiz? Bu amalni ortga qaytarib bo'lmaydi.",
+    "cancel": "Bekor qilish",
+    "confirm": "O'chirish"
   }
 }

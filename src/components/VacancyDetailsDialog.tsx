@@ -1,5 +1,6 @@
 // components/VacancyDetailsDialog.tsx
 
+import { useTranslation } from "react-i18next"
 import {
   Banknote,
   Briefcase,
@@ -22,27 +23,15 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useVacancy } from "@/features/vacancies"
 
-// const statusMeta: Record<string, { label: string; dot: string; text: string }> = {
-//   draft: { label: "Qoralama", dot: "bg-amber-400", text: "text-amber-700 dark:text-amber-400" },
-//   published: { label: "Chop etilgan", dot: "bg-emerald-500", text: "text-emerald-700 dark:text-emerald-400" },
-//   closed: { label: "Yopilgan", dot: "bg-rose-400", text: "text-rose-700 dark:text-rose-400" },
-// }
-
-const employmentTypeLabels: Record<string, string> = {
-  full_time: "To'liq stavka",
-  part_time: "Yarim stavka",
-  contract: "Shartnoma asosida",
-  internship: "Amaliyot",
-}
-
 interface VacancyDetailsDialogProps {
   vacancyId: number | null
   onOpenChange: (open: boolean) => void
 }
 
 export function VacancyDetailsDialog({ vacancyId, onOpenChange }: VacancyDetailsDialogProps) {
+  const { t } = useTranslation()
   const { data: vacancy, isLoading } = useVacancy(vacancyId)
- 
+
   return (
     <Dialog open={!!vacancyId} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
@@ -77,20 +66,24 @@ export function VacancyDetailsDialog({ vacancyId, onOpenChange }: VacancyDetails
                 </div>
                 {vacancy.employment_type && (
                   <div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-2 text-sm font-medium">
-                    {employmentTypeLabels[vacancy.employment_type] ?? vacancy.employment_type}
+                    {t(`vacancies.employmentType.${vacancy.employment_type}`, {
+                      defaultValue: vacancy.employment_type,
+                    })}
                   </div>
                 )}
                 {vacancy.expires_at && (
                   <div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-2 text-sm font-medium text-muted-foreground">
                     <CalendarClock className="size-3.5" />
-                    {new Date(vacancy.expires_at).toLocaleDateString("uz-UZ")} gacha amal qiladi
+                    {t("vacancies.details.expiresUntil", {
+                      date: new Date(vacancy.expires_at).toLocaleDateString("uz-UZ"),
+                    })}
                   </div>
                 )}
               </div>
 
               {/* Tavsif */}
               <div className="space-y-1.5">
-                <h4 className="text-sm font-semibold text-foreground">Tavsif</h4>
+                <h4 className="text-sm font-semibold text-foreground">{t("vacancies.details.descriptionTitle")}</h4>
                 <p className="whitespace-pre-line text-sm text-muted-foreground">
                   {vacancy.description}
                 </p>
@@ -100,7 +93,7 @@ export function VacancyDetailsDialog({ vacancyId, onOpenChange }: VacancyDetails
               { vacancy?.requirements && vacancy?.requirements?.length > 0 && (
                 <div className="space-y-1.5">
                   <h4 className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
-                    <ListChecks className="size-4" /> Talablar
+                    <ListChecks className="size-4" /> {t("vacancies.details.requirementsTitle")}
                   </h4>
                   <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
                     {vacancy.requirements.map((req, i) => (
@@ -114,7 +107,7 @@ export function VacancyDetailsDialog({ vacancyId, onOpenChange }: VacancyDetails
               {vacancy.responsibilities && vacancy.responsibilities?.length > 0 && (
                 <div className="space-y-1.5">
                   <h4 className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
-                    <ClipboardList className="size-4" /> Majburiyatlar
+                    <ClipboardList className="size-4" /> {t("vacancies.details.responsibilitiesTitle")}
                   </h4>
                   <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
                     {vacancy.responsibilities.map((res, i) => (
@@ -129,12 +122,12 @@ export function VacancyDetailsDialog({ vacancyId, onOpenChange }: VacancyDetails
               {/* Kompaniya ma'lumotlari */}
               <div className="space-y-2">
                 <h4 className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
-                  <Building2 className="size-4" /> Kompaniya
+                  <Building2 className="size-4" /> {t("vacancies.details.companyTitle")}
                 </h4>
                 <div className="rounded-lg bg-muted p-3">
                   <p className="font-medium text-foreground">{vacancy.carrier?.company_name}</p>
                   <p className="text-xs text-muted-foreground">
-                    Faoliyat davri: {vacancy.carrier?.years_in_business}
+                    {t("vacancies.details.yearsInBusiness", { years: vacancy.carrier?.years_in_business })}
                   </p>
                 </div>
 
@@ -148,7 +141,7 @@ export function VacancyDetailsDialog({ vacancyId, onOpenChange }: VacancyDetails
                             {loc.name}
                             {loc.is_primary && (
                               <Badge variant="outline" className="ml-2 border-0 bg-primary/10 px-1.5 py-0 text-[10px] text-primary">
-                                Asosiy
+                                {t("vacancies.details.primaryBadge")}
                               </Badge>
                             )}
                           </p>

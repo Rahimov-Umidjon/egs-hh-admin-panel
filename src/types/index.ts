@@ -202,7 +202,7 @@ export interface CreateLocationPayload {
 
 
 
-export type ApplicationStatus = "pending" | "invited" | "rejected"
+export type ApplicationStatus = "pending" | "invited" | "rejected" | "hired"
 
 export interface ApplicationVacancySummary {
   id: number
@@ -290,7 +290,7 @@ export type ApplicationDriver = {
 
 
 
-export type EmployeeStatus = "active" | "inactive" | "terminated"
+export type EmployeeStatus = "active" | "paused" | "ended"
 export type EmployeeSource = "manual" | "vacancy"
 export type PayPeriod = "monthly" | "weekly" | "daily" | "hourly"
 
@@ -378,6 +378,8 @@ export interface EmployeePayload {
   meta?: Record<string, unknown> | null
   vacancy_application_id?: number
   source?: EmployeeSource
+  status:EmployeeStatus
+  pause_reason:string
 }
 
 export interface EmployeeWithDriverPayload extends EmployeePayload {
@@ -388,3 +390,160 @@ export interface EmployeeWithDriverPayload extends EmployeePayload {
 }
 
 
+
+
+
+
+export type TerminationType =
+  | "resigned"
+  | "fired"
+  | "contract_expired"
+  | "mutual_agreement"
+  | "other"
+
+export interface EmployeeTerminatePayload {
+  status: "ended"
+  termination_type: TerminationType
+  termination_reason: string
+}
+
+export interface EmployeePausePayload {
+  status: "paused"
+  pause_reason?: string
+}
+
+export interface EmployeeResumePayload {
+  status: "active"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export type VehicleStatus = "active" | "inactive" | "repair" | "sold"
+
+export interface TransportTypeTranslations {
+  en?: string
+  ru?: string
+  uz?: string
+  uzcyrl?: string
+  kk?: string
+  ky?: string
+  tj?: string
+  tk?: string
+  tr?: string
+  kr?: string
+  [locale: string]: string | undefined
+}
+
+export interface TransportType {
+  id: number
+  name: string
+  name_ru: string
+  slug: string
+  is_active: boolean
+  sort_order: number
+  tonnage: string | null
+  volume: string | null
+  length: string | null
+  width: string | null
+  height: string | null
+  image_url: string | null
+  translations?: TransportTypeTranslations
+  photo?:string
+}
+
+export interface VehicleCarrier {
+  id: number
+  name: string | null
+}
+
+export interface VehicleActiveRental {
+  id: number
+  [key: string]: unknown
+}
+
+export interface Vehicle {
+  id: number
+  carrier: VehicleCarrier
+  carrier_id: number
+  transport_type: TransportType
+  transport_type_id: number
+  plate_number: string
+  vin: string
+  brand: string
+  model: string
+  year: number
+  mileage: string
+  status: VehicleStatus
+  status_label: string
+  is_available: boolean
+  notes: string | null
+  active_rental: VehicleActiveRental | null
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
+
+export interface VehiclePayload {
+  transport_type_id: number
+  plate_number: string
+  vin: string
+  brand: string
+  model: string
+  year: number
+  mileage: number
+  status: VehicleStatus
+  is_available: boolean
+  notes?: string
+}
+
+export interface VehicleListParams {
+  search?: string
+  status?: VehicleStatus
+  transport_type_id?: number
+  is_available?: boolean
+  created_from?: string
+  created_to?: string
+  sort_by?: string
+  sort_direction?: "asc" | "desc"
+  per_page?: number
+  page?: number
+}
+
+export interface Pagination {
+  current_page: number
+  last_page: number
+  per_page: number
+  total: number
+  from: number
+  to: number
+  links: {
+    first: string
+    last: string
+    prev: string | null
+    next: string | null
+  }
+}
+
+ 
+
+export interface SingleResponse<T> {
+  success: boolean
+  message: string
+  data: T
+}
+
+export interface ApiMessageResponse {
+  success: boolean
+  message: string
+}
