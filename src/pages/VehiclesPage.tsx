@@ -12,6 +12,7 @@ import {
   Search,
   Trash2,
   Truck,
+  UserPlus,
   X,
 } from "lucide-react"
 
@@ -63,6 +64,7 @@ import {
   useVehicles,
 } from "@/features/vehicles/Usevehicles"
 import type { Vehicle, VehicleStatus } from "@/types"
+import { VehicleRentalAssignDialog } from "@/components/VehicleRentalAssignDialog"
 
 function formatDate(value: string | null | undefined, locale: string) {
   if (!value) return null
@@ -103,7 +105,7 @@ export default function VehiclesPage() {
   const [availability, setAvailability] = useState<"available" | "unavailable" | undefined>()
   const [page, setPage] = useState(1)
   const [perPage] = useState(20)
-
+  const [assignVehicleId, setAssignVehicleId] = useState<number | null>(null)
   const debouncedSearch = useDebouncedValue(search, 400)
   const hasActiveFilters = Boolean(search || status || availability)
 
@@ -298,6 +300,7 @@ export default function VehiclesPage() {
                 <TableHead>{t("Vehicles.table.status")}</TableHead>
                 <TableHead>{t("Vehicles.table.availability")}</TableHead>
                 <TableHead>{t("Vehicles.table.createdAt")}</TableHead>
+                <TableHead>{t("Vehicles.table.full_name")}</TableHead>
                 <TableHead className="text-right">{t("Vehicles.table.actions")}</TableHead>
               </TableRow>
             </TableHeader>
@@ -359,6 +362,9 @@ export default function VehiclesPage() {
                     <TableCell className="text-sm text-muted-foreground">
                       {formatDate(vehicle.created_at, i18n.language)}
                     </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {vehicle.active_rental?.driver?.full_name ?? "—"}
+                    </TableCell>
 
                     <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                       <DropdownMenu>
@@ -375,6 +381,13 @@ export default function VehiclesPage() {
                           <DropdownMenuItem className="cursor-pointer" onClick={() => openEdit(vehicle.id)}>
                             <Pencil className="size-4" />
                             {t("Vehicles.actionsMenu.edit")}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => setAssignVehicleId(vehicle.id)}
+                          >
+                            <UserPlus className="size-4" />
+                            {vehicle.active_rental ? t("Vehicles.actionsMenu.reassign") : t("Vehicles.actionsMenu.assign")}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="cursor-pointer text-rose-600 focus:text-rose-600"
@@ -443,7 +456,7 @@ export default function VehiclesPage() {
                   aria-disabled={pagination.current_page >= pagination.last_page || isFetching}
                   className={cn(
                     (pagination.current_page >= pagination.last_page || isFetching) &&
-                      "pointer-events-none opacity-50"
+                    "pointer-events-none opacity-50"
                   )}
                   onClick={(e) => {
                     e.preventDefault()
@@ -466,6 +479,12 @@ export default function VehiclesPage() {
       />
 
       <VehicleDetailsSheet vehicleId={viewingId} onOpenChange={(open) => !open && setViewingId(null)} />
+      <VehicleRentalAssignDialog
+        open={assignVehicleId !== null}
+        onOpenChange={(open) => !open && setAssignVehicleId(null)}
+        vehicleId={assignVehicleId}
+      />
+
     </div>
   )
 }

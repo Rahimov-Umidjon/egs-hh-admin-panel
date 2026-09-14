@@ -429,6 +429,13 @@ export interface EmployeeResumePayload {
 
 
 
+
+
+
+
+
+
+
 export type VehicleStatus = "active" | "inactive" | "repair" | "sold"
 
 export interface TransportTypeTranslations {
@@ -546,4 +553,134 @@ export interface SingleResponse<T> {
 export interface ApiMessageResponse {
   success: boolean
   message: string
+}
+
+
+
+
+
+
+
+
+
+
+export type VehicleRentalStatus = "active" | "completed" | "cancelled"
+
+export interface VehicleRental {
+  id: number
+  vehicle_id: number
+  driver_id: number
+  driver?: {
+    id: number
+    full_name: string
+    phone?: string | null
+  }
+  started_at: string
+  ended_at: string | null
+  status: VehicleRentalStatus
+  status_label: string
+  notes?: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface VehicleRentalCreatePayload {
+  vehicle_id: number
+  driver_id: number
+  started_at: string
+  notes?: string
+}
+
+export interface VehicleRentalUpdatePayload {
+  ended_at?: string
+  status?: VehicleRentalStatus
+  notes?: string
+}
+
+
+export interface ActiveDriver {
+  employee_id: number
+  driver_id: number
+  name: string | null
+  avatar: { url: string } | null
+}
+
+
+
+export type ConversationType = "private" | "group"
+// Backend hujjatida "open"dan boshqa qiymat ko'rsatilmagan — misoldan taxmin qilindi.
+export type ConversationStatus = "open" | "closed"
+export type ChatMessageType = "text" | "image" | "audio" | "location"
+
+export interface Conversation {
+  id: number
+  type: ConversationType
+  name: string
+  avatar: string | null
+  status: ConversationStatus
+  last_message: string | null
+  last_message_at: string | null
+  is_muted: boolean
+  muted_until: string | null
+  is_pinned: boolean
+  pinned_at: string | null
+}
+
+export interface ChatMessageSender {
+  id: number
+  fio: string | null
+  phone_number?: string | null
+}
+
+export interface ChatMessage {
+  id: number
+  conversation_id: number
+  reply_to_id: number | null
+  sender_id: number
+  sender_type: string
+  message: string | null
+  type: ChatMessageType
+  file_path: string | null
+  audio_path: string | null
+  latitude: string | null
+  longitude: string | null
+  edited_at: string | null
+  deleted_at: string | null
+  created_at: string
+  updated_at: string
+  file_url: string | null
+  audio_url: string | null
+  sender?: ChatMessageSender
+}
+
+export interface ListMeta {
+  current_page: number
+  last_page: number
+  per_page: number
+  total: number
+}
+
+export interface ConversationsListResponse {
+  data: Conversation[]
+  meta: ListMeta
+}
+
+export interface LaravelPaginator<T> {
+  current_page: number
+  data: T[]
+  last_page: number
+  per_page: number
+  total: number
+  from: number | null
+  to: number | null
+}
+
+export interface ConversationDetailResponse {
+  conversation: Pick<Conversation, "id" | "type" | "name" | "avatar" | "status">
+  data: LaravelPaginator<ChatMessage>
+}
+
+export interface UnreadStats {
+  total: number
+  unread_by_conversation: Record<string, number>
 }

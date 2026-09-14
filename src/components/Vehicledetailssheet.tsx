@@ -12,6 +12,7 @@ import {
   StickyNote,
   Tag,
   Truck,
+  UserRound,
 } from "lucide-react"
 
 import {
@@ -26,6 +27,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { cn } from "@/lib/utils"
 import { useVehicle } from "@/features/vehicles/Usevehicles"
 import { statusBadgeClass } from "@/components/vehicle-status"
+import { Button } from "./ui/button"
+import { VehicleRentalAssignDialog } from "./VehicleRentalAssignDialog"
+import { VehicleRentalEndDialog } from "./Vehiclerentalenddialog"
 
 // ------------------------------------------------------------------
 // Formatting helpers
@@ -51,7 +55,8 @@ interface VehicleDetailsSheetProps {
 export function VehicleDetailsSheet({ vehicleId, onOpenChange }: VehicleDetailsSheetProps) {
   const { t, i18n } = useTranslation()
   const { data: vehicle, isLoading } = useVehicle(vehicleId)
-
+  const [assignOpen, setAssignOpen] = useState(false)
+  const [endOpen, setEndOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const [photoFailed, setPhotoFailed] = useState(false)
 
@@ -255,6 +260,37 @@ export function VehicleDetailsSheet({ vehicleId, onOpenChange }: VehicleDetailsS
                   />
                 </div>
               </section>
+              <section>
+                <SectionTitle>{t("Vehicles.rentals.sectionTitle")}</SectionTitle>
+
+                {vehicle.active_rental ? (
+                  <div className="mt-3 rounded-2xl border bg-card p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex size-9 items-center justify-center rounded-lg bg-primary/5">
+                        <UserRound className="size-4 text-primary/70" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold">
+                          {vehicle.active_rental.driver?.full_name ?? "—"}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {t("Vehicles.rentals.since")} {formatDateTime(vehicle.active_rental.started_at, i18n.language)}
+                        </p>
+                      </div>
+                      <Button size="sm" variant="outline" onClick={() => setEndOpen(true)}>
+                        {t("Vehicles.rentals.end")}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-3 flex items-center justify-between rounded-2xl border border-dashed p-4">
+                    <p className="text-sm text-muted-foreground">{t("Vehicles.rentals.noneAssigned")}</p>
+                    <Button size="sm" onClick={() => setAssignOpen(true)}>
+                      {t("Vehicles.rentals.assign")}
+                    </Button>
+                  </div>
+                )}
+              </section>
 
               {/* Notes */}
               {vehicle.notes && (
@@ -269,13 +305,26 @@ export function VehicleDetailsSheet({ vehicleId, onOpenChange }: VehicleDetailsS
                         {vehicle.notes}
                       </p>
                     </div>
-                  </div>
+                  </div>j
                 </section>
               )}
             </div>
           </div>
         )}
       </SheetContent>
+
+
+      <VehicleRentalAssignDialog
+        open={assignOpen}
+        onOpenChange={setAssignOpen}
+        vehicleId={vehicleId}
+      />
+      <VehicleRentalEndDialog
+        open={endOpen}
+        onOpenChange={setEndOpen}
+        rental={vehicle?.active_rental}
+        vehicleId={vehicleId}
+      />
     </Sheet>
   )
 }

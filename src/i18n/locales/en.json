@@ -690,6 +690,7 @@
     "employees": "Employees",
     "vacancies": "Vacancies",
     "applications": "Applications",
+    "chat": "Chat",
     "profile": "Profile",
     "logout": "Log out"
   },
@@ -737,5 +738,70 @@
     "description": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
     "cancel": "Cancel",
     "confirm": "Delete"
+  },
+  "chat": {
+    "title": "Chat",
+    "searchPlaceholder": "Search...",
+    "tabs": {
+      "all": "All",
+      "unread": "Unread"
+    },
+    "empty": {
+      "title": "No conversations found",
+      "description": "There are no conversations yet"
+    },
+    "selectConversation": {
+      "title": "Select a conversation",
+      "description": "Choose a conversation from the list to view messages"
+    },
+    "type": {
+      "group": "Group",
+      "private": "Private"
+    },
+    "menu": {
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "pin": "Pin",
+      "unpin": "Unpin",
+      "search": "Search in conversation"
+    },
+    "composer": {
+      "placeholder": "Write a message...",
+      "location": "Send location",
+      "recordAudio": "Record a voice message"
+    },
+    "message": {
+      "edited": "edited",
+      "deleted": "This message was deleted",
+      "openMap": "Open in maps"
+    },
+    "location": {
+      "title": "Send location",
+      "description": "Drop a pin on the map or use your current location",
+      "currentLocation": "My location",
+      "searchPlaceholder": "Search for a place (e.g. Turkiston metro)...",
+      "send": "Send",
+      "cancel": "Cancel",
+      "apiKeyMissing": "Google Maps API key is not configured",
+      "loading": "Loading map...",
+      "loadFailed": "Could not load the map. Check your internet connection.",
+      "authFailure": "There's a problem with the Google Maps key (referrer restriction or billing not enabled). Check Google Cloud Console."
+    },
+    "mic": {
+      "permissionDenied": "Microphone access denied"
+    },
+    "searchPanel": {
+      "placeholder": "Search messages...",
+      "noResults": "No results found"
+    },
+    "deleteDialog": {
+      "title": "Delete message",
+      "description": "Are you sure you want to delete this message? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "noMessages": "No messages",
+    "today": "Today",
+    "yesterday": "Yesterday"
   }
 }

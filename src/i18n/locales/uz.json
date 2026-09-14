@@ -690,6 +690,7 @@
     "employees": "Xodimlar",
     "vacancies": "Vakansiyalar",
     "applications": "Arizalar",
+    "chat": "Suhbatlar",
     "profile": "Profil",
     "logout": "Chiqish"
   },
@@ -737,5 +738,70 @@
     "description": "\"{{name}}\" filialini o'chirmoqchimisiz? Bu amalni ortga qaytarib bo'lmaydi.",
     "cancel": "Bekor qilish",
     "confirm": "O'chirish"
+  },
+  "chat": {
+    "title": "Suhbatlar",
+    "searchPlaceholder": "Qidirish...",
+    "tabs": {
+      "all": "Barchasi",
+      "unread": "O'qilmagan"
+    },
+    "empty": {
+      "title": "Suhbatlar topilmadi",
+      "description": "Hozircha hech qanday suhbat yo'q"
+    },
+    "selectConversation": {
+      "title": "Suhbatni tanlang",
+      "description": "Xabarlarni ko'rish uchun chapdagi ro'yxatdan suhbat tanlang"
+    },
+    "type": {
+      "group": "Guruh",
+      "private": "Shaxsiy"
+    },
+    "menu": {
+      "mute": "Ovozsiz qilish",
+      "unmute": "Ovozni yoqish",
+      "pin": "Yuqoriga qadash",
+      "unpin": "Qadashni bekor qilish",
+      "search": "Suhbatda qidirish"
+    },
+    "composer": {
+      "placeholder": "Xabar yozing...",
+      "location": "Joylashuvni yuborish",
+      "recordAudio": "Ovozli xabar yozish"
+    },
+    "message": {
+      "edited": "tahrirlangan",
+      "deleted": "Xabar o'chirilgan",
+      "openMap": "Xaritada ko'rish"
+    },
+    "location": {
+      "title": "Joylashuvni yuborish",
+      "description": "Xaritada nuqtani belgilang yoki joriy manzilingizni ishlating",
+      "currentLocation": "Joriy manzilim",
+      "searchPlaceholder": "Manzil qidirish (masalan: Turkiston metro)...",
+      "send": "Yuborish",
+      "cancel": "Bekor qilish",
+      "apiKeyMissing": "Google Maps API kaliti sozlanmagan",
+      "loading": "Xarita yuklanmoqda...",
+      "loadFailed": "Xaritani yuklab bo'lmadi. Internet aloqasini tekshiring.",
+      "authFailure": "Google Maps kaliti bilan muammo bor (referrer cheklovi yoki billing yoqilmagan). Google Cloud Console'ni tekshiring."
+    },
+    "mic": {
+      "permissionDenied": "Mikrofonga ruxsat berilmadi"
+    },
+    "searchPanel": {
+      "placeholder": "Xabarlarni qidirish...",
+      "noResults": "Hech narsa topilmadi"
+    },
+    "deleteDialog": {
+      "title": "Xabarni o'chirish",
+      "description": "Ushbu xabarni o'chirmoqchimisiz? Bu amalni ortga qaytarib bo'lmaydi.",
+      "cancel": "Bekor qilish",
+      "confirm": "O'chirish"
+    },
+    "noMessages": "Xabarlar yo'q",
+    "today": "Bugun",
+    "yesterday": "Kecha"
   }
 }

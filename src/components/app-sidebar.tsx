@@ -8,8 +8,12 @@ import {
     ChevronsUpDown,
     FileUser,
     ShieldCheck,
+    MessageSquare,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { useUnreadStats } from "@/features/chat/useChat"
+import { useUnreadChannel } from "@/features/chat/useUnreadChannel"
+import { Badge } from "@/components/ui/badge"
 
 import {
     Sidebar,
@@ -63,6 +67,11 @@ const navItems = [
         icon: FileUser,
     },
     {
+        titleKey: "sidebar.chat",
+        url: "/chat",
+        icon: MessageSquare,
+    },
+    {
         titleKey: "sidebar.profile",
         url: "/profile",
         icon: BarChart3,
@@ -73,6 +82,8 @@ export function AppSidebar() {
     const location = useLocation()
     const { user, logout } = useAuth()
     const { t } = useTranslation()
+    const { data: unreadStats } = useUnreadStats()
+    useUnreadChannel()
 
     return (
         <Sidebar className="rounded-2xl overflow-hidden" collapsible="icon">
@@ -114,7 +125,14 @@ export function AppSidebar() {
                                         >
                                             <NavLink to={item.url}>
                                                 <item.icon />
-                                                <span>{t(item.titleKey)}</span>
+                                                <span className="flex flex-1 items-center justify-between">
+                                                    {t(item.titleKey)}
+                                                    {item.url === "/chat" && (unreadStats?.total ?? 0) > 0 && (
+                                                        <Badge className="ml-2 h-4 rounded-full bg-primary px-1.5 text-[10px] text-primary-foreground">
+                                                            {unreadStats!.total}
+                                                        </Badge>
+                                                    )}
+                                                </span>
                                             </NavLink>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>

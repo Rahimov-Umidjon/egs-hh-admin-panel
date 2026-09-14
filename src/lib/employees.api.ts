@@ -1,5 +1,6 @@
 import { api } from "@/lib/api"
 import type {
+  ActiveDriver,
   Employee,
   EmployeeListParams,
   EmployeeListResponse,
@@ -35,4 +36,9 @@ export const employeesApi = {
     const { data } = await api.put<{ data: Employee }>(`/carrier/employees/${id}`, payload)
     return data.data
   },
+  getActiveDrivers: async (): Promise<ActiveDriver[]> => {
+    const { data } = await api.get("/carrier/employees/active")
+    return data.data
+  },
+
 }

@@ -1,6 +1,7 @@
 import { api } from "@/lib/api"
 import { createContext, useContext, useState, useCallback, useEffect } from "react"
 import type { ReactNode } from "react"
+import type { CompanyProfile } from "@/types"
 
 export interface AuthUser {
   id: number
@@ -38,8 +39,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const fetchMe = async () => {
       try {
         // interceptor Authorization header'ni o'zi qo'shadi
-        const res = await api.get<AuthUser>("/auth/me")
-        if (!cancelled) setUser(res.data)
+        // Backend bu yerda { data: CompanyProfile } qaytaradi (login'dagi
+        // flat { id, name, email } shaklidagi AuthUser emas) — shu sababli
+        // to'g'ridan-to'g'ri emas, `data.data`dan kerakli maydonlarni olamiz.
+        // Aks holda `user` ob'ekt sifatida haqiqiy bo'lib qoladi-yu, lekin
+        // `user.id` undefined bo'lib chiqadi va shunga bog'liq narsalar
+        // (masalan Pusher kanaliga ulanish) sukut bilan ishlamay qoladi.
+        const res = await api.get<{ data: CompanyProfile }>("/auth/me")
+        const profile = res.data.data
+        if (!cancelled) {
+          setUser({ id: profile.id, name: profile.company_name, email: profile.email })
+        }
       } catch {
         // 401 bo'lsa, response interceptor tokenni allaqachon tozalab,
         // /login ga yo'naltiradi — shunchaki local state'ni ham tozalaymiz
