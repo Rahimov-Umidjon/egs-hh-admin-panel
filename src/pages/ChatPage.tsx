@@ -64,6 +64,7 @@ import { useDebouncedValue } from "@/hooks/use-debounced-value"
 import { useAudioRecorder } from "@/hooks/use-audio-recorder"
 import { ChatLocationPickerDialog } from "@/components/ChatLocationPickerDialog"
 import { ChatLocationPreview } from "@/components/ChatLocationPreview"
+import { useAuth } from "@/features/auth/AuthContext"
 import type { ChatMessage, Conversation } from "@/types"
 
 function initials(name: string) {
@@ -118,15 +119,18 @@ function audioFileExtension(mimeType: string) {
   return "webm"
 }
 
-// Backend hujjatida admin/carrier tomonidan yuborilgan xabar uchun sender_type
-// ko'rsatilmagan — "driver" bo'lmagan har qanday qiymat "biz" tomon deb qabul qilinadi.
-function isOutgoing(message: ChatMessage) {
-  return message.sender_type !== "driver"
+// Chat sahifasi carrier va client panellari o'rtasida umumiy — shuning uchun "mening
+// xabarim"ni sender_type ("driver" bo'lmasa "biz") bilan emas, joriy foydalanuvchi
+// id'siga solishtirib aniqlaymiz (tasodifiy id to'qnashuvidan himoya uchun sender_type
+// tekshiruvi ham saqlab qolinadi).
+function isOutgoing(message: ChatMessage, userId?: number) {
+  return message.sender_type !== "driver" && message.sender_id === userId
 }
 
 export default function ChatPage() {
   const { t, i18n } = useTranslation()
   const locale = i18n.language || "uz"
+  const { user } = useAuth()
 
   const [tab, setTab] = useState<"all" | "unread">("all")
   const [search, setSearch] = useState("")
@@ -570,7 +574,7 @@ export default function ChatPage() {
                   const dateKey = new Date(message.created_at).toDateString()
                   const showSeparator = dateKey !== lastDateKey
                   lastDateKey = dateKey
-                  const mine = isOutgoing(message)
+                  const mine = isOutgoing(message, user?.id)
                   const isEditing = editingId === message.id
                   const deleted = Boolean(message.deleted_at)
 

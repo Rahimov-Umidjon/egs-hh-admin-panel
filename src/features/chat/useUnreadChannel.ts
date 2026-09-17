@@ -28,9 +28,10 @@ export function useUnreadChannel() {
     const pusher = getPusherClient()
     if (!pusher) return
 
-    // Kanal nomi backendga kirilgan rolga bog'liq — bu admin panelda foydalanuvchi
-    // har doim "carrier" (login javobida ham `data.carrier` sifatida qaytadi).
-    const channelName = `private-carrier.${user.id}`
+    // Kanal nomi backendga kirilgan aktyor turiga (carrier/client) bog'liq —
+    // shu sabab admin va mijoz panellari alohida kanallarga obuna bo'ladi.
+    const channelName =
+      user.actorType === "client" ? `private-client.${user.id}` : `private-carrier.${user.id}`
     const channel = pusher.subscribe(channelName)
 
     const handleUnreadUpdated = (payload: RealtimeUnreadPayload) => {
