@@ -166,10 +166,218 @@ export interface CompanyProfile {
   updated_at: string
 }
 
+// Tizimga kirayotgan foydalanuvchi turi — Carrier (tashuvchi kompaniya, mavjud admin
+// panel) yoki Client (yuk beruvchi: cargo_owner/broker/expeditor, backend /api/client)
+export type ActorType = "carrier" | "client"
+
+export type ClientType = "cargo_owner" | "broker" | "expeditor"
+export type ClientStatus = "pending" | "approved" | "rejected"
+
+export interface ClientProfile {
+  id: number
+  name: string
+  inn: string
+  website: string | null
+  contact_person_name: string | null
+  contact_person_phone: string | null
+  type: ClientType
+  email: string
+  phone_number: string | null
+  address: string | null
+  country_id: number | null
+  state_id: number | null
+  city_id: number | null
+  latitude: number | null
+  longitude: number | null
+  status: ClientStatus
+  is_active: boolean
+  avatar: { id: number; url: string } | null
+  created_at: string
+}
+
 export interface UpdateProfileInfoPayload {
   website?: string
   email?: string
   username?: string
+}
+
+export interface UpdateClientProfilePayload {
+  name?: string
+  website?: string
+  contact_person_name?: string
+  contact_person_phone?: string
+  phone_number?: string
+  address?: string
+  country_id?: number
+  state_id?: number
+  city_id?: number
+  latitude?: number
+  longitude?: number
+}
+
+export interface UpdateClientPasswordPayload {
+  current_password: string
+  password: string
+  password_confirmation: string
+}
+
+// ---- Lookup (reference data) — /lookup/* ----------------------------------
+// Bu endpointlar spec (client_open_api.yaml)da yo'q, backend jamoasi alohida
+// taqdim etgan: /lookup/countries, /lookup/cities, /lookup/transport-types,
+// /lookup/currencies, /lookup/cargo-document-types. Javob — Envelope'siz, xom array.
+export interface CountryOption {
+  id: number
+  name: string
+  latitude: string
+  longitude: string
+}
+
+export interface CityOption {
+  id: number
+  name: string
+  state_id: number
+  country_id: number
+}
+
+export interface TransportTypeOption {
+  id: number
+  name: string
+  name_ru: string
+  slug: string
+  is_active: number
+  sort_order: number
+  image_url: string | null
+  tonnage: string | null
+  volume: string | null
+  length: string | null
+  width: string | null
+  height: string | null
+}
+
+export interface CargoDocumentTypeOption {
+  value: string
+  label: string
+}
+
+// ---- Cargo (Client) — /cargos ----------------------------------------------
+export type CargoStatus = "open" | "assigned" | "in_progress" | "delivered" | "cancelled"
+export type CargoClass = "standard" | "premium"
+
+// Backendning haqiqiy javobi spec'dagi Location schema'sidan farq qiladi: nuqta
+// (lat/lng/address) `pickup_location`/`delivery_location` ichida, davlat/viloyat/shahar
+// esa alohida `from`/`to` ob'ektlarida keladi.
+export interface CargoPoint {
+  id: number
+  address: string | null
+  latitude: number
+  longitude: number
+}
+
+export interface CargoAdministrativeArea {
+  country: { id: number; name: string } | null
+  state: { id: number; name: string } | null
+  city: { id: number; name: string } | null
+}
+
+export interface CargoLocationInput {
+  country_id: number
+  state_id?: number | null
+  city_id?: number | null
+  address?: string | null
+  latitude: number
+  longitude: number
+}
+
+export interface Cargo {
+  id: number
+  name: string
+  status: CargoStatus
+  cargo_class: CargoClass
+  pickup_location: CargoPoint
+  delivery_location: CargoPoint
+  from: CargoAdministrativeArea
+  to: CargoAdministrativeArea
+  weight: number | null
+  volume: number | null
+  quantity: number | null
+  dimensions: {
+    length: number | null
+    width: number | null
+    height: number | null
+  }
+  fragile: boolean
+  dangerous: boolean
+  temperature_controlled: boolean
+  min_temperature: number | null
+  max_temperature: number | null
+  transport_requirements: string | null
+  transport_type: { id: number; name: string , image_url:string } | null
+  additional_info: string | null
+  loading_at: string
+  unloading_at: string | null
+  current_offer: Record<string, unknown> | null
+  current_assignment: Record<string, unknown> | null
+  offers_count: number
+  view_count: number
+  documents: CargoDocument[]
+  published_at: string | null
+  cancelled_at: string | null
+  cancel_reason: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface CargoDocument {
+  id: number
+  type: string
+  label?: string
+  url?: string
+  created_at?: string
+}
+
+export interface CreateCargoPayload {
+  name: string
+  pickup: CargoLocationInput
+  delivery: CargoLocationInput
+  weight?: number
+  volume?: number
+  quantity?: number
+  length?: number
+  width?: number
+  height?: number
+  fragile?: boolean
+  dangerous?: boolean
+  temperature_controlled?: boolean
+  min_temperature?: number
+  max_temperature?: number
+  transport_requirements?: string
+  transport_type_id?: number
+  additional_info?: string
+  cargo_class?: CargoClass
+  loading_at: string
+  unloading_at?: string
+}
+
+export type UpdateCargoPayload = Partial<CreateCargoPayload>
+
+export interface CargoListParams {
+  status?: CargoStatus
+  per_page?: number
+  page?: number
+}
+
+export interface CargoStatusHistoryEntry {
+  status: string
+  changed_at: string
+  note?: string | null
+}
+
+export interface CargoTracking {
+  cargo_id: number
+  cargo_status: string
+  assignment: Record<string, unknown> | null
+  status_history: CargoStatusHistoryEntry[]
+  driver_location: { latitude: number; longitude: number; updated_at?: string } | null
 }
 
 export interface UpdatePasswordPayload {
