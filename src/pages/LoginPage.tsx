@@ -3,14 +3,17 @@ import type { FormEvent } from "react"
 import { Navigate, useLocation, useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 
-import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { Eye, EyeOff, Loader2, Package, Truck } from "lucide-react"
 import { toast } from "sonner"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { useAuth } from "@/features/auth/AuthContext"
 import { useLogin } from "@/features/auth/useLogin"
 import { useRegister } from "@/features/auth/useRegister"
 import type { RegisterPayload } from "@/features/auth/useRegister"
+import { useClientRegister } from "@/features/auth/useClientRegister"
+import type { ClientRegisterPayload } from "@/features/auth/useClientRegister"
+import type { ActorType, ClientType } from "@/types"
+import { cn } from "@/lib/utils"
 
 import {
   flattenApiErrors,
@@ -22,11 +25,17 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
 import {
   Card,
   CardContent,
 } from "@/components/ui/card"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const REGISTER_INITIAL_STATE: RegisterPayload = {
   company_name: "",
@@ -59,6 +68,20 @@ const REGISTER_INITIAL_STATE: RegisterPayload = {
   },
 }
 
+const CLIENT_REGISTER_INITIAL_STATE: ClientRegisterPayload = {
+  name: "",
+  inn: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+  type: "cargo_owner",
+  website: "",
+  contact_person_name: "",
+  contact_person_phone: "",
+  phone_number: "",
+  address: "",
+}
+
 function extractErrorMessage(error: unknown, fallback: string): string {
   
   const err = error as {
@@ -77,15 +100,29 @@ function extractFieldErrors(error: unknown): Record<string, string[]> | undefine
   return err?.response?.data?.errors
 }
 
+function homeFor(actorType: ActorType) {
+  return actorType === "client" ? "/client" : "/"
+}
+
 export default function LoginPage() {
   const { t } = useTranslation()
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
 
   const navigate = useNavigate()
   const location = useLocation()
 
-  const loginMutation = useLogin()
+  // Foydalanuvchi login qilishdan oldin qaysi aktyor sifatida kirayotganini
+  // tanlaydi (Carrier — tashuvchi kompaniya, yoki Client — yuk beruvchi).
+  // Bu tanlovga qarab har xil backend endpointi chaqiriladi.
+  const [accountType, setAccountType] = useState<ActorType>("carrier")
+
+  // Oddiy saytlardagidek: yagona sahifada login shakli ko'rsatiladi, pastida
+  // "Ro'yxatdan o'tish" matni orqali register shakliga o'tiladi (tab/tugmalar guruhi emas)
+  const [mode, setMode] = useState<"login" | "register">("login")
+
+  const loginMutation = useLogin(accountType)
   const registerMutation = useRegister()
+  const clientRegisterMutation = useClientRegister()
 
   const translateFieldError = useFieldErrorTranslator()
   const summarizeErrorCount = useErrorCountSummary()
@@ -103,9 +140,16 @@ export default function LoginPage() {
   // fieldPath -> backenddan kelgan xom xabar (masalan "validation.company_name_required")
   const [rawFieldErrors, setRawFieldErrors] = useState<Record<string, string>>({})
 
+  const [clientRegisterForm, setClientRegisterForm] = useState<ClientRegisterPayload>(
+    CLIENT_REGISTER_INITIAL_STATE
+  )
+  const [showClientRegPassword, setShowClientRegPassword] = useState(false)
+  const [showClientRegPasswordConfirm, setShowClientRegPasswordConfirm] = useState(false)
+  const [clientRawFieldErrors, setClientRawFieldErrors] = useState<Record<string, string>>({})
+
   if (isAuthenticated) {
     const redirect =
-      (location.state as { from?: string })?.from ?? "/"
+      (location.state as { from?: string })?.from ?? homeFor(user?.actorType ?? "carrier")
 
     return <Navigate replace to={redirect} />
   }
@@ -120,7 +164,7 @@ export default function LoginPage() {
           toast.success(t("auth.login_success"))
 
           const redirect =
-            (location.state as { from?: string })?.from ?? "/"
+            (location.state as { from?: string })?.from ?? homeFor(accountType)
 
           navigate(redirect, { replace: true })
         },
@@ -200,6 +244,66 @@ export default function LoginPage() {
     })
   }
 
+  function updateClientRegisterField<K extends keyof ClientRegisterPayload>(
+    field: K,
+    value: ClientRegisterPayload[K]
+  ) {
+    setClientRegisterForm((prev) => ({ ...prev, [field]: value }))
+    clearClientFieldError(field as string)
+  }
+
+  function clearClientFieldError(fieldPath: string) {
+    setClientRawFieldErrors((prev) => {
+      if (!(fieldPath in prev)) return prev
+      const next = { ...prev }
+      delete next[fieldPath]
+      return next
+    })
+  }
+
+  function clientFieldError(fieldPath: string): string | undefined {
+    const raw = clientRawFieldErrors[fieldPath]
+    if (!raw) return undefined
+    return translateFieldError(fieldPath, raw)
+  }
+
+  function handleClientRegisterSubmit(e: FormEvent) {
+    e.preventDefault()
+
+    if (clientRegisterForm.password !== clientRegisterForm.password_confirmation) {
+      toast.error(t("auth.passwords_mismatch"))
+      return
+    }
+
+    clientRegisterMutation.mutate(clientRegisterForm, {
+      onSuccess() {
+        toast.success(t("auth.register_success"))
+        setClientRawFieldErrors({})
+        setClientRegisterForm(CLIENT_REGISTER_INITIAL_STATE)
+        setMode("login")
+      },
+      onError(error) {
+        const apiErrors = extractFieldErrors(error)
+        const flattened = flattenApiErrors(apiErrors)
+
+        if (Object.keys(flattened).length > 0) {
+          setClientRawFieldErrors(flattened)
+          toast.error(summarizeErrorCount(Object.keys(flattened).length))
+          return
+        }
+
+        toast.error(
+          extractErrorMessage(error, t("auth.register_error_default"))
+        )
+      },
+    })
+  }
+
+  const clientPasswordsMismatch =
+    clientRegisterForm.password.length > 0 &&
+    clientRegisterForm.password_confirmation.length > 0 &&
+    clientRegisterForm.password !== clientRegisterForm.password_confirmation
+
   const passwordsMismatch =
     registerForm.password.length > 0 &&
     registerForm.password_confirmation.length > 0 &&
@@ -227,21 +331,38 @@ export default function LoginPage() {
                 <LanguageSwitcher />
               </div>
 
-              <Tabs defaultValue="login" className="w-full">
+              <div className="mx-auto mb-6 grid w-2/3 grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setAccountType("carrier")}
+                  className={cn(
+                    "flex flex-col items-center gap-1 rounded-lg border p-3 text-sm font-medium transition-colors",
+                    accountType === "carrier"
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-muted text-muted-foreground hover:bg-muted/50"
+                  )}
+                >
+                  <Truck className="size-5" />
+                  {t("auth.account_type_carrier")}
+                </button>
 
-                <TabsList className="grid w-2/3 mx-auto grid-cols-2">
-                  <TabsTrigger value="login">
-                    {t("auth.login_tab")}
-                  </TabsTrigger>
+                <button
+                  type="button"
+                  onClick={() => setAccountType("client")}
+                  className={cn(
+                    "flex flex-col items-center gap-1 rounded-lg border p-3 text-sm font-medium transition-colors",
+                    accountType === "client"
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-muted text-muted-foreground hover:bg-muted/50"
+                  )}
+                >
+                  <Package className="size-5" />
+                  {t("auth.account_type_client")}
+                </button>
+              </div>
 
-                  <TabsTrigger value="register">
-                    {t("auth.register_tab")}
-                  </TabsTrigger>
-                </TabsList>
-
-                {/* LOGIN */}
-
-                <TabsContent  value="login" className="mt-6 w-1/2 mx-auto">
+              {mode === "login" ? (
+                <div className="mt-6 w-1/2 mx-auto">
 
                   <div className="mb-6 text-center">
                     <h2 className="text-3xl font-bold">
@@ -299,11 +420,300 @@ export default function LoginPage() {
 
                   </form>
 
-                </TabsContent>
+                  <p className="mt-6 text-center text-sm text-muted-foreground">
+                    {t("auth.no_account_prompt")}{" "}
+                    <button
+                      type="button"
+                      onClick={() => setMode("register")}
+                      className="font-medium text-primary hover:underline"
+                    >
+                      {t("auth.register_tab")}
+                    </button>
+                  </p>
 
-                {/* REGISTER */}
-                <TabsContent value="register" className="mt-6 w-[90%] mx-auto">
+                </div>
+              ) : (
+                <div className="mt-6 w-[90%] mx-auto">
+                {accountType === "client" ? (
+                <>
+                  <div className="mb-6 text-center">
+                    <h2 className="text-3xl font-bold">
+                      {t("auth.client_register_title")}
+                    </h2>
 
+                    <p className="text-muted-foreground">
+                      {t("auth.client_register_subtitle")}
+                    </p>
+                  </div>
+
+                  <form onSubmit={handleClientRegisterSubmit} className="space-y-6">
+
+                    {/* Mijoz ma'lumotlari */}
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                        {t("auth.section_company")}
+                      </h3>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>{t("auth.client_name")}</Label>
+                          <Input
+                            placeholder="ABC Trade LLC"
+                            value={clientRegisterForm.name}
+                            onChange={(e) =>
+                              updateClientRegisterField("name", e.target.value)
+                            }
+                            className={cn(clientFieldError("name") && "border-red-500")}
+                          />
+                          {clientFieldError("name") && (
+                            <p className="text-xs text-red-600">{clientFieldError("name")}</p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>{t("auth.client_inn")}</Label>
+                          <Input
+                            placeholder="123456789"
+                            value={clientRegisterForm.inn}
+                            onChange={(e) =>
+                              updateClientRegisterField("inn", e.target.value)
+                            }
+                            className={cn(clientFieldError("inn") && "border-red-500")}
+                          />
+                          {clientFieldError("inn") && (
+                            <p className="text-xs text-red-600">{clientFieldError("inn")}</p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>{t("auth.client_type")}</Label>
+                          <Select
+                            value={clientRegisterForm.type}
+                            onValueChange={(value) =>
+                              updateClientRegisterField("type", value as ClientType)
+                            }
+                          >
+                            <SelectTrigger className={cn("w-full", clientFieldError("type") && "border-red-500")}>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="cargo_owner">
+                                {t("auth.client_type_cargo_owner")}
+                              </SelectItem>
+                              <SelectItem value="broker">
+                                {t("auth.client_type_broker")}
+                              </SelectItem>
+                              <SelectItem value="expeditor">
+                                {t("auth.client_type_expeditor")}
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {clientFieldError("type") && (
+                            <p className="text-xs text-red-600">{clientFieldError("type")}</p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>{t("auth.website")}</Label>
+                          <Input
+                            type="url"
+                            placeholder="https://abctrade.uz"
+                            value={clientRegisterForm.website}
+                            onChange={(e) =>
+                              updateClientRegisterField("website", e.target.value)
+                            }
+                            className={cn(clientFieldError("website") && "border-red-500")}
+                          />
+                          {clientFieldError("website") && (
+                            <p className="text-xs text-red-600">{clientFieldError("website")}</p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>{t("auth.contact_person_name")}</Label>
+                          <Input
+                            placeholder="Aziz Karimov"
+                            value={clientRegisterForm.contact_person_name}
+                            onChange={(e) =>
+                              updateClientRegisterField("contact_person_name", e.target.value)
+                            }
+                            className={cn(clientFieldError("contact_person_name") && "border-red-500")}
+                          />
+                          {clientFieldError("contact_person_name") && (
+                            <p className="text-xs text-red-600">{clientFieldError("contact_person_name")}</p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>{t("auth.contact_person_phone")}</Label>
+                          <Input
+                            placeholder="+998901234567"
+                            value={clientRegisterForm.contact_person_phone}
+                            onChange={(e) =>
+                              updateClientRegisterField("contact_person_phone", e.target.value)
+                            }
+                            className={cn(clientFieldError("contact_person_phone") && "border-red-500")}
+                          />
+                          {clientFieldError("contact_person_phone") && (
+                            <p className="text-xs text-red-600">{clientFieldError("contact_person_phone")}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Hisob ma'lumotlari */}
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                        {t("auth.section_account")}
+                      </h3>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>{t("auth.email")}</Label>
+                          <Input
+                            type="email"
+                            placeholder="client@example.com"
+                            value={clientRegisterForm.email}
+                            onChange={(e) =>
+                              updateClientRegisterField("email", e.target.value)
+                            }
+                            className={cn(clientFieldError("email") && "border-red-500")}
+                          />
+                          {clientFieldError("email") && (
+                            <p className="text-xs text-red-600">{clientFieldError("email")}</p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>{t("auth.phone_number")}</Label>
+                          <Input
+                            placeholder="+998901234567"
+                            value={clientRegisterForm.phone_number}
+                            onChange={(e) =>
+                              updateClientRegisterField("phone_number", e.target.value)
+                            }
+                            className={cn(clientFieldError("phone_number") && "border-red-500")}
+                          />
+                          {clientFieldError("phone_number") && (
+                            <p className="text-xs text-red-600">{clientFieldError("phone_number")}</p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>{t("auth.password")}</Label>
+                          <div className="relative">
+                            <Input
+                              type={showClientRegPassword ? "text" : "password"}
+                              placeholder="********"
+                              value={clientRegisterForm.password}
+                              onChange={(e) =>
+                                updateClientRegisterField("password", e.target.value)
+                              }
+                              className={cn("pr-10", clientFieldError("password") && "border-red-500")}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowClientRegPassword((v) => !v)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2"
+                            >
+                              {showClientRegPassword ? (
+                                <EyeOff size={18} />
+                              ) : (
+                                <Eye size={18} />
+                              )}
+                            </button>
+                          </div>
+                          {clientFieldError("password") && (
+                            <p className="text-xs text-red-600">{clientFieldError("password")}</p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>{t("auth.password_confirmation")}</Label>
+                          <div className="relative">
+                            <Input
+                              type={showClientRegPasswordConfirm ? "text" : "password"}
+                              placeholder="********"
+                              value={clientRegisterForm.password_confirmation}
+                              onChange={(e) =>
+                                updateClientRegisterField(
+                                  "password_confirmation",
+                                  e.target.value
+                                )
+                              }
+                              className="pr-10"
+                            />
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setShowClientRegPasswordConfirm((v) => !v)
+                              }
+                              className="absolute right-3 top-1/2 -translate-y-1/2"
+                            >
+                              {showClientRegPasswordConfirm ? (
+                                <EyeOff size={18} />
+                              ) : (
+                                <Eye size={18} />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {clientPasswordsMismatch && (
+                        <p className="text-sm text-red-600">
+                          {t("auth.passwords_mismatch")}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Manzil */}
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                        {t("auth.section_location")}
+                      </h3>
+
+                      <div className="space-y-2">
+                        <Label>{t("auth.address")}</Label>
+                        <Input
+                          placeholder="Toshkent, Amir Temur ko'chasi 10"
+                          value={clientRegisterForm.address}
+                          onChange={(e) =>
+                            updateClientRegisterField("address", e.target.value)
+                          }
+                          className={cn(clientFieldError("address") && "border-red-500")}
+                        />
+                        {clientFieldError("address") && (
+                          <p className="text-xs text-red-600">{clientFieldError("address")}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <Button
+                      className="w-full"
+                      disabled={clientRegisterMutation.isPending}
+                    >
+                      {clientRegisterMutation.isPending && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
+                      {t("auth.register_button")}
+                    </Button>
+
+                  </form>
+
+                  <p className="mt-6 text-center text-sm text-muted-foreground">
+                    {t("auth.have_account_prompt")}{" "}
+                    <button
+                      type="button"
+                      onClick={() => setMode("login")}
+                      className="font-medium text-primary hover:underline"
+                    >
+                      {t("auth.login_tab")}
+                    </button>
+                  </p>
+                </>
+                ) : (
+                <>
                   <div className="mb-6 text-center">
                     <h2 className="text-3xl font-bold">
                       {t("auth.register_title")}
@@ -719,9 +1129,21 @@ export default function LoginPage() {
 
                   </form>
 
-                </TabsContent>
+                  <p className="mt-6 text-center text-sm text-muted-foreground">
+                    {t("auth.have_account_prompt")}{" "}
+                    <button
+                      type="button"
+                      onClick={() => setMode("login")}
+                      className="font-medium text-primary hover:underline"
+                    >
+                      {t("auth.login_tab")}
+                    </button>
+                  </p>
+                </>
+                )}
 
-              </Tabs>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

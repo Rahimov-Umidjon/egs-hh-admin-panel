@@ -1,9 +1,17 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom"
 import { Loader2 } from "lucide-react"
 import { useAuth } from "@/features/auth/AuthContext"
+import type { ActorType } from "@/types"
 
-export function ProtectedRoute() {
-  const { isAuthenticated, isLoading } = useAuth()
+interface ProtectedRouteProps {
+  // Berilsa, faqat shu aktyor turi (carrier/client) kirgan bo'lsa Outlet ko'rsatiladi —
+  // boshqa aktyor turi o'ziga tegishli bosh sahifaga qaytariladi (masalan client
+  // tokeni bilan carrier'ga tegishli marshrutga kirishga urinish oldini olinadi).
+  allow?: ActorType
+}
+
+export function ProtectedRoute({ allow }: ProtectedRouteProps) {
+  const { isAuthenticated, isLoading, user } = useAuth()
   const location = useLocation()
 
   // Sahifa refresh qilinganda "/auth/me" so'rovi hali tugamagan bo'lishi mumkin —
@@ -20,6 +28,10 @@ export function ProtectedRoute() {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />
+  }
+
+  if (allow && user?.actorType !== allow) {
+    return <Navigate to={user?.actorType === "client" ? "/client" : "/"} replace />
   }
 
   return <Outlet />

@@ -1,34 +1,47 @@
 import { useMutation } from "@tanstack/react-query"
 import { api } from "@/lib/api"
-import { useAuth, type AuthUser } from "@/features/auth/AuthContext"
+import { useAuth } from "@/features/auth/AuthContext"
+import type { ActorType } from "@/types"
 
 export interface LoginPayload {
   email: string
   password: string
 }
 
-interface LoginResponse {
+interface CarrierLoginResponse {
   data: {
     token: string
-    carrier: AuthUser
+    carrier: { id: number; name: string; email: string }
   }
 }
 
-async function login(payload: LoginPayload): Promise<LoginResponse> {
-  // Laravel API: POST /api/login — { token, user } qaytaradi (Sanctum personal access token)
-  const { data } = await api.post<LoginResponse>("/auth/login", payload)
-  console.log(data)
-  return data
+interface ClientLoginResponse {
+  data: {
+    token: string
+    client: { id: number; name: string; email: string }
+  }
 }
 
-export function useLogin() {
+async function loginCarrier(payload: LoginPayload) {
+  // Laravel API: POST /api/auth/login — { token, carrier } qaytaradi (Sanctum token)
+  const { data } = await api.post<CarrierLoginResponse>("/auth/login", payload)
+  return { token: data.data.token, user: data.data.carrier }
+}
+
+async function loginClient(payload: LoginPayload) {
+  // Client API: POST /api/client/auth/login — { token, client } qaytaradi
+  const { data } = await api.post<ClientLoginResponse>("/client/auth/login", payload)
+  return { token: data.data.token, user: data.data.client }
+}
+
+export function useLogin(actorType: ActorType) {
   const { setAuth } = useAuth()
 
   return useMutation({
-    mutationFn: login,
-    onSuccess: (data) => {
-      setAuth(data.data.token, data.data.carrier
-      )
+    mutationFn: (payload: LoginPayload) =>
+      actorType === "client" ? loginClient(payload) : loginCarrier(payload),
+    onSuccess: ({ token, user }) => {
+      setAuth(token, user, actorType)
     },
   })
 }
