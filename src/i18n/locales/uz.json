@@ -27,10 +27,26 @@
     "invalid_credentials": "Login yoki parol noto'g'ri.",
     "login_tab": "Login",
     "register_tab": "Register",
+    "account_type_carrier": "Tashuvchi",
+    "account_type_client": "Mijoz",
+    "no_account_prompt": "Hisobingiz yo'qmi?",
+    "have_account_prompt": "Hisobingiz bormi?",
     "welcome_title": "Xush kelibsiz",
     "welcome_subtitle": "Hisobingizga kiring",
     "register_title": "Hisob yaratish",
     "register_subtitle": "Yangi kompaniya ro'yxatdan o'tkazing",
+    "client_register_title": "Mijoz hisobini yaratish",
+    "client_register_subtitle": "Yuk tashish uchun e'lon joylashtirish uchun ro'yxatdan o'ting",
+    "client_name": "Kompaniya / to'liq ism",
+    "client_inn": "STIR (INN)",
+    "client_type": "Hisob turi",
+    "client_type_cargo_owner": "Yuk egasi",
+    "client_type_broker": "Broker",
+    "client_type_expeditor": "Ekspeditor",
+    "contact_person_name": "Aloqa uchun shaxs ismi",
+    "contact_person_phone": "Aloqa uchun shaxs telefoni",
+    "phone_number": "Telefon raqami",
+    "address": "Manzil",
     "login_button": "Login",
     "register_button": "Register",
     "login_success": "Muvaffaqiyatli kirdingiz",
@@ -88,7 +104,65 @@
   },
   "common": {
     "language": "Til",
-    "logout": "Chiqish"
+    "logout": "Chiqish",
+    "justNow": "hozir",
+    "minutesAgo": "{{count}} daqiqa oldin",
+    "hoursAgo": "{{count}} soat oldin",
+    "daysAgo": "{{count}} kun oldin"
+  },
+  "client": {
+    "dashboard_welcome_title": "Xush kelibsiz, {{name}}",
+    "dashboard_welcome_subtitle": "Mijoz paneli hali tayyorlanmoqda — tez orada yuklar, kuzatuv va boshqa bo'limlar shu yerda paydo bo'ladi."
+  },
+  "clientProfile": {
+    "title": "Profil",
+    "subtitle": "Hisobingiz haqida ma'lumot",
+    "changePassword": "Parolni o'zgartirish",
+    "edit": "Tahrirlash",
+    "email": "Email",
+    "notProvided": "Kiritilmagan",
+    "status": {
+      "pending": "Tasdiqlanishi kutilmoqda",
+      "approved": "Tasdiqlangan",
+      "rejected": "Rad etilgan"
+    },
+    "avatar": {
+      "changeAria": "Rasmni o'zgartirish",
+      "invalidType": "Fayl formati qo'llab-quvvatlanmaydi. PNG, JPG yoki WEBP ishlating.",
+      "tooLarge": "Fayl hajmi juda katta. Maksimal hajm — {{size}} MB.",
+      "success": "Rasm yangilandi",
+      "error": "Rasmni yangilashda xatolik yuz berdi"
+    },
+    "error": {
+      "title": "Profilni yuklashda xatolik",
+      "description": "Internet aloqasini tekshirib, qaytadan urinib ko'ring.",
+      "retry": "Qaytadan urinish"
+    }
+  },
+  "clientProfileInfoDialog": {
+    "title": "Profilni tahrirlash",
+    "description": "Hisobingiz ma'lumotlarini yangilang.",
+    "name": "Kompaniya / to'liq ism",
+    "website": "Veb-sayt",
+    "contactPersonName": "Aloqa uchun shaxs ismi",
+    "contactPersonPhone": "Aloqa uchun shaxs telefoni",
+    "phoneNumber": "Telefon raqami",
+    "address": "Manzil",
+    "cancel": "Bekor qilish",
+    "save": "Saqlash"
+  },
+  "clientChangePasswordDialog": {
+    "title": "Parolni o'zgartirish",
+    "description": "Joriy parolingizni kiriting va yangisini belgilang.",
+    "currentPassword": "Joriy parol",
+    "newPassword": "Yangi parol",
+    "confirmPassword": "Parolni tasdiqlang",
+    "cancel": "Bekor qilish",
+    "update": "Yangilash",
+    "errors": {
+      "mismatch": "Parollar bir xil emas",
+      "tooShort": "Parol kamida 8 ta belgidan iborat bo'lishi kerak"
+    }
   },
   "carrier": {
     "not_approved": "Foydalanuvchi tasdiqlash jarayonida."
@@ -693,6 +767,156 @@
     "chat": "Suhbatlar",
     "profile": "Profil",
     "logout": "Chiqish"
+  },
+  "clientSidebar": {
+    "panelName": "Mijoz paneli",
+    "menu": "Menyu",
+    "dashboard": "Boshqaruv paneli",
+    "cargos": "Yuklarim",
+    "chat": "Chat",
+    "profile": "Profil",
+    "logout": "Chiqish"
+  },
+  "locationPicker": {
+    "title": "Joylashuvni tanlang",
+    "description": "Xaritada nuqtani belgilang yoki joriy manzilingizni ishlating",
+    "currentLocation": "Joriy manzilim",
+    "confirm": "Tanlash",
+    "cancel": "Bekor qilish",
+    "apiKeyMissing": "Google Maps API kaliti sozlanmagan",
+    "loading": "Xarita yuklanmoqda...",
+    "loadFailed": "Xaritani yuklab bo'lmadi. Internet aloqasini tekshiring.",
+    "authFailure": "Google Maps kaliti bilan muammo bor (referrer cheklovi yoki billing yoqilmagan). Google Cloud Console'ni tekshiring."
+  },
+  "cargoLocation": {
+    "country": "Davlat",
+    "countryPlaceholder": "Qidirish uchun yozing...",
+    "city": "Shahar",
+    "cityPlaceholder": "Qidirish uchun yozing...",
+    "searching": "Qidirilmoqda...",
+    "typeToSearch": "Qidirish uchun kamida 2 ta belgi kiriting",
+    "noResults": "Natija topilmadi",
+    "address": "Manzil",
+    "addressPlaceholder": "Ko'cha, uy raqami",
+    "pickPoint": "Xaritadan nuqta tanlash",
+    "changePoint": "Nuqtani o'zgartirish"
+  },
+  "cargoStatus": {
+    "all": "Barchasi",
+    "open": "Ochiq",
+    "assigned": "Biriktirilgan",
+    "in_progress": "Yo'lda",
+    "delivered": "Yetkazilgan",
+    "cancelled": "Bekor qilingan"
+  },
+  "cargoForm": {
+    "createTitle": "Yangi yuk",
+    "editTitle": "Yukni tahrirlash",
+    "subtitle": "Tashish uchun yuk ma'lumotlarini to'ldiring",
+    "previewTitle": "Namuna ko'rinishi",
+    "name": "Yuk nomi",
+    "cargoClass": "Yuk klassi",
+    "classStandard": "Standart",
+    "classPremium": "Premium",
+    "transportType": "Transport turi",
+    "transportTypePlaceholder": "Transport turini tanlang",
+    "pickup": "Yuklash joyi",
+    "delivery": "Yetkazish joyi",
+    "dimensionsSection": "Og'irlik va o'lchamlar",
+    "weight": "Og'irlik (kg)",
+    "volume": "Hajm (m³)",
+    "quantity": "Miqdori",
+    "length": "Uzunligi (sm)",
+    "width": "Eni (sm)",
+    "height": "Balandligi (sm)",
+    "optionsSection": "Qo'shimcha xususiyatlar",
+    "fragile": "Mo'rt yuk",
+    "dangerous": "Xavfli yuk",
+    "temperatureControlled": "Harorat nazorati talab qilinadi",
+    "minTemperature": "Min. harorat (°C)",
+    "maxTemperature": "Maks. harorat (°C)",
+    "transportRequirements": "Tashish talablari",
+    "additionalInfo": "Qo'shimcha ma'lumot",
+    "datesSection": "Sanalar",
+    "loadingAt": "Yuklash sanasi",
+    "unloadingAt": "Tushirish sanasi",
+    "offersCount": "Takliflar soni",
+    "viewCount": "Ko'rishlar soni",
+    "cancel": "Bekor qilish",
+    "save": "Saqlash",
+    "create": "Yaratish",
+    "createSuccess": "Yuk muvaffaqiyatli yaratildi",
+    "updateSuccess": "Yuk muvaffaqiyatli yangilandi",
+    "errorDefault": "Xatolik yuz berdi. Ma'lumotlarni tekshirib qaytadan urinib ko'ring.",
+    "errors": {
+      "pickupIncomplete": "Yuklash joyini to'ldiring (davlat va xaritadagi nuqta)",
+      "deliveryIncomplete": "Yetkazish joyini to'ldiring (davlat va xaritadagi nuqta)",
+      "loadingAtRequired": "Yuklash sanasini ko'rsating"
+    }
+  },
+  "cargoList": {
+    "title": "Yuklarim",
+    "subtitle": "Tashish uchun joylashtirgan yuklaringizni boshqaring",
+    "create": "Yangi yuk",
+    "columns": {
+      "name": "Nomi",
+      "status": "Holati",
+      "route": "Yo'nalish",
+      "loadingAt": "Yuklash sanasi",
+      "actions": "Amallar"
+    },
+    "actions": {
+      "view": "Ko'rish",
+      "edit": "Tahrirlash",
+      "cancel": "Bekor qilish",
+      "close": "Yopish",
+      "delete": "O'chirish"
+    },
+    "card": {
+      "loadingSide": "Yuklash turi",
+      "quantityAndDate": "Miqdori: {{quantity}}, {{date}}",
+      "matchingVehicles": "Mos avtomobillar",
+      "clientPrice": "Mijoz narxi (EGS)",
+      "carrierPrice": "Tashuvchi narxi",
+      "notificationsCount": "Bildirishnomalar soni",
+      "telegramCount": "Telegram guruh/xabarlar soni",
+      "sales": "SALES",
+      "operation": "OPERATION",
+      "showMore": "Batafsil",
+      "showLess": "Yashirish"
+    },
+    "empty": {
+      "title": "Hali yuk yo'q",
+      "description": "Tashuvchilarni topish uchun birinchi yukingizni yarating"
+    },
+    "cancelConfirm": {
+      "title": "Yukni bekor qilish",
+      "description": "\"{{name}}\" yukini bekor qilishga ishonchingiz komilmi?",
+      "confirm": "Yukni bekor qilish",
+      "reasonLabel": "Sababi (ixtiyoriy)",
+      "reasonPlaceholder": "Nima uchun bu yukni bekor qilyapsiz?"
+    },
+    "cancelSuccess": "Yuk bekor qilindi",
+    "deleteConfirm": {
+      "title": "Yukni o'chirish",
+      "description": "\"{{name}}\" yukini o'chirishga ishonchingiz komilmi? Bu amalni qaytarib bo'lmaydi.",
+      "confirm": "O'chirish"
+    },
+    "deleteSuccess": "Yuk o'chirildi",
+    "loadedAll": "Barcha yuklar yuklandi"
+  },
+  "cargoDetail": {
+    "back": "Ro'yxatga qaytish",
+    "edit": "Tahrirlash",
+    "cancel": "Bekor qilish",
+    "delete": "O'chirish",
+    "cancelledNote": "Bu yuk {{date}} sanada bekor qilingan",
+    "route": "Yo'nalish",
+    "tracking": "Kuzatuv",
+    "driverLocation": "Haydovchining oxirgi ma'lum joylashuvi: {{lat}}, {{lng}}",
+    "noHistory": "Holat tarixi hali yo'q",
+    "documents": "Hujjatlar",
+    "noDocuments": "Hujjatlar hali yuklanmagan"
   },
   "locationDialog": {
     "editTitle": "Filialni tahrirlash",

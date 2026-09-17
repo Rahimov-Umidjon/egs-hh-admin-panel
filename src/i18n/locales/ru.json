@@ -27,10 +27,26 @@
     "invalid_credentials": "Неверный логин или пароль.",
     "login_tab": "Вход",
     "register_tab": "Регистрация",
+    "account_type_carrier": "Перевозчик",
+    "account_type_client": "Клиент",
+    "no_account_prompt": "Нет аккаунта?",
+    "have_account_prompt": "Уже есть аккаунт?",
     "welcome_title": "С возвращением",
     "welcome_subtitle": "Войдите в свою учётную запись",
     "register_title": "Создать аккаунт",
     "register_subtitle": "Зарегистрируйте новую компанию",
+    "client_register_title": "Регистрация клиента",
+    "client_register_subtitle": "Зарегистрируйтесь, чтобы размещать грузы для перевозки",
+    "client_name": "Название компании / ФИО",
+    "client_inn": "ИНН",
+    "client_type": "Тип аккаунта",
+    "client_type_cargo_owner": "Владелец груза",
+    "client_type_broker": "Брокер",
+    "client_type_expeditor": "Экспедитор",
+    "contact_person_name": "Имя контактного лица",
+    "contact_person_phone": "Телефон контактного лица",
+    "phone_number": "Номер телефона",
+    "address": "Адрес",
     "login_button": "Войти",
     "register_button": "Зарегистрироваться",
     "login_success": "Вы успешно вошли в систему",
@@ -88,7 +104,65 @@
   },
   "common": {
     "language": "Язык",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "justNow": "только что",
+    "minutesAgo": "{{count}} минут назад",
+    "hoursAgo": "{{count}} часов назад",
+    "daysAgo": "{{count}} дней назад"
+  },
+  "client": {
+    "dashboard_welcome_title": "Добро пожаловать, {{name}}",
+    "dashboard_welcome_subtitle": "Панель клиента находится в разработке — здесь скоро появятся грузы, отслеживание и другие разделы."
+  },
+  "clientProfile": {
+    "title": "Профиль",
+    "subtitle": "Информация о вашем аккаунте",
+    "changePassword": "Сменить пароль",
+    "edit": "Редактировать",
+    "email": "Email",
+    "notProvided": "Не указано",
+    "status": {
+      "pending": "Ожидает подтверждения",
+      "approved": "Подтверждён",
+      "rejected": "Отклонён"
+    },
+    "avatar": {
+      "changeAria": "Изменить фото",
+      "invalidType": "Неподдерживаемый формат файла. Используйте PNG, JPG или WEBP.",
+      "tooLarge": "Файл слишком большой. Максимальный размер — {{size}} МБ.",
+      "success": "Фото обновлено",
+      "error": "Не удалось обновить фото"
+    },
+    "error": {
+      "title": "Не удалось загрузить профиль",
+      "description": "Проверьте соединение и попробуйте снова.",
+      "retry": "Повторить"
+    }
+  },
+  "clientProfileInfoDialog": {
+    "title": "Редактировать профиль",
+    "description": "Обновите информацию о вашем аккаунте.",
+    "name": "Название компании / ФИО",
+    "website": "Веб-сайт",
+    "contactPersonName": "Имя контактного лица",
+    "contactPersonPhone": "Телефон контактного лица",
+    "phoneNumber": "Номер телефона",
+    "address": "Адрес",
+    "cancel": "Отмена",
+    "save": "Сохранить"
+  },
+  "clientChangePasswordDialog": {
+    "title": "Смена пароля",
+    "description": "Введите текущий пароль и задайте новый.",
+    "currentPassword": "Текущий пароль",
+    "newPassword": "Новый пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "cancel": "Отмена",
+    "update": "Обновить",
+    "errors": {
+      "mismatch": "Пароли не совпадают",
+      "tooShort": "Пароль должен содержать не менее 8 символов"
+    }
   },
   "carrier": {
     "not_approved": "Пользователь находится на этапе подтверждения."
@@ -693,6 +767,156 @@
     "chat": "Чат",
     "profile": "Профиль",
     "logout": "Выйти"
+  },
+  "clientSidebar": {
+    "panelName": "Панель клиента",
+    "menu": "Меню",
+    "dashboard": "Панель управления",
+    "cargos": "Мои грузы",
+    "chat": "Чат",
+    "profile": "Профиль",
+    "logout": "Выйти"
+  },
+  "locationPicker": {
+    "title": "Выберите местоположение",
+    "description": "Нажмите точку на карте или используйте своё текущее местоположение",
+    "currentLocation": "Моё текущее местоположение",
+    "confirm": "Выбрать",
+    "cancel": "Отмена",
+    "apiKeyMissing": "Ключ Google Maps API не настроен",
+    "loading": "Загрузка карты...",
+    "loadFailed": "Не удалось загрузить карту. Проверьте интернет-соединение.",
+    "authFailure": "Проблема с ключом Google Maps (ограничение referrer или не включён биллинг). Проверьте Google Cloud Console."
+  },
+  "cargoLocation": {
+    "country": "Страна",
+    "countryPlaceholder": "Начните вводить для поиска...",
+    "city": "Город",
+    "cityPlaceholder": "Начните вводить для поиска...",
+    "searching": "Поиск...",
+    "typeToSearch": "Введите минимум 2 символа для поиска",
+    "noResults": "Ничего не найдено",
+    "address": "Адрес",
+    "addressPlaceholder": "Улица, номер дома",
+    "pickPoint": "Выбрать точку на карте",
+    "changePoint": "Изменить точку"
+  },
+  "cargoStatus": {
+    "all": "Все",
+    "open": "Открыт",
+    "assigned": "Назначен",
+    "in_progress": "В пути",
+    "delivered": "Доставлен",
+    "cancelled": "Отменён"
+  },
+  "cargoForm": {
+    "createTitle": "Новый груз",
+    "editTitle": "Редактировать груз",
+    "subtitle": "Заполните данные груза для перевозки",
+    "previewTitle": "Предпросмотр",
+    "name": "Название груза",
+    "cargoClass": "Класс груза",
+    "classStandard": "Стандарт",
+    "classPremium": "Премиум",
+    "transportType": "Тип транспорта",
+    "transportTypePlaceholder": "Выберите тип транспорта",
+    "pickup": "Место погрузки",
+    "delivery": "Место доставки",
+    "dimensionsSection": "Вес и габариты",
+    "weight": "Вес (кг)",
+    "volume": "Объём (м³)",
+    "quantity": "Количество",
+    "length": "Длина (см)",
+    "width": "Ширина (см)",
+    "height": "Высота (см)",
+    "optionsSection": "Опции",
+    "fragile": "Хрупкий груз",
+    "dangerous": "Опасный груз",
+    "temperatureControlled": "Требует температурного режима",
+    "minTemperature": "Мин. температура (°C)",
+    "maxTemperature": "Макс. температура (°C)",
+    "transportRequirements": "Требования к перевозке",
+    "additionalInfo": "Дополнительная информация",
+    "datesSection": "Даты",
+    "loadingAt": "Дата погрузки",
+    "unloadingAt": "Дата разгрузки",
+    "offersCount": "Количество предложений",
+    "viewCount": "Количество просмотров",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "create": "Создать",
+    "createSuccess": "Груз успешно создан",
+    "updateSuccess": "Груз успешно обновлён",
+    "errorDefault": "Что-то пошло не так. Проверьте данные и попробуйте снова.",
+    "errors": {
+      "pickupIncomplete": "Заполните место погрузки (страну и точку на карте)",
+      "deliveryIncomplete": "Заполните место доставки (страну и точку на карте)",
+      "loadingAtRequired": "Укажите дату погрузки"
+    }
+  },
+  "cargoList": {
+    "title": "Мои грузы",
+    "subtitle": "Управляйте грузами, размещёнными для перевозки",
+    "create": "Новый груз",
+    "columns": {
+      "name": "Название",
+      "status": "Статус",
+      "route": "Маршрут",
+      "loadingAt": "Дата погрузки",
+      "actions": "Действия"
+    },
+    "actions": {
+      "view": "Просмотр",
+      "edit": "Редактировать",
+      "cancel": "Отменить",
+      "close": "Закрыть",
+      "delete": "Удалить"
+    },
+    "card": {
+      "loadingSide": "Вид погрузки",
+      "quantityAndDate": "Количество: {{quantity}}, {{date}}",
+      "matchingVehicles": "Совпадающие авто",
+      "clientPrice": "Цена клиента EGS",
+      "carrierPrice": "Цена перевозчика",
+      "notificationsCount": "Кол-во уведомлений",
+      "telegramCount": "Кол-во групп/сообщений в Telegram",
+      "sales": "SALES",
+      "operation": "OPERATION",
+      "showMore": "Подробнее",
+      "showLess": "Скрыть"
+    },
+    "empty": {
+      "title": "Грузов пока нет",
+      "description": "Создайте первый груз, чтобы начать поиск перевозчиков"
+    },
+    "cancelConfirm": {
+      "title": "Отмена груза",
+      "description": "Вы уверены, что хотите отменить «{{name}}»?",
+      "confirm": "Отменить груз",
+      "reasonLabel": "Причина (необязательно)",
+      "reasonPlaceholder": "Почему вы отменяете этот груз?"
+    },
+    "cancelSuccess": "Груз отменён",
+    "deleteConfirm": {
+      "title": "Удаление груза",
+      "description": "Вы уверены, что хотите удалить «{{name}}»? Это действие необратимо.",
+      "confirm": "Удалить"
+    },
+    "deleteSuccess": "Груз удалён",
+    "loadedAll": "Все грузы загружены"
+  },
+  "cargoDetail": {
+    "back": "Назад к списку",
+    "edit": "Редактировать",
+    "cancel": "Отменить",
+    "delete": "Удалить",
+    "cancelledNote": "Этот груз был отменён {{date}}",
+    "route": "Маршрут",
+    "tracking": "Отслеживание",
+    "driverLocation": "Последнее известное местоположение водителя: {{lat}}, {{lng}}",
+    "noHistory": "История статусов пока пуста",
+    "documents": "Документы",
+    "noDocuments": "Документы ещё не загружены"
   },
   "locationDialog": {
     "editTitle": "Редактировать филиал",

@@ -27,10 +27,26 @@
     "invalid_credentials": "Логин ёки парол нотўғри.",
     "login_tab": "Кириш",
     "register_tab": "Рўйхатдан ўтиш",
+    "account_type_carrier": "Ташувчи",
+    "account_type_client": "Мижоз",
+    "no_account_prompt": "Ҳисобингиз йўқми?",
+    "have_account_prompt": "Ҳисобингиз борми?",
     "welcome_title": "Хуш келибсиз",
     "welcome_subtitle": "Ҳисобингизга киринг",
     "register_title": "Ҳисоб яратиш",
     "register_subtitle": "Янги компанияни рўйхатдан ўтказинг",
+    "client_register_title": "Мижоз ҳисобини яратиш",
+    "client_register_subtitle": "Юк ташиш учун эълон жойлаштириш учун рўйхатдан ўтинг",
+    "client_name": "Компания / тўлиқ исм",
+    "client_inn": "СТИР (ИНН)",
+    "client_type": "Ҳисоб тури",
+    "client_type_cargo_owner": "Юк эгаси",
+    "client_type_broker": "Брокер",
+    "client_type_expeditor": "Экспедитор",
+    "contact_person_name": "Алоқа учун шахс исми",
+    "contact_person_phone": "Алоқа учун шахс телефони",
+    "phone_number": "Телефон рақами",
+    "address": "Манзил",
     "login_button": "Кириш",
     "register_button": "Рўйхатдан ўтиш",
     "login_success": "Муваффақиятли кирдингиз",
@@ -88,7 +104,65 @@
   },
   "common": {
     "language": "Тил",
-    "logout": "Чиқиш"
+    "logout": "Чиқиш",
+    "justNow": "ҳозир",
+    "minutesAgo": "{{count}} дақиқа олдин",
+    "hoursAgo": "{{count}} соат олдин",
+    "daysAgo": "{{count}} кун олдин"
+  },
+  "client": {
+    "dashboard_welcome_title": "Хуш келибсиз, {{name}}",
+    "dashboard_welcome_subtitle": "Мижоз панели ҳали тайёрланмоқда — тез орада юклар, кузатув ва бошқа бўлимлар шу ерда пайдо бўлади."
+  },
+  "clientProfile": {
+    "title": "Профил",
+    "subtitle": "Ҳисобингиз ҳақида маълумот",
+    "changePassword": "Паролни ўзгартириш",
+    "edit": "Таҳрирлаш",
+    "email": "Email",
+    "notProvided": "Киритилмаган",
+    "status": {
+      "pending": "Тасдиқланиши кутилмоқда",
+      "approved": "Тасдиқланган",
+      "rejected": "Рад этилган"
+    },
+    "avatar": {
+      "changeAria": "Расмни ўзгартириш",
+      "invalidType": "Файл формати қўллаб-қувватланмайди. PNG, JPG ёки WEBP ишлатинг.",
+      "tooLarge": "Файл ҳажми жуда катта. Максимал ҳажм — {{size}} MB.",
+      "success": "Расм янгиланди",
+      "error": "Расмни янгилашда хатолик юз берди"
+    },
+    "error": {
+      "title": "Профилни юклашда хатолик",
+      "description": "Интернет алоқасини текшириб, қайтадан уриниб кўринг.",
+      "retry": "Қайтадан уриниш"
+    }
+  },
+  "clientProfileInfoDialog": {
+    "title": "Профилни таҳрирлаш",
+    "description": "Ҳисобингиз маълумотларини янгиланг.",
+    "name": "Компания / тўлиқ исм",
+    "website": "Веб-сайт",
+    "contactPersonName": "Алоқа учун шахс исми",
+    "contactPersonPhone": "Алоқа учун шахс телефони",
+    "phoneNumber": "Телефон рақами",
+    "address": "Манзил",
+    "cancel": "Бекор қилиш",
+    "save": "Сақлаш"
+  },
+  "clientChangePasswordDialog": {
+    "title": "Паролни ўзгартириш",
+    "description": "Жорий паролингизни киритинг ва янгисини белгиланг.",
+    "currentPassword": "Жорий парол",
+    "newPassword": "Янги парол",
+    "confirmPassword": "Паролни тасдиқланг",
+    "cancel": "Бекор қилиш",
+    "update": "Янгилаш",
+    "errors": {
+      "mismatch": "Пароллар бир хил эмас",
+      "tooShort": "Парол камида 8 та белгидан иборат бўлиши керак"
+    }
   },
   "carrier": {
     "not_approved": "Фойдаланувчи тасдиқлаш жараёнида."
@@ -693,6 +767,156 @@
     "chat": "Сухбатлар",
     "profile": "Профил",
     "logout": "Чиқиш"
+  },
+  "clientSidebar": {
+    "panelName": "Мижоз панели",
+    "menu": "Меню",
+    "dashboard": "Бошқарув панели",
+    "cargos": "Юкларим",
+    "chat": "Чат",
+    "profile": "Профил",
+    "logout": "Чиқиш"
+  },
+  "locationPicker": {
+    "title": "Жойлашувни танланг",
+    "description": "Харитада нуқтани белгиланг ёки жорий манзилингизни ишлатинг",
+    "currentLocation": "Жорий манзилим",
+    "confirm": "Танлаш",
+    "cancel": "Бекор қилиш",
+    "apiKeyMissing": "Google Maps API калити созланмаган",
+    "loading": "Харита юкланмоқда...",
+    "loadFailed": "Харитани юклаб бўлмади. Интернет алоқасини текширинг.",
+    "authFailure": "Google Maps калити билан муаммо бор (referrer чекловi ёки billing ёқилмаган). Google Cloud Console'ни текширинг."
+  },
+  "cargoLocation": {
+    "country": "Давлат",
+    "countryPlaceholder": "Қидириш учун ёзинг...",
+    "city": "Шаҳар",
+    "cityPlaceholder": "Қидириш учун ёзинг...",
+    "searching": "Қидирилмоқда...",
+    "typeToSearch": "Қидириш учун камида 2 та белги киритинг",
+    "noResults": "Натижа топилмади",
+    "address": "Манзил",
+    "addressPlaceholder": "Кўча, уй рақами",
+    "pickPoint": "Харитадан нуқта танлаш",
+    "changePoint": "Нуқтани ўзгартириш"
+  },
+  "cargoStatus": {
+    "all": "Барчаси",
+    "open": "Очиқ",
+    "assigned": "Бириктирилган",
+    "in_progress": "Йўлда",
+    "delivered": "Етказилган",
+    "cancelled": "Бекор қилинган"
+  },
+  "cargoForm": {
+    "createTitle": "Янги юк",
+    "editTitle": "Юкни таҳрирлаш",
+    "subtitle": "Ташиш учун юк маълумотларини тўлдиринг",
+    "previewTitle": "Намуна кўриниши",
+    "name": "Юк номи",
+    "cargoClass": "Юк класси",
+    "classStandard": "Стандарт",
+    "classPremium": "Премиум",
+    "transportType": "Транспорт тури",
+    "transportTypePlaceholder": "Транспорт турини танланг",
+    "pickup": "Юклаш жойи",
+    "delivery": "Етказиш жойи",
+    "dimensionsSection": "Оғирлик ва ўлчамлар",
+    "weight": "Оғирлик (кг)",
+    "volume": "Ҳажм (м³)",
+    "quantity": "Миқдори",
+    "length": "Узунлиги (см)",
+    "width": "Эни (см)",
+    "height": "Баландлиги (см)",
+    "optionsSection": "Қўшимча хусусиятлар",
+    "fragile": "Мўрт юк",
+    "dangerous": "Хавфли юк",
+    "temperatureControlled": "Ҳарорат назорати талаб қилинади",
+    "minTemperature": "Мин. ҳарорат (°C)",
+    "maxTemperature": "Макс. ҳарорат (°C)",
+    "transportRequirements": "Ташиш талаблари",
+    "additionalInfo": "Қўшимча маълумот",
+    "datesSection": "Саналар",
+    "loadingAt": "Юклаш санаси",
+    "unloadingAt": "Тушириш санаси",
+    "offersCount": "Таклифлар сони",
+    "viewCount": "Кўришлар сони",
+    "cancel": "Бекор қилиш",
+    "save": "Сақлаш",
+    "create": "Яратиш",
+    "createSuccess": "Юк муваффақиятли яратилди",
+    "updateSuccess": "Юк муваффақиятли янгиланди",
+    "errorDefault": "Хатолик юз берди. Маълумотларни текшириб қайтадан уриниб кўринг.",
+    "errors": {
+      "pickupIncomplete": "Юклаш жойини тўлдиринг (давлат ва харитадаги нуқта)",
+      "deliveryIncomplete": "Етказиш жойини тўлдиринг (давлат ва харитадаги нуқта)",
+      "loadingAtRequired": "Юклаш санасини кўрсатинг"
+    }
+  },
+  "cargoList": {
+    "title": "Юкларим",
+    "subtitle": "Ташиш учун жойлаштирган юкларингизни бошқаринг",
+    "create": "Янги юк",
+    "columns": {
+      "name": "Номи",
+      "status": "Ҳолати",
+      "route": "Йўналиш",
+      "loadingAt": "Юклаш санаси",
+      "actions": "Амаллар"
+    },
+    "actions": {
+      "view": "Кўриш",
+      "edit": "Таҳрирлаш",
+      "cancel": "Бекор қилиш",
+      "close": "Ёпиш",
+      "delete": "Ўчириш"
+    },
+    "card": {
+      "loadingSide": "Юклаш тури",
+      "quantityAndDate": "Миқдори: {{quantity}}, {{date}}",
+      "matchingVehicles": "Мос автомобиллар",
+      "clientPrice": "Мижоз нархи (EGS)",
+      "carrierPrice": "Ташувчи нархи",
+      "notificationsCount": "Билдиришномалар сони",
+      "telegramCount": "Telegram гуруҳ/хабарлар сони",
+      "sales": "SALES",
+      "operation": "OPERATION",
+      "showMore": "Батафсил",
+      "showLess": "Яшириш"
+    },
+    "empty": {
+      "title": "Ҳали юк йўқ",
+      "description": "Ташувчиларни топиш учун биринчи юкингизни яратинг"
+    },
+    "cancelConfirm": {
+      "title": "Юкни бекор қилиш",
+      "description": "\"{{name}}\" юкини бекор қилишга ишончингиз комилми?",
+      "confirm": "Юкни бекор қилиш",
+      "reasonLabel": "Сабаби (ихтиёрий)",
+      "reasonPlaceholder": "Нима учун бу юкни бекор қиляпсиз?"
+    },
+    "cancelSuccess": "Юк бекор қилинди",
+    "deleteConfirm": {
+      "title": "Юкни ўчириш",
+      "description": "\"{{name}}\" юкини ўчиришга ишончингиз комилми? Бу амални қайтариб бўлмайди.",
+      "confirm": "Ўчириш"
+    },
+    "deleteSuccess": "Юк ўчирилди",
+    "loadedAll": "Барча юклар юкланди"
+  },
+  "cargoDetail": {
+    "back": "Рўйхатга қайтиш",
+    "edit": "Таҳрирлаш",
+    "cancel": "Бекор қилиш",
+    "delete": "Ўчириш",
+    "cancelledNote": "Бу юк {{date}} санада бекор қилинган",
+    "route": "Йўналиш",
+    "tracking": "Кузатув",
+    "driverLocation": "Ҳайдовчининг охирги маълум жойлашуви: {{lat}}, {{lng}}",
+    "noHistory": "Ҳолат тарихи ҳали йўқ",
+    "documents": "Ҳужжатлар",
+    "noDocuments": "Ҳужжатлар ҳали юкланмаган"
   },
   "locationDialog": {
     "editTitle": "Филиални таҳрирлаш",

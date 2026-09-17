@@ -27,10 +27,26 @@
     "invalid_credentials": "Invalid username or password.",
     "login_tab": "Login",
     "register_tab": "Register",
+    "account_type_carrier": "Carrier",
+    "account_type_client": "Client",
+    "no_account_prompt": "Don't have an account?",
+    "have_account_prompt": "Already have an account?",
     "welcome_title": "Welcome back",
     "welcome_subtitle": "Sign in to your account",
     "register_title": "Create an account",
     "register_subtitle": "Register your new company",
+    "client_register_title": "Create a client account",
+    "client_register_subtitle": "Register to post cargo for transport",
+    "client_name": "Company / full name",
+    "client_inn": "TIN (INN)",
+    "client_type": "Account type",
+    "client_type_cargo_owner": "Cargo owner",
+    "client_type_broker": "Broker",
+    "client_type_expeditor": "Expeditor",
+    "contact_person_name": "Contact person name",
+    "contact_person_phone": "Contact person phone",
+    "phone_number": "Phone number",
+    "address": "Address",
     "login_button": "Login",
     "register_button": "Register",
     "login_success": "Logged in successfully",
@@ -88,7 +104,65 @@
   },
   "common": {
     "language": "Language",
-    "logout": "Log out"
+    "logout": "Log out",
+    "justNow": "just now",
+    "minutesAgo": "{{count}} minutes ago",
+    "hoursAgo": "{{count}} hours ago",
+    "daysAgo": "{{count}} days ago"
+  },
+  "client": {
+    "dashboard_welcome_title": "Welcome, {{name}}",
+    "dashboard_welcome_subtitle": "The client dashboard is being built — cargo, tracking and other sections will appear here soon."
+  },
+  "clientProfile": {
+    "title": "Profile",
+    "subtitle": "Your account information",
+    "changePassword": "Change password",
+    "edit": "Edit",
+    "email": "Email",
+    "notProvided": "Not provided",
+    "status": {
+      "pending": "Pending approval",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "avatar": {
+      "changeAria": "Change photo",
+      "invalidType": "Unsupported file type. Please use PNG, JPG or WEBP.",
+      "tooLarge": "File is too large. Maximum size is {{size}} MB.",
+      "success": "Photo updated",
+      "error": "Failed to update the photo"
+    },
+    "error": {
+      "title": "Failed to load profile",
+      "description": "Please check your connection and try again.",
+      "retry": "Retry"
+    }
+  },
+  "clientProfileInfoDialog": {
+    "title": "Edit profile",
+    "description": "Update your account information.",
+    "name": "Company / full name",
+    "website": "Website",
+    "contactPersonName": "Contact person name",
+    "contactPersonPhone": "Contact person phone",
+    "phoneNumber": "Phone number",
+    "address": "Address",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "clientChangePasswordDialog": {
+    "title": "Change password",
+    "description": "Enter your current password and set a new one.",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "cancel": "Cancel",
+    "update": "Update",
+    "errors": {
+      "mismatch": "Passwords do not match",
+      "tooShort": "Password must be at least 8 characters"
+    }
   },
   "carrier": {
     "not_approved": "The user is awaiting approval."
@@ -693,6 +767,156 @@
     "chat": "Chat",
     "profile": "Profile",
     "logout": "Log out"
+  },
+  "clientSidebar": {
+    "panelName": "Client panel",
+    "menu": "Menu",
+    "dashboard": "Dashboard",
+    "cargos": "My cargo",
+    "chat": "Chat",
+    "profile": "Profile",
+    "logout": "Log out"
+  },
+  "locationPicker": {
+    "title": "Pick a location",
+    "description": "Tap a point on the map or use your current location",
+    "currentLocation": "My current location",
+    "confirm": "Select",
+    "cancel": "Cancel",
+    "apiKeyMissing": "Google Maps API key is not configured",
+    "loading": "Loading map...",
+    "loadFailed": "Failed to load the map. Please check your internet connection.",
+    "authFailure": "There's a problem with the Google Maps key (referrer restriction or billing not enabled). Please check the Google Cloud Console."
+  },
+  "cargoLocation": {
+    "country": "Country",
+    "countryPlaceholder": "Start typing to search...",
+    "city": "City",
+    "cityPlaceholder": "Start typing to search...",
+    "searching": "Searching...",
+    "typeToSearch": "Type at least 2 characters to search",
+    "noResults": "No results found",
+    "address": "Address",
+    "addressPlaceholder": "Street, building number",
+    "pickPoint": "Pick point on map",
+    "changePoint": "Change point"
+  },
+  "cargoStatus": {
+    "all": "All",
+    "open": "Open",
+    "assigned": "Assigned",
+    "in_progress": "In progress",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled"
+  },
+  "cargoForm": {
+    "createTitle": "New cargo",
+    "editTitle": "Edit cargo",
+    "subtitle": "Fill in the cargo details for transport",
+    "previewTitle": "Preview",
+    "name": "Cargo name",
+    "cargoClass": "Cargo class",
+    "classStandard": "Standard",
+    "classPremium": "Premium",
+    "transportType": "Transport type",
+    "transportTypePlaceholder": "Select transport type",
+    "pickup": "Pickup location",
+    "delivery": "Delivery location",
+    "dimensionsSection": "Weight and dimensions",
+    "weight": "Weight (kg)",
+    "volume": "Volume (m³)",
+    "quantity": "Quantity",
+    "length": "Length (cm)",
+    "width": "Width (cm)",
+    "height": "Height (cm)",
+    "optionsSection": "Options",
+    "fragile": "Fragile",
+    "dangerous": "Dangerous goods",
+    "temperatureControlled": "Temperature controlled",
+    "minTemperature": "Min temperature (°C)",
+    "maxTemperature": "Max temperature (°C)",
+    "transportRequirements": "Transport requirements",
+    "additionalInfo": "Additional information",
+    "datesSection": "Dates",
+    "loadingAt": "Loading date",
+    "unloadingAt": "Unloading date",
+    "offersCount": "Offers",
+    "viewCount": "Views",
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "createSuccess": "Cargo created successfully",
+    "updateSuccess": "Cargo updated successfully",
+    "errorDefault": "Something went wrong. Please check the details and try again.",
+    "errors": {
+      "pickupIncomplete": "Please complete the pickup location (country and a point on the map)",
+      "deliveryIncomplete": "Please complete the delivery location (country and a point on the map)",
+      "loadingAtRequired": "Please specify the loading date"
+    }
+  },
+  "cargoList": {
+    "title": "My cargo",
+    "subtitle": "Manage the cargo you've posted for transport",
+    "create": "New cargo",
+    "columns": {
+      "name": "Name",
+      "status": "Status",
+      "route": "Route",
+      "loadingAt": "Loading date",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "close": "Close",
+      "delete": "Delete"
+    },
+    "card": {
+      "loadingSide": "Loading side",
+      "quantityAndDate": "Qty: {{quantity}}, {{date}}",
+      "matchingVehicles": "Matching vehicles",
+      "clientPrice": "Client price (EGS)",
+      "carrierPrice": "Carrier price",
+      "notificationsCount": "Notifications",
+      "telegramCount": "Telegram groups/messages",
+      "sales": "SALES",
+      "operation": "OPERATION",
+      "showMore": "Show more",
+      "showLess": "Show less"
+    },
+    "empty": {
+      "title": "No cargo yet",
+      "description": "Create your first cargo to start finding carriers"
+    },
+    "cancelConfirm": {
+      "title": "Cancel cargo",
+      "description": "Are you sure you want to cancel \"{{name}}\"?",
+      "confirm": "Cancel cargo",
+      "reasonLabel": "Reason (optional)",
+      "reasonPlaceholder": "Why are you cancelling this cargo?"
+    },
+    "cancelSuccess": "Cargo cancelled",
+    "deleteConfirm": {
+      "title": "Delete cargo",
+      "description": "Are you sure you want to delete \"{{name}}\"? This cannot be undone.",
+      "confirm": "Delete"
+    },
+    "deleteSuccess": "Cargo deleted",
+    "loadedAll": "All cargo loaded"
+  },
+  "cargoDetail": {
+    "back": "Back to list",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "cancelledNote": "This cargo was cancelled on {{date}}",
+    "route": "Route",
+    "tracking": "Tracking",
+    "driverLocation": "Driver's last known location: {{lat}}, {{lng}}",
+    "noHistory": "No status history yet",
+    "documents": "Documents",
+    "noDocuments": "No documents uploaded yet"
   },
   "locationDialog": {
     "editTitle": "Edit branch",
