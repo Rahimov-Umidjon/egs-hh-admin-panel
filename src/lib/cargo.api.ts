@@ -3,14 +3,29 @@ import type {
   Cargo,
   CargoListParams,
   CargoTracking,
+  ClientDashboardData,
   CreateCargoPayload,
   PaginatedResponse,
+  PublicCargo,
+  PublicCargoListParams,
   UpdateCargoPayload,
 } from "@/types"
 
 export const cargoApi = {
+  getDashboard: async () => {
+    const { data } = await api.get<{ data: ClientDashboardData }>("/client/dashboard")
+    return data.data
+  },
+
   getAll: async (params?: CargoListParams) => {
     const { data } = await api.get<PaginatedResponse<Cargo>>("/client/cargos", {
+      params,
+    })
+    return data
+  },
+
+  getPublic: async (params?: PublicCargoListParams) => {
+    const { data } = await api.get<PaginatedResponse<PublicCargo>>("/client/public-cargos", {
       params,
     })
     return data

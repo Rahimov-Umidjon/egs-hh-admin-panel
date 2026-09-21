@@ -2,6 +2,7 @@ import { NavLink, useLocation } from "react-router-dom"
 import {
     LayoutDashboard,
     Package,
+    Store,
     UserRound,
     LogOut,
     ChevronsUpDown,
@@ -47,6 +48,11 @@ const navItems = [
         titleKey: "clientSidebar.cargos",
         url: "/client/cargos",
         icon: Package,
+    },
+    {
+        titleKey: "clientSidebar.publicCargos",
+        url: "/client/public-cargos",
+        icon: Store,
     },
     {
         titleKey: "clientSidebar.chat",

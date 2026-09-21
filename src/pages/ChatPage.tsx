@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import {
   Bell,
@@ -132,10 +133,16 @@ export default function ChatPage() {
   const locale = i18n.language || "uz"
   const { user } = useAuth()
 
+  // Boshqa sahifadan (masalan taklif tafsilotlaridagi "Chatga yozish" tugmasi)
+  // ?conversation=<id> bilan kelinganda, ochilishi bilanoq shu suhbat tanlansin.
+  const [searchParams] = useSearchParams()
   const [tab, setTab] = useState<"all" | "unread">("all")
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebouncedValue(search, 350)
-  const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [selectedId, setSelectedId] = useState<number | null>(() => {
+    const raw = searchParams.get("conversation")
+    return raw ? Number(raw) : null
+  })
 
   const [messageSearchOpen, setMessageSearchOpen] = useState(false)
   const [messageSearchQuery, setMessageSearchQuery] = useState("")

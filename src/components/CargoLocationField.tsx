@@ -40,12 +40,12 @@ interface CargoLocationFieldProps {
   error?: string
 }
 
-interface LocationOption {
+export interface LocationOption {
   id: number
   name: string
 }
 
-interface LocationSearchSelectProps {
+export interface LocationSearchSelectProps {
   label: string
   placeholder: string
   disabled?: boolean
@@ -61,7 +61,7 @@ interface LocationSearchSelectProps {
 
 // Davlat/shahar tanlash uchun qidiruvli combobox — tugma bosilganda popover ochiladi va
 // darhol tanlash uchun ro'yxat chiqadi, yozilganda esa natijalar torayadi.
-function LocationSearchSelect({
+export function LocationSearchSelect({
   label,
   placeholder,
   disabled,

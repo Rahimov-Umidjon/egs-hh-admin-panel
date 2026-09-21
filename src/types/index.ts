@@ -380,6 +380,180 @@ export interface CargoTracking {
   driver_location: { latitude: number; longitude: number; updated_at?: string } | null
 }
 
+// ---- Cargo offers (Client) — /cargos/:id/offers -------------------------------
+export type CargoOfferStatus = "pending" | "accepted" | "rejected"
+
+export interface CargoOfferProposer {
+  type: string
+  id: number
+  name: string
+  avatar?: { url: string; mime_type: string; size: number } | null
+  is_online?: boolean
+}
+
+export interface CargoOfferCurrency {
+  id: number
+  code: string
+  symbol: string
+}
+
+export interface CargoOfferCargoRequirements {
+  weight: number | null
+  volume: number | null
+  quantity: number | null
+  length: number | null
+  width: number | null
+  height: number | null
+  fragile: boolean
+  dangerous: boolean
+  temperature_controlled: boolean
+  min_temperature: number | null
+  max_temperature: number | null
+  transport_requirements: string | null
+  transport_type: { id: number; name: string; image_url: string | null } | null
+}
+
+// Taklif javobidagi `cargo` ob'ekti asosiy `Cargo` tipidan farqli shaklda keladi
+// (masalan `weight`/`volume` emas, `requirements` ichida; `from`/`to` emas,
+// `route.from`/`route.to` ichida) — shu sababli alohida tip sifatida ajratildi.
+export interface CargoOfferCargoSummary {
+  id: number
+  name: string
+  status: CargoStatus
+  cargo_class: CargoClass
+  view_count: number
+  pickup_location: CargoPoint
+  delivery_location: CargoPoint
+  route: {
+    from: CargoAdministrativeArea
+    to: CargoAdministrativeArea
+  }
+  requirements: CargoOfferCargoRequirements
+  additional_info: string | null
+  loading_at: string
+  unloading_at: string | null
+  is_negotiable: boolean
+  posted_by: { id: number; type: string; name: string }
+  published_at: string | null
+  expires_at: string | null
+  created_at: string
+}
+
+export interface CargoOffer {
+  id: number
+  cargo_id: number
+  proposer: CargoOfferProposer
+  amount: number
+  currency: CargoOfferCurrency
+  advance_amount: number | null
+  payment_terms: string | null
+  message: string | null
+  status: CargoOfferStatus
+  status_label: string
+  rejection_reason: string | null
+  responded_at: string | null
+  created_at: string
+  cargo: CargoOfferCargoSummary
+}
+
+// ---- Driver profili (Client) — GET /client/drivers/:id -----------------------
+export interface DriverReview {
+  id: number
+  rating: number
+  comment: string
+  is_anonymous: boolean
+  reviewer: { type: string; id: number; name: string }
+  created_at: string
+}
+
+export interface Driver {
+  id: number
+  rating: number
+  rating_count: number
+  name: string | null
+  avatar: { url: string; mime_type: string; size: number } | null
+  is_online: boolean
+  is_verified: boolean
+  completed_cargos_count: number
+  cancelled_cargos_count: number
+  reliability_rate: number
+  member_since: string
+  recent_reviews: DriverReview[]
+}
+
+// ---- Ochiq yuklar bozori (Client) — GET /client/public-cargos ----------------
+export interface PublicCargo {
+  id: number
+  name: string
+  status: CargoStatus
+  from: CargoAdministrativeArea
+  to: CargoAdministrativeArea
+  weight: number | null
+  volume: number | null
+  quantity: number | null
+  transport_type: { id: number; name: string; image_url: string | null } | null
+  loading_at: string
+  unloading_at: string | null
+  created_at: string
+}
+
+export interface PublicCargoListParams {
+  from_city_id?: number
+  to_city_id?: number
+  transport_type_id?: number
+  page?: number
+  per_page?: number
+}
+
+// ---- Client dashboard — GET /client/dashboard --------------------------------
+export interface DashboardCargoCounts {
+  total: number
+  open: number
+  assigned: number
+  in_progress: number
+  delivered: number
+  cancelled: number
+}
+
+export interface DashboardRecentCargo {
+  id: number
+  name: string
+  status: CargoStatus
+  cargo_class: CargoClass
+  view_count: number
+  from: CargoAdministrativeArea[] | CargoAdministrativeArea
+  to: CargoAdministrativeArea[] | CargoAdministrativeArea
+  weight: number | null
+  volume: number | null
+  quantity: number | null
+  loading_at: string
+  unloading_at: string | null
+  created_at: string
+}
+
+export interface DashboardPublicCargo {
+  id: number
+  name: string
+  status: CargoStatus
+  from: CargoAdministrativeArea[] | CargoAdministrativeArea
+  to: CargoAdministrativeArea[] | CargoAdministrativeArea
+  weight: number | null
+  volume: number | null
+  quantity: number | null
+  loading_at: string
+  unloading_at: string | null
+  created_at: string
+}
+
+export interface ClientDashboardData {
+  cargos: DashboardCargoCounts
+  recent_cargos: DashboardRecentCargo[]
+  recent_public_cargos: DashboardPublicCargo[]
+  carriers: {
+    total_approved: number
+  }
+}
+
 export interface UpdatePasswordPayload {
   password: string
   password_confirmation: string

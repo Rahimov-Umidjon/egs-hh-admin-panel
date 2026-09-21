@@ -2,7 +2,13 @@ import { useInfiniteQuery, useMutation, useQueries, useQuery, useQueryClient } f
 import { toast } from "sonner"
 
 import { cargoApi } from "@/lib/cargo.api"
-import type { CargoListParams, CargoStatus, CreateCargoPayload, UpdateCargoPayload } from "@/types"
+import type {
+  CargoListParams,
+  CargoStatus,
+  CreateCargoPayload,
+  PublicCargoListParams,
+  UpdateCargoPayload,
+} from "@/types"
 
 export const cargoKeys = {
   all: ["cargos"] as const,
@@ -12,6 +18,16 @@ export const cargoKeys = {
   detail: (id: number) => [...cargoKeys.all, "detail", id] as const,
   tracking: (id: number) => [...cargoKeys.all, "tracking", id] as const,
   documents: (id: number) => [...cargoKeys.all, "documents", id] as const,
+  dashboard: () => [...cargoKeys.all, "dashboard"] as const,
+  publicInfinite: (params?: Omit<PublicCargoListParams, "page" | "per_page">) =>
+    [...cargoKeys.all, "public", "infinite", params] as const,
+}
+
+export function useClientDashboard() {
+  return useQuery({
+    queryKey: cargoKeys.dashboard(),
+    queryFn: () => cargoApi.getDashboard(),
+  })
 }
 
 // Global QueryClient `staleTime: 30_000` bilan sozlangan — bu yuklar ro'yxati uchun
@@ -33,6 +49,22 @@ export function useInfiniteCargos(params?: Omit<CargoListParams, "page">) {
   return useInfiniteQuery({
     queryKey: cargoKeys.infiniteList(params),
     queryFn: ({ pageParam }) => cargoApi.getAll({ ...params, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.pagination.current_page < lastPage.pagination.last_page
+        ? lastPage.pagination.current_page + 1
+        : undefined,
+    staleTime: 0,
+  })
+}
+
+// Boshqa mijozlarning ochiq yuklari — "yuklar bozori" sahifasi uchun.
+export function useInfinitePublicCargos(
+  params?: Omit<PublicCargoListParams, "page" | "per_page">
+) {
+  return useInfiniteQuery({
+    queryKey: cargoKeys.publicInfinite(params),
+    queryFn: ({ pageParam }) => cargoApi.getPublic({ ...params, page: pageParam, per_page: 16 }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.pagination.current_page < lastPage.pagination.last_page

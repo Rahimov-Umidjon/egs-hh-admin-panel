@@ -23,8 +23,10 @@ const ChatPage = lazy(() => import("./pages/ChatPage"))
 const ClientDashboardPage = lazy(() => import("./pages/ClientDashboardPage"))
 const ClientProfilePage = lazy(() => import("./pages/ClientProfilePage"))
 const CargoListPage = lazy(() => import("./pages/CargoListPage"))
+const PublicCargosPage = lazy(() => import("./pages/PublicCargosPage"))
 const CargoFormPage = lazy(() => import("./pages/CargoFormPage"))
 const CargoDetailPage = lazy(() => import("./pages/CargoDetailPage"))
+const CargoOfferDetailPage = lazy(() => import("./pages/CargoOfferDetailPage"))
 
 function App() {
   return (
@@ -63,9 +65,14 @@ function App() {
                   <Route path="/client" element={<ClientDashboardPage />} />
                   <Route path="/client/profile" element={<ClientProfilePage />} />
                   <Route path="/client/cargos" element={<CargoListPage />} />
+                  <Route path="/client/public-cargos" element={<PublicCargosPage />} />
                   <Route path="/client/cargos/new" element={<CargoFormPage />} />
                   <Route path="/client/cargos/:id" element={<CargoDetailPage />} />
                   <Route path="/client/cargos/:id/edit" element={<CargoFormPage />} />
+                  <Route
+                    path="/client/cargos/:id/offers/:offerId"
+                    element={<CargoOfferDetailPage />}
+                  />
                   <Route path="/client/chat" element={<ChatPage />} />
                 </Route>
               </Route>
