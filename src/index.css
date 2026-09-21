@@ -31,6 +31,8 @@
   --sidebar-accent-foreground: hsl(240 5.9% 10%);
   --sidebar-border: hsl(220 13% 91%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --scrollbar-thumb: oklch(0.32 0.08 252 / 35%);
+  --scrollbar-thumb-hover: oklch(0.32 0.08 252 / 55%);
 }
 
 .dark {
@@ -60,6 +62,8 @@
   --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
   --sidebar-border: hsl(240 3.7% 15.9%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --scrollbar-thumb: oklch(0.7 0.1 252 / 35%);
+  --scrollbar-thumb-hover: oklch(0.7 0.1 252 / 55%);
 }
 
 @theme inline {
@@ -101,5 +105,31 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Ilova rangiga mos, ingichka scrollbar — Firefox uchun standart xossalar,
+     Chromium/Safari uchun -webkit- pseudo-elementlari orqali. Butun ilovaga
+     bir joydan qo'llanadi, har bir komponentda alohida sozlash shart emas. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover);
   }
 }
