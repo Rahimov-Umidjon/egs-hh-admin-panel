@@ -112,7 +112,7 @@
   },
   "client": {
     "dashboard_welcome_title": "Добро пожаловать, {{name}}",
-    "dashboard_welcome_subtitle": "Панель клиента находится в разработке — здесь скоро появятся грузы, отслеживание и другие разделы."
+    "dashboard_welcome_subtitle": "Общий обзор ваших грузов и активности системы"
   },
   "clientProfile": {
     "title": "Профиль",
@@ -773,9 +773,27 @@
     "menu": "Меню",
     "dashboard": "Панель управления",
     "cargos": "Мои грузы",
+    "publicCargos": "Рынок грузов",
     "chat": "Чат",
     "profile": "Профиль",
     "logout": "Выйти"
+  },
+  "publicCargos": {
+    "title": "Рынок грузов",
+    "subtitle": "Открытые грузы других клиентов",
+    "filters": {
+      "fromCountry": "Откуда (страна)",
+      "fromCity": "Откуда (город)",
+      "toCountry": "Куда (страна)",
+      "toCity": "Куда (город)",
+      "transportType": "Тип транспорта",
+      "transportTypeAll": "Все типы транспорта",
+      "clear": "Очистить фильтры"
+    },
+    "empty": {
+      "title": "Пока нет открытых грузов",
+      "description": "Новые грузы появятся здесь"
+    }
   },
   "locationPicker": {
     "title": "Выберите местоположение",
@@ -808,6 +826,118 @@
     "in_progress": "В пути",
     "delivered": "Доставлен",
     "cancelled": "Отменён"
+  },
+  "clientDashboard": {
+    "error": {
+      "title": "Ошибка при загрузке данных",
+      "description": "Проверьте подключение к интернету и попробуйте снова.",
+      "retry": "Повторить"
+    },
+    "stats": {
+      "total": "Всего грузов",
+      "totalTag": "100%",
+      "totalSubtitle": "Все грузы в системе",
+      "open": "Открытые грузы",
+      "openTag": "В ожидании",
+      "openSubtitle": "Неназначенные грузы в ожидании",
+      "inProgress": "В пути / Назначено",
+      "inProgressBreakdown": "{{assigned}} + {{inProgress}}",
+      "inProgressSubtitle": "Грузы в пути и назначенные",
+      "delivered": "Доставлено",
+      "deliveredTag": "Успешно",
+      "deliveredSubtitle": "Доставлено клиенту",
+      "carriers": "Подтверждённые перевозчики",
+      "carriersTag": "Активны",
+      "carriersSubtitle": "Партнёрские логистические компании"
+    },
+    "statusChart": {
+      "title": "Статусы грузов",
+      "subtitle": "Соотношение статусов",
+      "centerLabel": "Всего"
+    },
+    "weightVolumeChart": {
+      "title": "Анализ веса и объёма последних грузов",
+      "subtitle": "Сравнение по кг и м³",
+      "weightLegend": "Вес (кг)",
+      "volumeLegend": "Объём (м³)"
+    },
+    "table": {
+      "mineTab": "Мои последние грузы ({{count}})",
+      "publicTab": "Рынок открытых грузов ({{count}})",
+      "viewAll": "Перейти к грузам",
+      "columns": {
+        "id": "ID / Название",
+        "route": "Маршрут",
+        "status": "Статус",
+        "weight": "Вес",
+        "volume": "Объём",
+        "quantity": "Кол-во",
+        "dates": "Погрузка & разгрузка",
+        "actions": "Действия"
+      },
+      "loadingLabel": "Погрузка",
+      "unloadingLabel": "Разгрузка",
+      "empty": "Пока нет грузов",
+      "viewAria": "Подробнее"
+    }
+  },
+  "cargoOffers": {
+    "title": "Предложения",
+    "empty": "Пока нет предложений",
+    "proposer": "Кто предложил",
+    "amount": "Сумма предложения",
+    "advanceAmount": "Сумма аванса",
+    "paymentTerms": "Условия оплаты",
+    "message": "Сообщение",
+    "createdAt": "Дата отправки",
+    "respondedAt": "Дата ответа",
+    "rejectionReason": "Причина отказа",
+    "viewDetails": "Подробнее",
+    "status": {
+      "pending": "В ожидании",
+      "accepted": "Принято",
+      "rejected": "Отклонено"
+    },
+    "proposerType": {
+      "driver": "Водитель",
+      "carrier": "Транспортная компания"
+    }
+  },
+  "cargoOfferDetail": {
+    "pageTitle": "Детали предложения",
+    "pageSubtitle": "Предложение по грузу «{{name}}»",
+    "proposalSuffix": "предложение",
+    "offerInfo": "Информация о предложении",
+    "cargoInfo": "Информация о грузе",
+    "driverInfo": "Информация о водителе",
+    "reviewsTitle": "Отзывы клиентов",
+    "viewFullCargo": "Смотреть полную информацию",
+    "writeToChat": "Написать в чат",
+    "contactError": "Не удалось открыть чат",
+    "accept": "Принять",
+    "reject": "Отклонить",
+    "acceptConfirm": {
+      "title": "Принять предложение",
+      "description": "Если вы примете предложение, груз будет назначен этому водителю. Продолжить?",
+      "confirm": "Принять"
+    },
+    "rejectConfirm": {
+      "title": "Отклонить предложение",
+      "description": "Вы уверены, что хотите отклонить это предложение?",
+      "confirm": "Отклонить",
+      "reasonLabel": "Причина (необязательно)",
+      "reasonPlaceholder": "Укажите причину отказа..."
+    },
+    "acceptSuccess": "Предложение принято",
+    "rejectSuccess": "Предложение отклонено",
+    "completedCargos": "Количество грузов",
+    "reliabilityRate": "Успешность",
+    "cancelledCargos": "Отменено",
+    "online": "Онлайн",
+    "offline": "Офлайн",
+    "memberSince": "Дата регистрации",
+    "reviewsCount": "{{count}} отзывов",
+    "anonymousReviewer": "Анонимный клиент"
   },
   "cargoForm": {
     "createTitle": "Новый груз",
@@ -911,9 +1041,17 @@
     "cancel": "Отменить",
     "delete": "Удалить",
     "cancelledNote": "Этот груз был отменён {{date}}",
+    "idLabel": "ID: #{{id}}",
+    "info": "Информация о грузе",
+    "dimensions": "Размеры",
+    "deliveryStatus": "Статус доставки",
     "route": "Маршрут",
+    "origin": "Точка погрузки",
+    "destination": "Точка выгрузки",
+    "driver": "Водитель",
+    "driverLocationTitle": "Текущее местоположение водителя",
+    "lastUpdated": "Обновлено: {{time}}",
     "tracking": "Отслеживание",
-    "driverLocation": "Последнее известное местоположение водителя: {{lat}}, {{lng}}",
     "noHistory": "История статусов пока пуста",
     "documents": "Документы",
     "noDocuments": "Документы ещё не загружены"

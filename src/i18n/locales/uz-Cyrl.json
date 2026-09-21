@@ -112,7 +112,7 @@
   },
   "client": {
     "dashboard_welcome_title": "Хуш келибсиз, {{name}}",
-    "dashboard_welcome_subtitle": "Мижоз панели ҳали тайёрланмоқда — тез орада юклар, кузатув ва бошқа бўлимлар шу ерда пайдо бўлади."
+    "dashboard_welcome_subtitle": "Юкларингиз ва тизим фаолияти бўйича умумий кўриниш"
   },
   "clientProfile": {
     "title": "Профил",
@@ -773,9 +773,27 @@
     "menu": "Меню",
     "dashboard": "Бошқарув панели",
     "cargos": "Юкларим",
+    "publicCargos": "Юклар бозори",
     "chat": "Чат",
     "profile": "Профил",
     "logout": "Чиқиш"
+  },
+  "publicCargos": {
+    "title": "Юклар бозори",
+    "subtitle": "Бошқа мижозларнинг очиқ юклари",
+    "filters": {
+      "fromCountry": "Қаердан (давлат)",
+      "fromCity": "Қаердан (шаҳар)",
+      "toCountry": "Қаерга (давлат)",
+      "toCity": "Қаерга (шаҳар)",
+      "transportType": "Транспорт тури",
+      "transportTypeAll": "Барча транспорт турлари",
+      "clear": "Филтрларни тозалаш"
+    },
+    "empty": {
+      "title": "Ҳозирча очиқ юклар йўқ",
+      "description": "Янги юклар пайдо бўлганда шу ерда кўринади"
+    }
   },
   "locationPicker": {
     "title": "Жойлашувни танланг",
@@ -808,6 +826,118 @@
     "in_progress": "Йўлда",
     "delivered": "Етказилган",
     "cancelled": "Бекор қилинган"
+  },
+  "clientDashboard": {
+    "error": {
+      "title": "Маълумотларни юклашда хатолик",
+      "description": "Интернет алоқасини текшириб, қайтадан уриниб кўринг.",
+      "retry": "Қайтадан уриниш"
+    },
+    "stats": {
+      "total": "Жами юклар",
+      "totalTag": "100%",
+      "totalSubtitle": "Тизимдаги умумий юклар",
+      "open": "Очиқ юклар",
+      "openTag": "Кутилмоқда",
+      "openSubtitle": "Тайинланмаган кутилаётган юклар",
+      "inProgress": "Жараёнда / Бириктирилган",
+      "inProgressBreakdown": "{{assigned}} + {{inProgress}}",
+      "inProgressSubtitle": "Йўлда ва бириктирилган юклар",
+      "delivered": "Етказиб берилди",
+      "deliveredTag": "Муваффақиятли",
+      "deliveredSubtitle": "Мижозга етиб борган",
+      "carriers": "Тасдиқланган ҳайдовчилар",
+      "carriersTag": "Актив",
+      "carriersSubtitle": "Ҳамкор логистика компаниялари"
+    },
+    "statusChart": {
+      "title": "Юклар ҳолати бўйича",
+      "subtitle": "Статуслар нисбати",
+      "centerLabel": "Жами"
+    },
+    "weightVolumeChart": {
+      "title": "Сўнгги юклар оғирлиги ва ҳажми таҳлили",
+      "subtitle": "Кг ва м³ бўйича таққослаш",
+      "weightLegend": "Оғирлик (кг)",
+      "volumeLegend": "Ҳажм (м³)"
+    },
+    "table": {
+      "mineTab": "Сўнгги юкларим ({{count}})",
+      "publicTab": "Очиқ юклар бозори ({{count}})",
+      "viewAll": "Юкларга ўтиш",
+      "columns": {
+        "id": "ID / Номи",
+        "route": "Йўналиш",
+        "status": "Статус",
+        "weight": "Оғирлик",
+        "volume": "Ҳажми",
+        "quantity": "Сони",
+        "dates": "Ортиш & тушириш",
+        "actions": "Амаллар"
+      },
+      "loadingLabel": "Ортиш",
+      "unloadingLabel": "Тушириш",
+      "empty": "Ҳозирча юклар йўқ",
+      "viewAria": "Батафсил кўриш"
+    }
+  },
+  "cargoOffers": {
+    "title": "Таклифлар",
+    "empty": "Ҳозирча таклифлар йўқ",
+    "proposer": "Таклиф берувчи",
+    "amount": "Таклиф суммаси",
+    "advanceAmount": "Аванс суммаси",
+    "paymentTerms": "Тўлов шартлари",
+    "message": "Хабар",
+    "createdAt": "Юборилган сана",
+    "respondedAt": "Жавоб берилган сана",
+    "rejectionReason": "Рад этиш сабаби",
+    "viewDetails": "Батафсил кўриш",
+    "status": {
+      "pending": "Кутилмоқда",
+      "accepted": "Қабул қилинган",
+      "rejected": "Рад этилган"
+    },
+    "proposerType": {
+      "driver": "Ҳайдовчи",
+      "carrier": "Ташувчи компания"
+    }
+  },
+  "cargoOfferDetail": {
+    "pageTitle": "Таклиф тафсилотлари",
+    "pageSubtitle": "{{name}} юки учун таклиф",
+    "proposalSuffix": "таклифи",
+    "offerInfo": "Таклиф ҳақида маълумот",
+    "cargoInfo": "Юк ҳақида маълумот",
+    "driverInfo": "Ҳайдовчи ҳақида маълумот",
+    "reviewsTitle": "Мижозлар берган шарҳлар",
+    "viewFullCargo": "Тўлиқ маълумотни кўриш",
+    "writeToChat": "Чатга ёзиш",
+    "contactError": "Суҳбатни очишда хатолик юз берди",
+    "accept": "Қабул қилиш",
+    "reject": "Бекор қилиш",
+    "acceptConfirm": {
+      "title": "Таклифни қабул қилиш",
+      "description": "Таклифни қабул қилсангиз, юк шу ҳайдовчига бириктирилади. Давом этасизми?",
+      "confirm": "Қабул қилиш"
+    },
+    "rejectConfirm": {
+      "title": "Таклифни бекор қилиш",
+      "description": "Ушбу таклифни рад этмоқчимисиз?",
+      "confirm": "Рад этиш",
+      "reasonLabel": "Сабаби (ихтиёрий)",
+      "reasonPlaceholder": "Рад этиш сабабини киритинг..."
+    },
+    "acceptSuccess": "Таклиф қабул қилинди",
+    "rejectSuccess": "Таклиф рад этилди",
+    "completedCargos": "Юклар сони",
+    "reliabilityRate": "Муваффақият",
+    "cancelledCargos": "Бекор қилинган",
+    "online": "Онлайн",
+    "offline": "Офлайн",
+    "memberSince": "Аъзо бўлган сана",
+    "reviewsCount": "{{count}} та шарҳ",
+    "anonymousReviewer": "Номаълум мижоз"
   },
   "cargoForm": {
     "createTitle": "Янги юк",
@@ -911,9 +1041,17 @@
     "cancel": "Бекор қилиш",
     "delete": "Ўчириш",
     "cancelledNote": "Бу юк {{date}} санада бекор қилинган",
+    "idLabel": "ID: #{{id}}",
+    "info": "Юк маълумотлари",
+    "dimensions": "Ўлчамлари",
+    "deliveryStatus": "Етказиш ҳолати",
     "route": "Йўналиш",
+    "origin": "Юклаш нуқтаси",
+    "destination": "Тушириш нуқтаси",
+    "driver": "Ҳайдовчи",
+    "driverLocationTitle": "Ҳайдовчининг жорий жойлашуви",
+    "lastUpdated": "Янгиланган: {{time}}",
     "tracking": "Кузатув",
-    "driverLocation": "Ҳайдовчининг охирги маълум жойлашуви: {{lat}}, {{lng}}",
     "noHistory": "Ҳолат тарихи ҳали йўқ",
     "documents": "Ҳужжатлар",
     "noDocuments": "Ҳужжатлар ҳали юкланмаган"

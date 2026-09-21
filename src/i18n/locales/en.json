@@ -112,7 +112,7 @@
   },
   "client": {
     "dashboard_welcome_title": "Welcome, {{name}}",
-    "dashboard_welcome_subtitle": "The client dashboard is being built — cargo, tracking and other sections will appear here soon."
+    "dashboard_welcome_subtitle": "An overview of your cargos and system activity"
   },
   "clientProfile": {
     "title": "Profile",
@@ -773,9 +773,27 @@
     "menu": "Menu",
     "dashboard": "Dashboard",
     "cargos": "My cargo",
+    "publicCargos": "Cargo marketplace",
     "chat": "Chat",
     "profile": "Profile",
     "logout": "Log out"
+  },
+  "publicCargos": {
+    "title": "Cargo marketplace",
+    "subtitle": "Open cargos from other clients",
+    "filters": {
+      "fromCountry": "From (country)",
+      "fromCity": "From (city)",
+      "toCountry": "To (country)",
+      "toCity": "To (city)",
+      "transportType": "Transport type",
+      "transportTypeAll": "All transport types",
+      "clear": "Clear filters"
+    },
+    "empty": {
+      "title": "No open cargos yet",
+      "description": "New cargos will appear here"
+    }
   },
   "locationPicker": {
     "title": "Pick a location",
@@ -808,6 +826,118 @@
     "in_progress": "In progress",
     "delivered": "Delivered",
     "cancelled": "Cancelled"
+  },
+  "clientDashboard": {
+    "error": {
+      "title": "Failed to load data",
+      "description": "Check your internet connection and try again.",
+      "retry": "Retry"
+    },
+    "stats": {
+      "total": "Total cargos",
+      "totalTag": "100%",
+      "totalSubtitle": "All cargos in the system",
+      "open": "Open cargos",
+      "openTag": "Pending",
+      "openSubtitle": "Unassigned cargos awaiting pickup",
+      "inProgress": "In progress / Assigned",
+      "inProgressBreakdown": "{{assigned}} + {{inProgress}}",
+      "inProgressSubtitle": "Cargos in transit and assigned",
+      "delivered": "Delivered",
+      "deliveredTag": "Successful",
+      "deliveredSubtitle": "Delivered to the client",
+      "carriers": "Approved carriers",
+      "carriersTag": "Active",
+      "carriersSubtitle": "Partner logistics companies"
+    },
+    "statusChart": {
+      "title": "Cargo status breakdown",
+      "subtitle": "Share of statuses",
+      "centerLabel": "Total"
+    },
+    "weightVolumeChart": {
+      "title": "Recent cargo weight & volume analysis",
+      "subtitle": "Comparison by kg and m³",
+      "weightLegend": "Weight (kg)",
+      "volumeLegend": "Volume (m³)"
+    },
+    "table": {
+      "mineTab": "My recent cargos ({{count}})",
+      "publicTab": "Open cargo marketplace ({{count}})",
+      "viewAll": "Go to cargos",
+      "columns": {
+        "id": "ID / Name",
+        "route": "Route",
+        "status": "Status",
+        "weight": "Weight",
+        "volume": "Volume",
+        "quantity": "Qty",
+        "dates": "Loading & unloading",
+        "actions": "Actions"
+      },
+      "loadingLabel": "Loading",
+      "unloadingLabel": "Unloading",
+      "empty": "No cargos yet",
+      "viewAria": "View details"
+    }
+  },
+  "cargoOffers": {
+    "title": "Offers",
+    "empty": "No offers yet",
+    "proposer": "Proposer",
+    "amount": "Offer amount",
+    "advanceAmount": "Advance amount",
+    "paymentTerms": "Payment terms",
+    "message": "Message",
+    "createdAt": "Submitted at",
+    "respondedAt": "Responded at",
+    "rejectionReason": "Rejection reason",
+    "viewDetails": "View details",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    },
+    "proposerType": {
+      "driver": "Driver",
+      "carrier": "Carrier company"
+    }
+  },
+  "cargoOfferDetail": {
+    "pageTitle": "Offer details",
+    "pageSubtitle": "Offer for cargo \"{{name}}\"",
+    "proposalSuffix": "proposal",
+    "offerInfo": "Offer information",
+    "cargoInfo": "Cargo information",
+    "driverInfo": "Driver information",
+    "reviewsTitle": "Client reviews",
+    "viewFullCargo": "View full details",
+    "writeToChat": "Write to chat",
+    "contactError": "Failed to open the chat",
+    "accept": "Accept",
+    "reject": "Reject",
+    "acceptConfirm": {
+      "title": "Accept offer",
+      "description": "Accepting this offer will assign the cargo to this driver. Continue?",
+      "confirm": "Accept"
+    },
+    "rejectConfirm": {
+      "title": "Reject offer",
+      "description": "Are you sure you want to reject this offer?",
+      "confirm": "Reject",
+      "reasonLabel": "Reason (optional)",
+      "reasonPlaceholder": "Enter a rejection reason..."
+    },
+    "acceptSuccess": "Offer accepted",
+    "rejectSuccess": "Offer rejected",
+    "completedCargos": "Cargo count",
+    "reliabilityRate": "Success rate",
+    "cancelledCargos": "Cancelled",
+    "online": "Online",
+    "offline": "Offline",
+    "memberSince": "Member since",
+    "reviewsCount": "{{count}} reviews",
+    "anonymousReviewer": "Anonymous client"
   },
   "cargoForm": {
     "createTitle": "New cargo",
@@ -911,9 +1041,17 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "cancelledNote": "This cargo was cancelled on {{date}}",
+    "idLabel": "ID: #{{id}}",
+    "info": "Cargo information",
+    "dimensions": "Dimensions",
+    "deliveryStatus": "Delivery status",
     "route": "Route",
+    "origin": "Pickup point",
+    "destination": "Delivery point",
+    "driver": "Driver",
+    "driverLocationTitle": "Driver's current location",
+    "lastUpdated": "Updated: {{time}}",
     "tracking": "Tracking",
-    "driverLocation": "Driver's last known location: {{lat}}, {{lng}}",
     "noHistory": "No status history yet",
     "documents": "Documents",
     "noDocuments": "No documents uploaded yet"

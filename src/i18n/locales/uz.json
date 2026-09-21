@@ -112,7 +112,7 @@
   },
   "client": {
     "dashboard_welcome_title": "Xush kelibsiz, {{name}}",
-    "dashboard_welcome_subtitle": "Mijoz paneli hali tayyorlanmoqda — tez orada yuklar, kuzatuv va boshqa bo'limlar shu yerda paydo bo'ladi."
+    "dashboard_welcome_subtitle": "Yuklaringiz va tizim faoliyati bo'yicha umumiy ko'rinish"
   },
   "clientProfile": {
     "title": "Profil",
@@ -773,9 +773,27 @@
     "menu": "Menyu",
     "dashboard": "Boshqaruv paneli",
     "cargos": "Yuklarim",
+    "publicCargos": "Yuklar bozori",
     "chat": "Chat",
     "profile": "Profil",
     "logout": "Chiqish"
+  },
+  "publicCargos": {
+    "title": "Yuklar bozori",
+    "subtitle": "Boshqa mijozlarning ochiq yuklari",
+    "filters": {
+      "fromCountry": "Qayerdan (davlat)",
+      "fromCity": "Qayerdan (shahar)",
+      "toCountry": "Qayerga (davlat)",
+      "toCity": "Qayerga (shahar)",
+      "transportType": "Transport turi",
+      "transportTypeAll": "Barcha transport turlari",
+      "clear": "Filtrlarni tozalash"
+    },
+    "empty": {
+      "title": "Hozircha ochiq yuklar yo'q",
+      "description": "Yangi yuklar paydo bo'lganda shu yerda ko'rinadi"
+    }
   },
   "locationPicker": {
     "title": "Joylashuvni tanlang",
@@ -808,6 +826,118 @@
     "in_progress": "Yo'lda",
     "delivered": "Yetkazilgan",
     "cancelled": "Bekor qilingan"
+  },
+  "clientDashboard": {
+    "error": {
+      "title": "Ma'lumotlarni yuklashda xatolik",
+      "description": "Internet aloqasini tekshirib, qaytadan urinib ko'ring.",
+      "retry": "Qaytadan urinish"
+    },
+    "stats": {
+      "total": "Jami yuklar",
+      "totalTag": "100%",
+      "totalSubtitle": "Tizimdagi umumiy yuklar",
+      "open": "Ochiq yuklar",
+      "openTag": "Kutilmoqda",
+      "openSubtitle": "Tayinlanmagan kutilayotgan yuklar",
+      "inProgress": "Jarayonda / Biriktirilgan",
+      "inProgressBreakdown": "{{assigned}} + {{inProgress}}",
+      "inProgressSubtitle": "Yo'lda va biriktirilgan yuklar",
+      "delivered": "Yetkazib berildi",
+      "deliveredTag": "Muvaffaqiyatli",
+      "deliveredSubtitle": "Mijozga yetib borgan",
+      "carriers": "Tasdiqlangan haydovchilar",
+      "carriersTag": "Aktiv",
+      "carriersSubtitle": "Hamkor logistika kompaniyalari"
+    },
+    "statusChart": {
+      "title": "Yuklar holati bo'yicha",
+      "subtitle": "Statuslar nisbati",
+      "centerLabel": "Jami"
+    },
+    "weightVolumeChart": {
+      "title": "So'nggi yuklar og'irligi va hajmi tahlili",
+      "subtitle": "Kg va m³ bo'yicha taqqoslash",
+      "weightLegend": "Og'irlik (kg)",
+      "volumeLegend": "Hajm (m³)"
+    },
+    "table": {
+      "mineTab": "So'nggi yuklarim ({{count}})",
+      "publicTab": "Ochiq yuklar bozori ({{count}})",
+      "viewAll": "Yuklarga o'tish",
+      "columns": {
+        "id": "ID / Nomi",
+        "route": "Yo'nalish",
+        "status": "Status",
+        "weight": "Og'irlik",
+        "volume": "Hajmi",
+        "quantity": "Soni",
+        "dates": "Ortish & tushirish",
+        "actions": "Amallar"
+      },
+      "loadingLabel": "Ortish",
+      "unloadingLabel": "Tushirish",
+      "empty": "Hozircha yuklar yo'q",
+      "viewAria": "Batafsil ko'rish"
+    }
+  },
+  "cargoOffers": {
+    "title": "Takliflar",
+    "empty": "Hozircha takliflar yo'q",
+    "proposer": "Taklif beruvchi",
+    "amount": "Taklif summasi",
+    "advanceAmount": "Avans summasi",
+    "paymentTerms": "To'lov shartlari",
+    "message": "Xabar",
+    "createdAt": "Yuborilgan sana",
+    "respondedAt": "Javob berilgan sana",
+    "rejectionReason": "Rad etish sababi",
+    "viewDetails": "Batafsil ko'rish",
+    "status": {
+      "pending": "Kutilmoqda",
+      "accepted": "Qabul qilingan",
+      "rejected": "Rad etilgan"
+    },
+    "proposerType": {
+      "driver": "Haydovchi",
+      "carrier": "Tashuvchi kompaniya"
+    }
+  },
+  "cargoOfferDetail": {
+    "pageTitle": "Taklif tafsilotlari",
+    "pageSubtitle": "{{name}} yuki uchun taklif",
+    "proposalSuffix": "taklifi",
+    "offerInfo": "Taklif haqida ma'lumot",
+    "cargoInfo": "Yuk haqida ma'lumot",
+    "driverInfo": "Haydovchi haqida ma'lumot",
+    "reviewsTitle": "Mijozlar bergan sharhlar",
+    "viewFullCargo": "To'liq ma'lumotni ko'rish",
+    "writeToChat": "Chatga yozish",
+    "contactError": "Suhbatni ochishda xatolik yuz berdi",
+    "accept": "Qabul qilish",
+    "reject": "Bekor qilish",
+    "acceptConfirm": {
+      "title": "Taklifni qabul qilish",
+      "description": "Taklifni qabul qilsangiz, yuk shu haydovchiga biriktiriladi. Davom etasizmi?",
+      "confirm": "Qabul qilish"
+    },
+    "rejectConfirm": {
+      "title": "Taklifni bekor qilish",
+      "description": "Ushbu taklifni rad etmoqchimisiz?",
+      "confirm": "Rad etish",
+      "reasonLabel": "Sababi (ixtiyoriy)",
+      "reasonPlaceholder": "Rad etish sababini kiriting..."
+    },
+    "acceptSuccess": "Taklif qabul qilindi",
+    "rejectSuccess": "Taklif rad etildi",
+    "completedCargos": "Yuklar soni",
+    "reliabilityRate": "Muvaffaqiyat",
+    "cancelledCargos": "Bekor qilingan",
+    "online": "Onlayn",
+    "offline": "Offlayn",
+    "memberSince": "A'zo bo'lgan sana",
+    "reviewsCount": "{{count}} ta sharh",
+    "anonymousReviewer": "Noma'lum mijoz"
   },
   "cargoForm": {
     "createTitle": "Yangi yuk",
@@ -911,9 +1041,17 @@
     "cancel": "Bekor qilish",
     "delete": "O'chirish",
     "cancelledNote": "Bu yuk {{date}} sanada bekor qilingan",
+    "idLabel": "ID: #{{id}}",
+    "info": "Yuk ma'lumotlari",
+    "dimensions": "O'lchamlari",
+    "deliveryStatus": "Yetkazish holati",
     "route": "Yo'nalish",
+    "origin": "Yuklash nuqtasi",
+    "destination": "Tushirish nuqtasi",
+    "driver": "Haydovchi",
+    "driverLocationTitle": "Haydovchining joriy joylashuvi",
+    "lastUpdated": "Yangilangan: {{time}}",
     "tracking": "Kuzatuv",
-    "driverLocation": "Haydovchining oxirgi ma'lum joylashuvi: {{lat}}, {{lng}}",
     "noHistory": "Holat tarixi hali yo'q",
     "documents": "Hujjatlar",
     "noDocuments": "Hujjatlar hali yuklanmagan"
